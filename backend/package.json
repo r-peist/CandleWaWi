@@ -1,0 +1,26 @@
+{
+  "name": "my-backend-service",
+  "version": "1.0.0",
+  "description": "Serverless backend with TypeScript",
+  "main": "dist/handler.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "serverless offline start",
+    "deploy": "serverless deploy",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.146",
+    "@types/node": "^20.5.1",
+    "serverless": "^3.32.0",
+    "serverless-esbuild": "^1.36.0",
+    "serverless-offline": "^12.0.4",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1692.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
