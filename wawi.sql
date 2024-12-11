@@ -135,13 +135,17 @@ CREATE TABLE IF NOT EXISTS `material` (
   `Name` varchar(50) NOT NULL DEFAULT '',
   `KatID` int(11) NOT NULL,
   `MatKatID` int(11) NOT NULL,
+  `SKU` varchar(150) UNIQUE DEFAULT NULL,
+  `Active` SET('true', 'false') NOT NULL DEFAULT 'true',
   PRIMARY KEY (`MatID`),
   UNIQUE KEY `Name` (`Name`),
+  UNIQUE KEY `SKU` (`SKU`),
   KEY `Mat_KatID` (`KatID`),
   KEY `Mat_MatKatID` (`MatKatID`),
   CONSTRAINT `Mat_KatID` FOREIGN KEY (`KatID`) REFERENCES `kategorie` (`KatID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Mat_MatKatID` FOREIGN KEY (`MatKatID`) REFERENCES `materialkategorie` (`MatKatID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 
 -- Exportiere Daten aus Tabelle wawi.material: ~0 rows (ungefähr)
 
