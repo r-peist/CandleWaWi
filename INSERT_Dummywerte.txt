@@ -24,23 +24,23 @@ INSERT INTO `materialkategorie` (`MatKatID`, `Name`, `Einheit`) VALUES
 
 
 INSERT INTO `material` (`MatID`, `Name`, `KatID`, `MatKatID`, `SKU`, `Active`) VALUES
-(1, 'Wachs_Soja_40.000g', 4, 2, WAX-001-NAT, true),
-(2, 'Wachs_Soja_60.000g', 4, 2, WAX-002-SOY, false),
-(3, 'Glas_Braun_180ml', 4, 4, CON-001-GLASS-BROWN, true),
-(4, 'Glas_Schwarz_300ml', 4, 4, CON-002-GLASS-BLACK, true),
-(5, 'Glas_Weiß_300ml', 4, 4, CON-003-GLASS-WHITE, false),
-(6, 'Holzdeckel_Braun', 4, 11, LID-001-WOOD-BROWN, true),
-(7, 'Aludeckel_Schwarz', 4, 11, LID-002-ALU-BLACK, true),
-(8, 'Docht_Baumwolle1', 4, 3, WCK-001-COTTON, true),
-(9, 'Docht_Holz1', 4, 3, WCK-002-WOOD, false),
-(10, 'Glas_Diffusor_Braun', 4, 4, CON-004-GLASS-BROWN, true),
-(11, 'Diffusor_Deckel', 4, 11, LID-003-DIFF, true),
-(12, 'Öl_1', 4, 8, OIL-001-LAVENDER, true),
-(13, 'ÖL_2', 4, 8, OIL-002-LAVENDER, true),
-(14, 'Wasser', 4, 5, LIQ-001-WAT, true),
-(15, 'Alkohol', 4, 5, LIQ-002-ALC, true),
-(16, 'WarnungKerze', 4, 12, WAR-001-CAN, true),
-(17, 'WarnungDifSpray', 4, 12, WAR-001-DIF, true);
+(1, 'Wachs_Soja_40.000g', 4, 2, 'WAX-001-NAT', 'true'),
+(2, 'Wachs_Soja_60.000g', 4, 2, 'WAX-002-SOY', 'false'),
+(3, 'Glas_Braun_180ml', 4, 4, 'CON-001-GLASS-BROWN', 'true'),
+(4, 'Glas_Schwarz_300ml', 4, 4, 'CON-002-GLASS-BLACK', 'true'),
+(5, 'Glas_Weiß_300ml', 4, 4, 'CON-003-GLASS-WHITE', 'true'),
+(6, 'Holzdeckel_Braun', 4, 11, 'LID-001-WOOD-BROWN', 'true'),
+(7, 'Aludeckel_Schwarz', 4, 11, 'LID-002-ALU-BLACK', 'true'),
+(8, 'Docht_Baumwolle1', 4, 3, 'WCK-001-COTTON', 'true'),
+(9, 'Docht_Holz1', 4, 3, 'WCK-002-WOOD', 'false'),
+(10, 'Glas_Diffusor_Braun', 4, 4, 'CON-004-GLASS-BROWN', 'true'),
+(11, 'Diffusor_Deckel', 4, 11, 'LID-003-DIFF', 'true'),
+(12, 'Öl_1', 4, 8, 'OIL-001-LAVENDER', 'true'),
+(13, 'ÖL_2', 4, 8, 'OIL-002-LAVENDER', 'true'),
+(14, 'Wasser', 4, 5, 'LIQ-001-WAT', 'true'),
+(15, 'Alkohol', 4, 5, 'LIQ-002-ALC', 'true'),
+(16, 'WarnungKerze', 4, 12, 'WAR-001-CAN', 'true'),
+(17, 'WarnungDifSpray', 4, 12, 'WAR-001-DIF', 'true');
 
 
 INSERT INTO `lager` (`LagerID`, `Name`, `Anschrift`) VALUES
