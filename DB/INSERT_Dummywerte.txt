@@ -1,0 +1,151 @@
+INSERT INTO `kategorie` (`KatID`, `Name`) VALUES
+(1, 'Endprodukt'),
+(2, 'zugekauftesEndprod'),
+(3, 'Zwischenprodukt'),
+(4, 'Rohmaterial'),
+(5, 'Zubehör'),
+(6, 'Verpackungsmat');
+
+
+INSERT INTO `materialkategorie` (`MatKatID`, `Name`, `Einheit`) VALUES
+(1, 'Endprodukt', 'stk'),
+(2, 'Wachs', 'g'),
+(3, 'Docht', 'stk'),
+(4, 'Behältnis', 'stk'),
+(5, 'Gemisch', 'ml'),
+(6, 'Karton', 'stk'),
+(7, 'Tüte', 'stk'),
+(8, 'Öl', 'ml'),
+(9, 'Etiketten', 'stk'),
+(10, 'Geschenkboxen', 'stk'),
+(11, 'Deckel', 'stk'),
+(12, 'WarnEtikett', 'stk'),
+(13, 'Sonstiges', 'stk');
+
+
+INSERT INTO `material` (`MatID`, `Name`, `KatID`, `MatKatID`, `SKU`, `Active`) VALUES
+(1, 'Wachs_Soja_40.000g', 4, 2, 'WAX-001-NAT', 'true'),
+(2, 'Wachs_Soja_60.000g', 4, 2, 'WAX-002-SOY', 'false'),
+(3, 'Glas_Braun_180ml', 4, 4, 'CON-001-GLASS-BROWN', 'true'),
+(4, 'Glas_Schwarz_300ml', 4, 4, 'CON-002-GLASS-BLACK', 'true'),
+(5, 'Glas_Weiß_300ml', 4, 4, 'CON-003-GLASS-WHITE', 'true'),
+(6, 'Holzdeckel_Braun', 4, 11, 'LID-001-WOOD-BROWN', 'true'),
+(7, 'Aludeckel_Schwarz', 4, 11, 'LID-002-ALU-BLACK', 'true'),
+(8, 'Docht_Baumwolle1', 4, 3, 'WCK-001-COTTON', 'true'),
+(9, 'Docht_Holz1', 4, 3, 'WCK-002-WOOD', 'false'),
+(10, 'Glas_Diffusor_Braun', 4, 4, 'CON-004-GLASS-BROWN', 'true'),
+(11, 'Diffusor_Deckel', 4, 11, 'LID-003-DIFF', 'true'),
+(12, 'Öl_1', 4, 8, 'OIL-001-LAVENDER', 'true'),
+(13, 'ÖL_2', 4, 8, 'OIL-002-LAVENDER', 'true'),
+(14, 'Wasser', 4, 5, 'LIQ-001-WAT', 'true'),
+(15, 'Alkohol', 4, 5, 'LIQ-002-ALC', 'true'),
+(16, 'WarnungKerze', 4, 12, 'WAR-001-CAN', 'true'),
+(17, 'WarnungDifSpray', 4, 12, 'WAR-001-DIF', 'true');
+
+
+INSERT INTO `lager` (`LagerID`, `Name`, `Anschrift`) VALUES
+(1, 'Burgstraße', 'Burgstraße 8 Werni'),
+(2, 'Keller', 'Bei Chris'),
+(3, 'Messe', 'Messe');
+
+
+INSERT INTO `lieferant` (`LiefID`, `Name`) VALUES
+(1, 'Amazon'),
+(2, 'Destrebution'),
+(3, 'ExternerLadeneinkauf');
+
+
+INSERT INTO `materiallager` (`MatLagerID`, `MatID`, `LagerID`, `Menge`) VALUES
+(1, 1, 1, 2),
+(2, 2, 1, 4),
+(3, 3, 1, 42),
+(4, 4, 1, 42),
+(5, 5, 1, 42),
+(6, 6, 1, 42),
+(7, 7, 1, 42),
+(8, 8, 1, 112),
+(9, 9, 1, 55);
+
+
+INSERT INTO `materiallieferant` (`MatLiefID`, `MatID`, `LiefID`, `Link`) VALUES
+(1, 1, 1, 'https://www.amazon.de/'),
+(2, 2, 1, 'https://www.amazon.de/'),
+(3, 3, 2, 'https://marketplacedistribution.com/'),
+(4, 4, 2, 'https://marketplacedistribution.com/'),
+(5, 5, 2, 'https://marketplacedistribution.com/'),
+(6, 6, 2, 'https://marketplacedistribution.com/');
+
+
+INSERT INTO `behaelter` (`BehaelterID`, `MatID`, `Name`, `Farbe`, `Hoehe`, `Breite`, `Fuellmenge`) 
+VALUES 
+(1, 3, 'Glas1', 'Braun', 75, 25, 180),
+(2, 4, 'Glas2', 'Schwarz', 100, 35, 300),
+(3, 5, 'Glas3', 'Weiß', 100, 35, 300),
+(4, 10, 'Glas4', 'Braun', 200, 25, 100);
+
+
+INSERT INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`) 
+VALUES 
+(1, 1, 1, '2024-02-12'),
+(2, 1, 1, '2024-04-22'),
+(3, 1, 1, '2024-09-11'),
+(4, 3, 1, '2024-12-02');
+
+
+INSERT INTO `deckel` (`DeckelID`, `MatID`, `Name`, `Farbe`, `Material`) 
+VALUES 
+(1, 6, 'Holzdeckel', 'Braun', 'Holz'),
+(2, 7, 'Aludeckel', 'Schwarz', 'Alu'),
+(3, 11, 'DiffusorDeckel', 'Schwarz', 'Plastik');
+
+
+INSERT INTO `docht` (`DochtID`, `MatID`, `Laenge`, `Material`) 
+VALUES 
+(1, 8, 75, 'Baumwolle'),
+(2, 9, 120, 'Holz');
+
+
+INSERT INTO `inventarkorrektur` (`InvKorrID`, `MatID`, `LagerID`, `Titel`, `Kommentar`, `Datum`, `Menge`) 
+VALUES 
+(1, 3, 1, 'Kaputt', 'Joar ist kaputt ne', '2024-02-12', 2),
+(2, 4, 1, 'Kaputt', 'Kaputt ne', '2024-02-12', 5);
+
+
+INSERT INTO `warnettikett` (`WarnEttID`, `MatID`, `Name`, `Farbe`, `Hoehe`, `Breite`, `Material`) VALUES
+(1, 16, 'WarnungKerze', 'weiß', 10, 20, 'Folie'),
+(2, 17, 'WarnungDifSpray', 'weiß', 20, 30, 'Folie');
+
+
+INSERT INTO `zwischenproduktrezept` (`ZPRezeptID`, `Name`, `Beschreibung`, `Erstellungsdatum`, `Änderungsdatum`) VALUES
+(1, 'Duftmische1', 'Joar is ne Mische ne', '2024-11-27', '2024-11-27'),
+(2, 'NurÖl1', 'junge junge ganz schön viel Öl', '1990-08-27', '2024-11-27'),
+(3, 'Mische1DifSpray', 'Mischmasch wischwasch', '1999-09-11', '2024-12-28');
+
+
+INSERT INTO `rezeptzutaten` (`RezeptZutatenID`, `ZPRezeptID`, `MatID`, `Menge`) VALUES
+(1, 1, 12, 40),
+(2, 1, 13, 60),
+(3, 2, 12, 100),
+(4, 3, 14, 80),
+(5, 3, 15, 20);
+
+
+INSERT INTO `materialbestellung` (`MatBestID`, `BestellID`, `MatID`, `Menge`, `Kommentar`) VALUES
+(1, 1, 1, 2, 'Fehlt 1, es waren 3 bestellt'),
+(2, 1, 3, 42, NULL),
+(3, 1, 6, 42, NULL);
+
+
+INSERT INTO `rezeptkerze` (`RezeptKerzeID`, `Name`, `MatID`, `BehaelterID`, `DeckelID`, `DochtID`, `ZPRezeptID`, `WarnEttID`) VALUES
+(1, 'Kaffee', 1, 1, 2, 1, 2, 1),
+(2, 'Lavendel', 1, 1, 2, 1, 2, 1),
+(3, 'Vanille', 1, 1, 2, 1, 2, 1),
+(4, 'Lebkuchen', 1, 1, 2, 1, 2, 1),
+(5, 'Rhabarber Zimt Zauber', 1, 2, 1, 2, 2, 1);
+
+
+INSERT INTO `rezeptspraydif` (`RezeptSprayDifID`, `Name`, `BehaelterID`, `DeckelID`, `ZPRezeptID1`, `ZPRezeptID2`, `WarnEttID`) VALUES
+(1, 'Kaffee', 4, 3, 1, 3, 2),
+(2, 'Lavendel', 4, 3, 1, 3, 2),
+(3, 'Vanille', 4, 3, 1, 3, 2),
+(4, 'Lebkuchen', 4, 3, 1, 3, 2);
