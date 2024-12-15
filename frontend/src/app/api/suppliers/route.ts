@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
     try {
-        const backendApiUrl = 'http://localhost:3000/sendLieferanten';
+        const backendApiUrl = 'http://localhost:3000/getLieferanten';
 
         // Auf die interne API zugreifen
         const response = await fetch(backendApiUrl, {
