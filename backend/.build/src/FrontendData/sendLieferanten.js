@@ -5,12 +5,12 @@ exports.sendLieferanten = void 0;
 const sendLieferanten = async (event) => {
     try {
         // JSON-Daten aus dem Request-Body lesen
-        const { lieferanten } = JSON.parse(event.body || "{}");
+        const { sendLieferanten } = JSON.parse(event.body || "{}");
         return {
             statusCode: 200,
             body: JSON.stringify({
                 message: "Lieferantenrequest erhalten und Daten erfolgreich gesendet",
-                lieferanten
+                sendLieferanten
                 //receivedData: requestLieferanten, // Zurück an das Frontend
             }),
         };
