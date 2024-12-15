@@ -14,14 +14,35 @@ functions:
     handler: src/DBHandler/handlerGetLieferanten.getLieferanten
     events:
       - http:
-          path: getLieferanten
+          path: getLieferantenDB
           method: get
 
   sendLieferanten:
-    handler: src/SendFrontend/sendLieferanten.sendLieferanten
+    handler: src/FrontendData/sendLieferanten.sendLieferanten
     event:
       - http:
-          path: sendLieferanten
+          path: sendLieferantenFrontend
+          method: post
+
+  getLieferantFE:
+    handler: src/FrontendData/getLieferantFE.getLieferantFE
+    events:
+      - http:
+          path: getLieferantenFE
+          method: get
+
+  getMatLief:
+    handler: src/DBHandler/getMatLief.getMatLief
+    events:
+      - http:
+          path: getMatLief
+          method: get
+
+  sendMatLief:
+    handler: src/DBHandler/sendMatLief.sendMatLief
+    events:
+      - http:
+          path: sendMatLief
           method: post
 
 plugins:

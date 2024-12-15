@@ -1,26 +1,35 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { closePool, getConnection } from "../db/dbclient"; // Importiere den DB-Wrapper
-import { sendLieferanten } from "../FrontendData/sendLieferanten";
+import { getLieferantFE } from "../FrontendData/getLieferantFE";
 import axios from "axios"; //Für HTTP Aufruf
 
-export const getLieferanten = async (
+export const getMatLief = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   let connection;
+
+  // JSON-Daten aus dem Request-Body lesen
+const { lieferant } = JSON.parse(event.body || "{}");
+
+    // Zugriff auf das Feld LiefID
+const parsedData = JSON.parse(lieferant); // Den String "getMatLief" in ein Objekt umwandeln
+const liefID = parsedData.LiefID; // Nur das Feld LiefID extrahieren
+
+console.log("Extrahierte LiefID:", liefID);
 
   try {
     // Verbindung zur Datenbank herstellen
     connection = await getConnection();
 
     // Beispiel-Abfrage: Tabelleninformationen abrufen
-    const [rows] = await connection.query("SELECT * FROM lieferant");
+    const [rows] = await connection.query("SELECT * FROM materiallieferant WHERE LiefID = " + liefID);
 
-    const lieferanten = JSON.stringify(rows);
+    const matLief = JSON.stringify(rows);
 
     const response = await axios.post(
-      "http://localhost:3000/sendLieferanten",
+      "http://localhost:3000/sendMatLief",
       // der Funktion sendLieferanten werden Daten übergeben
-      { sendLieferanten: lieferanten }
+      { sendLieferanten: matLief }
     );
 
     // Erfolgreiche Antwort mit Abfrageergebnissen

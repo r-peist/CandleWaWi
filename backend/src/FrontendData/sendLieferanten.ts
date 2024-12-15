@@ -1,5 +1,4 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { json } from "stream/consumers";
 
 //Endpunkt im Frontend ist "sendLieferanten"
 export const sendLieferanten = async (
@@ -12,7 +11,7 @@ export const sendLieferanten = async (
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Lieferantenrequest erhalten und Daten gesendet",
+        message: "Lieferantenrequest erhalten und Daten erfolgreich gesendet",
         lieferanten
         //receivedData: requestLieferanten, // Zurück an das Frontend
       }),
@@ -28,5 +27,3 @@ export const sendLieferanten = async (
     };
   }
 };
-
-  
