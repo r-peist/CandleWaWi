@@ -10,12 +10,19 @@ provider:
     NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
 
 functions:
-  getData:
-    handler: src/handler.getData
+  getLieferanten:
+    handler: src/DBHandler/handlerGetLieferanten.getLieferanten
     events:
       - http:
-          path: getData
+          path: getLieferanten
           method: get
+
+  sendLieferanten:
+    handler: src/SendFrontend/sendLieferanten.sendLieferanten
+    event:
+      - http:
+          path: sendLieferanten
+          method: post
 
 plugins:
   - serverless-offline
