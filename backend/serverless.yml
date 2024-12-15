@@ -10,6 +10,7 @@ provider:
     NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
 
 functions:
+  #Einkauf trigger + Lieferanten anzeigen lassen
   getLieferanten:
     handler: src/DBHandler/handlerGetLieferanten.getLieferanten
     events:
@@ -21,9 +22,11 @@ functions:
     handler: src/FrontendData/sendLieferanten.sendLieferanten
     events:
       - http:
-          path: sendLieferantenFrontend
+          path: sendLieferanten
           method: post
+          cors: true
 
+  #Ausgewählten Lieferanten an DB übergeben und Mats für diesen zurückschicken
   getLieferantFE:
     handler: src/FrontendData/getLieferantFE.getLieferantFE
     events:
@@ -44,6 +47,9 @@ functions:
       - http:
           path: sendMatLief
           method: post
+
+  #Material des Lieferanten und Lieferant übergeben und
+  #Mat, Lief und Link aus DB holen und zurücksenden
 
 plugins:
   - serverless-offline
