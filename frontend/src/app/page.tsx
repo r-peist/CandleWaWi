@@ -6,6 +6,8 @@ import { FaBoxes, FaShoppingCart, FaTruckLoading } from 'react-icons/fa'
 import {IoBuild} from "react-icons/io5";
 import {MdSell} from "react-icons/md";
 
+
+
 const Home: NextPage = () => {
   return (
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
