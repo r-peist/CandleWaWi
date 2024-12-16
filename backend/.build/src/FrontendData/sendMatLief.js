@@ -5,7 +5,8 @@ exports.sendMatLief = void 0;
 const sendMatLief = async (event) => {
     try {
         // JSON-Daten aus dem Request-Body lesen
-        const { sendMatLief } = JSON.parse(event.body || "{}");
+        const sendMatLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+        console.log("Erhaltene Daten sind hier:", sendMatLief);
         return {
             statusCode: 200,
             body: JSON.stringify({

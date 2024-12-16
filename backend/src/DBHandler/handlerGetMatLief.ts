@@ -25,6 +25,8 @@ export const getMatLief = async (
 
     const matLief = JSON.stringify(rows);
 
+    console.log(matLief);
+
     const response = await axios.post(
       "http://localhost:3001/sendMatLief",
       // der Funktion sendLieferanten werden Daten übergeben

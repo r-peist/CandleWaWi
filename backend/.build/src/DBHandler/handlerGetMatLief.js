@@ -21,6 +21,7 @@ const getMatLief = async (event) => {
         // Beispiel-Abfrage: Tabelleninformationen abrufen
         const [rows] = await connection.query("SELECT * FROM materiallieferant WHERE LiefID = " + liefID);
         const matLief = JSON.stringify(rows);
+        console.log(matLief);
         const response = await axios_1.default.post("http://localhost:3001/sendMatLief", 
         // der Funktion sendLieferanten werden Daten übergeben
         { sendLieferanten: matLief });
