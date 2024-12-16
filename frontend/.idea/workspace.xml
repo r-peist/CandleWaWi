@@ -9,9 +9,6 @@
       <change beforePath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendLieferanten.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendLieferanten.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendMatLief.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/db/dbclient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/db/dbclient.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/handler.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/handler.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +18,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTTP Request" />
         <option value="TypeScript File" />
+        <option value="HTTP Request" />
       </list>
     </option>
   </component>
@@ -38,19 +35,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;F:\\1CandleWaWi\\CandleWaWi\\frontend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.All in suppliers.executor": "Run",
+    "HTTP Request.suppliers | #1.executor": "Run",
+    "HTTP Request.suppliers | GET request to example server.executor": "Run",
+    "HTTP Request.suppliers | POST request to send lieferantId.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "F:\\1CandleWaWi\\CandleWaWi\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RunManager" selected="HTTP Request.suppliers | POST request to send lieferantId">
+    <configuration name="All in suppliers" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/src/app/api/suppliers.http">
+      <method v="2" />
+    </configuration>
+    <configuration name="suppliers | GET request to example server" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="GET request to example server" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="suppliers | POST request to send lieferantId" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="POST request to send lieferantId" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="suppliers | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.suppliers | POST request to send lieferantId" />
+        <item itemvalue="HTTP Request.suppliers | #1" />
+        <item itemvalue="HTTP Request.All in suppliers" />
+        <item itemvalue="HTTP Request.suppliers | GET request to example server" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -69,6 +92,7 @@
       <workItem from="1734012412017" duration="3504000" />
       <workItem from="1734204104260" duration="3106000" />
       <workItem from="1734294302249" duration="9384000" />
+      <workItem from="1734354477170" duration="2196000" />
     </task>
     <servers />
   </component>
