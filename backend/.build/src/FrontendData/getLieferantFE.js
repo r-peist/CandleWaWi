@@ -12,8 +12,11 @@ const getLieferantFE = async (event) => {
         // Simulierte Speicherung der Daten (z. B. in einer Datenbank oder einem Cache)
         console.log("Empfangene Daten:", receivedLief);
         const response = await axios_1.default.post("http://localhost:3001/getMatLief", // URL der zweiten Funktion
-        receivedLief // JSON-Daten als Body
-        );
+        receivedLief, // JSON-Daten als Body
+        { headers: {
+                "Content-Type": "application/json", // Header für JSON setzen
+            }
+        });
         return {
             statusCode: 200,
             body: JSON.stringify({

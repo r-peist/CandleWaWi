@@ -1,6 +1,5 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { closePool, getConnection } from "../db/dbclient"; // Importiere den DB-Wrapper
-import { getLieferantFE } from "../FrontendData/getLieferantFE";
 import axios from "axios"; //Für HTTP Aufruf
 
 export const getMatLief = async (
@@ -9,7 +8,8 @@ export const getMatLief = async (
   let connection;
 
   // JSON-Daten aus dem Request-Body lesen
-const { lieferant } = JSON.parse(event.body || "{}");
+const {lieferant} = JSON.parse(event.body || "{}");
+console.log("Empfangene Daten:", lieferant);
 
     // Zugriff auf das Feld LiefID
 const parsedData = JSON.parse(lieferant); // Den String "getMatLief" in ein Objekt umwandeln

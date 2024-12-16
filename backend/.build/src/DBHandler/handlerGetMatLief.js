@@ -10,6 +10,7 @@ const getMatLief = async (event) => {
     let connection;
     // JSON-Daten aus dem Request-Body lesen
     const { lieferant } = JSON.parse(event.body || "{}");
+    console.log("Empfangene Daten:", lieferant);
     // Zugriff auf das Feld LiefID
     const parsedData = JSON.parse(lieferant); // Den String "getMatLief" in ein Objekt umwandeln
     const liefID = parsedData.LiefID; // Nur das Feld LiefID extrahieren

@@ -38,11 +38,13 @@
     "HTTP Request.suppliers | POST request to send lieferantId.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "F:/1CandleWaWi/CandleWaWi",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "F:\\1CandleWaWi\\CandleWaWi\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -87,7 +89,8 @@
       <workItem from="1734012412017" duration="3504000" />
       <workItem from="1734204104260" duration="3106000" />
       <workItem from="1734294302249" duration="9384000" />
-      <workItem from="1734354477170" duration="5076000" />
+      <workItem from="1734354477170" duration="6226000" />
+      <workItem from="1734360811904" duration="385000" />
     </task>
     <servers />
   </component>

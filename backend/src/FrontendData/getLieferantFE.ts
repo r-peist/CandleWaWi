@@ -12,8 +12,11 @@ export const getLieferantFE = async (
     console.log("Empfangene Daten:", receivedLief);
     const response = await axios.post(
         "http://localhost:3001/getMatLief", // URL der zweiten Funktion
-         receivedLief  // JSON-Daten als Body
-      );
+         receivedLief,  // JSON-Daten als Body
+         { headers: {
+            "Content-Type": "application/json", // Header für JSON setzen
+          }
+         });
 
     return {
       statusCode: 200,
