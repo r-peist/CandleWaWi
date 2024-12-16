@@ -57,7 +57,7 @@ plugins:
 
 custom:
   serverless-offline:
-    httpPort: 3001 # Der lokale Server läuft auf Port 3000
+    httpPort: 3001 # Der lokale Server läuft auf Port 3001
     noPrependStageInUrl: true # Kein Prefix für Umgebungen (z. B. dev)
 
 package:

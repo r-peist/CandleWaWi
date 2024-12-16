@@ -6,7 +6,9 @@ export const sendMatLief = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     // JSON-Daten aus dem Request-Body lesen
-    const { matLief } = JSON.parse(event.body || "{}");
+    const matLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+    //const { matLief } = JSON.parse(event.body || "{}");
+    console.log("Gesendete Daten von DB Handler: ", matLief);
 
     return {
       statusCode: 200,
