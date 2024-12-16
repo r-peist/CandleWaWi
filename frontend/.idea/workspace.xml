@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="" />
+    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,7 +90,7 @@
       <workItem from="1734012412017" duration="3504000" />
       <workItem from="1734204104260" duration="3106000" />
       <workItem from="1734294302249" duration="9384000" />
-      <workItem from="1734354477170" duration="3174000" />
+      <workItem from="1734354477170" duration="4618000" />
     </task>
     <servers />
   </component>

@@ -12,7 +12,7 @@ export const getLieferantFE = async (
     console.log("Empfangene Daten:", receivedLief);
     const response = await axios.post(
         "http://localhost:3001/getMatLief", // URL der zweiten Funktion
-        { getMatLief: receivedLief } // JSON-Daten als Body
+         receivedLief  // JSON-Daten als Body
       );
 
     return {
