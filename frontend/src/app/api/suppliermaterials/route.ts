@@ -5,8 +5,8 @@ export async function POST(req: NextRequest) {
         const backendApiUrl = 'http://localhost:3001/getLieferantenFE';
         const requestBody = await req.json();
 
-        if (!requestBody.lieferantId) {
-            throw new Error('lieferantId is required');
+        if (!requestBody.LiefID) {
+            throw new Error('LiefID is required');
         }
 
         // Anfrage an das externe Backend senden
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ lieferantId: requestBody.lieferantId }),
+            body: JSON.stringify({ LiefID: requestBody.LiefID }),
         });
 
         if (!response.ok) {

@@ -24,7 +24,7 @@ const fetchMaterialsForSupplier = async (supplierId: number) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ lieferantId: supplierId }),
+            body: JSON.stringify({ LiefID: supplierId }),
         });
         if (!response.ok) {
             throw new Error('Fehler beim Abrufen der Materialien');
