@@ -11,7 +11,7 @@ const getLieferantFE = async (event) => {
         const receivedLief = JSON.parse(event.body || "{}");
         // Simulierte Speicherung der Daten (z. B. in einer Datenbank oder einem Cache)
         console.log("Empfangene Daten:", receivedLief);
-        const response = await axios_1.default.post("http://localhost:3001/getLieferantenFE", // URL der zweiten Funktion
+        const response = await axios_1.default.post("http://localhost:3001/getMatLief", // URL der zweiten Funktion
         { getMatLief: receivedLief } // JSON-Daten als Body
         );
         return {
