@@ -8,31 +8,35 @@ async function fetchSuppliers() {
     try {
         const response = await fetch('/api/suppliers', { method: 'GET' });
         if (!response.ok) throw new Error('Fehler beim Abrufen der Lieferanten');
-        const data = await response.json();
-        return data; // LiefID und Name der Lieferanten
+        const { data } = await response.json(); // Nur `data` extrahieren
+        return data;
     } catch (error) {
         console.error(error);
         return [];
     }
 }
 
+
 const fetchMaterialsForSupplier = async (supplierId: number) => {
     try {
-        const response = await fetch('/api/materials', {
+        const response = await fetch('/api/getMaterials', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ lieferantId: supplierId }),
         });
-        if (!response.ok) throw new Error('Fehler beim Abrufen der Materialien');
+        if (!response.ok) {
+            throw new Error('Fehler beim Abrufen der Materialien');
+        }
         const data = await response.json();
-        return data; // Die Materialliste
+        return data; // Erwartet Materialliste
     } catch (error) {
-        console.error(error);
+        console.error('Fehler beim Laden der Materialien:', error);
         return [];
     }
 };
+
 
 const fetchMaterialDetails = async (materialId: number) => {
     try {
@@ -145,9 +149,11 @@ const Home: NextPage = () => {
                             <li
                                 key={supplier.LiefID}
                                 className="p-4 bg-white shadow rounded cursor-pointer hover:bg-gray-200"
-                                onClick={() => {
-                                    setSelectedSupplier(supplier.LiefID);
-                                    setSelectedMaterial(null);
+                                onClick={async () => {
+                                    setSelectedSupplier(supplier.LiefID); // Lieferant speichern
+                                    const materialData = await fetchMaterialsForSupplier(supplier.LiefID);
+                                    setMaterials(materialData); // Materialien speichern
+                                    setSelectedMaterial(null); // Auswahl zurücksetzen
                                 }}
                             >
                                 {supplier.Name}
@@ -158,6 +164,7 @@ const Home: NextPage = () => {
                     )}
                 </ul>
             </section>
+
 
             {selectedSupplier !== null && (
                 <section>
