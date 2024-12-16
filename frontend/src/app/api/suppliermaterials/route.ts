@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
     try {
-        const backendApiUrl = 'http://localhost:3000/getMaterials';
+        const backendApiUrl = 'http://localhost:3001/getMaterials';
         const requestBody = await req.json();
 
         if (!requestBody.lieferantId) {

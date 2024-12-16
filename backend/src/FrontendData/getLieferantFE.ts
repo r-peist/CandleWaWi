@@ -11,7 +11,7 @@ export const getLieferantFE = async (
     // Simulierte Speicherung der Daten (z. B. in einer Datenbank oder einem Cache)
     console.log("Empfangene Daten:", receivedLief);
     const response = await axios.post(
-        "http://localhost:3000/getLieferantenFE", // URL der zweiten Funktion
+        "http://localhost:3001/getLieferantenFE", // URL der zweiten Funktion
         { getMatLief: receivedLief } // JSON-Daten als Body
       );
 

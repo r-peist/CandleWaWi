@@ -14,7 +14,7 @@ const getLieferanten = async (event) => {
         // Beispiel-Abfrage: Tabelleninformationen abrufen
         const [rows] = await connection.query("SELECT * FROM lieferant");
         const lieferanten = JSON.stringify(rows);
-        const response = await axios_1.default.post("http://localhost:3000/sendLieferanten", 
+        const response = await axios_1.default.post("http://localhost:3001/sendLieferanten", 
         // der Funktion sendLieferanten werden Daten übergeben
         { sendLieferanten: lieferanten });
         // Erfolgreiche Antwort mit Abfrageergebnissen

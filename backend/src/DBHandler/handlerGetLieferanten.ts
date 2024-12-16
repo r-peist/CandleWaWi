@@ -18,7 +18,7 @@ export const getLieferanten = async (
     const lieferanten = JSON.stringify(rows);
 
     const response = await axios.post(
-      "http://localhost:3000/sendLieferanten",
+      "http://localhost:3001/sendLieferanten",
       // der Funktion sendLieferanten werden Daten übergeben
       { sendLieferanten: lieferanten }
     );

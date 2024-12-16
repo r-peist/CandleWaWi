@@ -27,7 +27,7 @@ console.log("Extrahierte LiefID:", liefID);
     const matLief = JSON.stringify(rows);
 
     const response = await axios.post(
-      "http://localhost:3000/sendMatLief",
+      "http://localhost:3001/sendMatLief",
       // der Funktion sendLieferanten werden Daten übergeben
       { sendLieferanten: matLief }
     );
