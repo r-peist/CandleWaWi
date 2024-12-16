@@ -9,7 +9,7 @@ const axios_1 = __importDefault(require("axios")); //Für HTTP Aufruf
 const getMatLief = async (event) => {
     let connection;
     // JSON-Daten aus dem Request-Body lesen
-    const parsedData = JSON.parse(event.body || "{}");
+    const { lieferant } = JSON.parse(event.body || "{}");
     // Zugriff auf das Feld LiefID
     const liefID = parsedData.LiefID; // Nur das Feld LiefID extrahieren
     console.log("Extrahierte LiefID:", liefID);
