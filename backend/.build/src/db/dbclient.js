@@ -41,23 +41,29 @@ const dotenv = __importStar(require("dotenv"));
 const promise_1 = __importDefault(require("mysql2/promise"));
 // Lade Umgebungsvariablen aus .env
 dotenv.config();
-// Pool erstellen
-const pool = promise_1.default.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-});
+let pool = null;
 // Wrapper für den Zugriff auf den Pool
 const getConnection = async () => {
+    if (!pool) {
+        pool = promise_1.default.createPool({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0,
+        });
+    }
+    ;
     return pool.getConnection();
 };
 exports.getConnection = getConnection;
 // Funktion zum Schließen des Pools (optional)
 const closePool = async () => {
-    await pool.end();
+    if (pool) {
+        await pool.end();
+        pool = null;
+    }
 };
 exports.closePool = closePool;

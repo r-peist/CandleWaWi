@@ -6,7 +6,8 @@ export const sendMatLief = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     // JSON-Daten aus dem Request-Body lesen
-    const { sendMatLief } = JSON.parse(event.body || "{}");
+    const sendMatLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+    console.log("Erhaltene Daten sind hier: ", sendMatLief);
 
     return {
       statusCode: 200,
