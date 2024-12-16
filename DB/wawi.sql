@@ -139,7 +139,6 @@ CREATE TABLE IF NOT EXISTS `material` (
   `Active` SET('true', 'false') NOT NULL DEFAULT 'true',
   PRIMARY KEY (`MatID`),
   UNIQUE KEY `Name` (`Name`),
-  UNIQUE KEY `SKU` (`SKU`),
   KEY `Mat_KatID` (`KatID`),
   KEY `Mat_MatKatID` (`MatKatID`),
   CONSTRAINT `Mat_KatID` FOREIGN KEY (`KatID`) REFERENCES `kategorie` (`KatID`) ON DELETE CASCADE ON UPDATE CASCADE,
