@@ -7,6 +7,7 @@ export const sendLieferanten = async (
   try {
     // JSON-Daten aus dem Request-Body lesen
     const { sendLieferanten } = JSON.parse(event.body || "{}");
+    console.log(sendLieferanten);
 
     return {
       statusCode: 200,

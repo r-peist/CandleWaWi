@@ -30,8 +30,11 @@ export const getMatLief = async (
     const response = await axios.post(
       "http://localhost:3001/sendMatLief",
       // der Funktion sendLieferanten werden Daten übergeben
-      { sendLieferanten: matLief }
-    );
+      matLief,
+      { headers: {
+        "Content-Type": "application/json",
+      } // JSON-Daten als Body
+    });
 
     // Erfolgreiche Antwort mit Abfrageergebnissen
     return {
