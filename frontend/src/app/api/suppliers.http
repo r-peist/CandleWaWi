@@ -1,0 +1,7 @@
+### POST request to send lieferantId
+POST http://localhost:3000/api/suppliermaterials
+Content-Type: application/json
+
+{
+  "LiefID": 1
+}
