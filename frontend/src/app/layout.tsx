@@ -1,3 +1,5 @@
+import { UserProvider } from "@auth0/nextjs-auth0/client"; // Auth0 UserProvider hinzufügen
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -28,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <UserProvider>{children}</UserProvider> {/* UserProvider umschließt alle Kinder */}
       </body>
     </html>
   );

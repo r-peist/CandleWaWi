@@ -1,7 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
-import { IoMdClose } from "react-icons/io";
+import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
+
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { redirect } from 'next/navigation';
 
 const fetchInventory = () => {
     return [
@@ -77,6 +80,8 @@ const toggleActiveStatus = (material, isActive) => {
 };
 
 const InventoryPage = () => {
+    const { user, isLoading } = useUser();
+
     const [inventory, setInventory] = useState(fetchInventory());
     const [categories] = useState(fetchCategories());
     const [materialCategories] = useState(fetchMaterialCategories());
@@ -85,6 +90,13 @@ const InventoryPage = () => {
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [editingField, setEditingField] = useState(null);
     const [formData, setFormData] = useState({ quantity: "", warehouse: "", link: "", comment: "" });
+
+    // Authentifizierung überprüfen
+    useEffect(() => {
+        if (!isLoading && !user) {
+            redirect('/');
+        }
+    }, [isLoading, user ]);
 
     useEffect(() => {
         setWarehouses(fetchWarehouses());
@@ -138,6 +150,15 @@ const InventoryPage = () => {
         setInventory(updatedInventory);
         toggleActiveStatus(material.material, !material.active);
     };
+
+    // **Verhindere das Rendern, während die Authentifizierung geprüft wird**
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Lädt...</div>;
+    }
+
+    if (!user) {
+        return null; // Zeige nichts, falls die Weiterleitung aktiv ist
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 p-8">

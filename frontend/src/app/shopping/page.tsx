@@ -1,7 +1,10 @@
 "use client";
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { redirect } from 'next/navigation';
 
 // Fetch-Funktionen für die API
 async function fetchSuppliers() {
@@ -57,6 +60,8 @@ const fetchMaterialDetails = async (materialId: number) => {
 };
 
 const Home: NextPage = () => {
+    const { user, isLoading } = useUser();
+
     const [suppliers, setSuppliers] = useState<{ LiefID: number; Name: string }[]>([]);
     const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
     const [materials, setMaterials] = useState<string[]>([]);
@@ -64,6 +69,13 @@ const Home: NextPage = () => {
     const [materialDetails, setMaterialDetails] = useState<{ supplier: string; description: string } | null>(null);
     const [cart, setCart] = useState<{ material: string; link: string }[]>([]);
     const [order, setOrder] = useState(null);
+
+        // Authentifizierung überprüfen
+        useEffect(() => {
+            if (!isLoading && !user) {
+                redirect('/');
+            }
+        }, [isLoading, user ]);
 
     // Lieferanten dynamisch laden
     useEffect(() => {
@@ -128,6 +140,15 @@ const Home: NextPage = () => {
         setOrder(newOrder);
         setCart([]); // Clear the cart after order creation
     };
+
+    // **Verhindere das Rendern, während die Authentifizierung geprüft wird**
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Lädt...</div>;
+    }
+
+    if (!user) {
+        return null; // Zeige nichts, falls die Weiterleitung aktiv ist
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 p-8">
