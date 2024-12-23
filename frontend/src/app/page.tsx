@@ -83,12 +83,7 @@ export default async function Home() {
                   href="/sale"
                   icon={<MdSell size={40} />}
               />
-              <FeatureCard
-                  title="LogOut [Temporär]"
-                  description=""
-                  href="/api/auth/logout"
-                  icon={<MdSell size={40} />}
-              />
+              <a href='/api/auth/logout'>Log Out</a>
           </div>
         </main>
           <Footer />
