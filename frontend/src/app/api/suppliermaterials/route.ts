@@ -3,7 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     try {
         const backendApiUrl = "http://localhost:3001/getLieferantenFE";
+        console.log("Hallo");
         const requestBody = await req.json();
+        console.log("Empfangen wurde: ", requestBody);
 
         if (!requestBody.LiefID) {
             throw new Error("LiefID is required");

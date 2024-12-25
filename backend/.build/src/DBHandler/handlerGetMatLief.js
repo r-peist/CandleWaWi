@@ -5,15 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMatLief = void 0;
 const dbclient_1 = require("../db/dbclient"); // Importiere den DB-Wrapper
-const axios_1 = __importDefault(require("axios")); //Für HTTP Aufruf
+const node_fetch_1 = __importDefault(require("node-fetch")); // Für HTTP Aufruf
 const getMatLief = async (event) => {
     let connection;
     // JSON-Daten aus dem Request-Body lesen
-    //const lieferant = JSON.parse(event.body || "{}");
     const lieferant = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
     console.log("Empfangene Daten:", lieferant);
     // Zugriff auf das Feld LiefID
-    const parsedData = lieferant; // Den String "getMatLief" in ein Objekt umwandeln
     const liefID = lieferant?.LiefID; // Nur das Feld LiefID extrahieren
     try {
         // Verbindung zur Datenbank herstellen
@@ -22,18 +20,25 @@ const getMatLief = async (event) => {
         const [rows] = await connection.query("SELECT * FROM materiallieferant WHERE LiefID = " + liefID);
         const matLief = JSON.stringify(rows);
         console.log(matLief);
-        const response = await axios_1.default.post("http://localhost:3001/sendMatLief", 
-        // der Funktion sendLieferanten werden Daten übergeben
-        matLief, { headers: {
+        // HTTP-Post-Aufruf mit node-fetch
+        const response = await (0, node_fetch_1.default)("http://localhost:3001/sendMatLief", {
+            method: "POST",
+            headers: {
                 "Content-Type": "application/json",
-            } // JSON-Daten als Body
+            },
+            body: matLief, // JSON-Daten als Body
         });
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler: ${response.status}`);
+        }
+        const responseBody = await response.json();
         // Erfolgreiche Antwort mit Abfrageergebnissen
         return {
             statusCode: 200,
             body: JSON.stringify({
                 message: "Datenbank-Abfrage erfolgreich!",
                 data: rows,
+                forwardedResponse: responseBody, // Antwort der nächsten Funktion
             }),
         };
     }
@@ -68,3 +73,4 @@ const getMatLief = async (event) => {
     }
 };
 exports.getMatLief = getMatLief;
+//# sourceMappingURL=handlerGetMatLief.js.map

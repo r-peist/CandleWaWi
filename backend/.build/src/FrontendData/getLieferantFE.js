@@ -4,33 +4,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLieferantFE = void 0;
-const axios_1 = __importDefault(require("axios")); //Für HTTP Aufruf
+const node_fetch_1 = __importDefault(require("node-fetch")); // Für HTTP Aufruf
 const getLieferantFE = async (event) => {
     try {
         // Daten aus dem Request-Body extrahieren
-        const receivedLief = JSON.parse(event.body || "{}");
-        //const receivedLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-        // Simulierte Speicherung der Daten (z. B. in einer Datenbank oder einem Cache)
+        const receivedLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
         console.log("Empfangene Daten:", receivedLief);
-        const response = await axios_1.default.post("http://localhost:3001/getMatLief", // URL der zweiten Funktion
-        JSON.stringify(receivedLief), { headers: {
+        // HTTP-Post-Aufruf mit node-fetch
+        const response = await (0, node_fetch_1.default)("http://localhost:3001/getMatLief", {
+            method: "POST",
+            headers: {
                 "Content-Type": "application/json",
-            } // JSON-Daten als Body
+            },
+            body: JSON.stringify(receivedLief), // JSON-Daten als Body
         });
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler: ${response.status}`);
+        }
+        const responseBody = await response.json();
         return {
             statusCode: 200,
             body: JSON.stringify({
                 message: "Daten erfolgreich empfangen und zwischengespeichert (MatLief)",
+                forwardedResponse: responseBody, // Antwort von getMatLief
             }),
         };
     }
     catch (error) {
         if (error instanceof Error) {
-            console.error("Datenbankfehler:", error.message);
+            console.error("Fehler beim Verarbeiten der Anfrage:", error.message);
             return {
                 statusCode: 500,
                 body: JSON.stringify({
-                    message: "Fehler bei der Datenbankabfrage (MatLief) mit Error Typpiesierung",
+                    message: "Fehler beim Verarbeiten der Anfrage (MatLief) mit Error Typpiesierung",
                     error: error.message,
                 }),
             };
@@ -40,7 +46,7 @@ const getLieferantFE = async (event) => {
             return {
                 statusCode: 500,
                 body: JSON.stringify({
-                    message: "Fehler bei der Datenbankabfrage (MatLief) ohne Error Typpiesierung",
+                    message: "Fehler beim Verarbeiten der Anfrage (MatLief) ohne Error Typpiesierung",
                     error: "Ein unbekannter Fehler ist aufgetreten.",
                 }),
             };
@@ -48,3 +54,4 @@ const getLieferantFE = async (event) => {
     }
 };
 exports.getLieferantFE = getLieferantFE;
+//# sourceMappingURL=getLieferantFE.js.map

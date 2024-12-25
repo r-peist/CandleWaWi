@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendMatLief = void 0;
-//Endpunkt im Frontend ist "sendLieferanten"
 const sendMatLief = async (event) => {
     try {
         // JSON-Daten aus dem Request-Body lesen
@@ -11,8 +10,7 @@ const sendMatLief = async (event) => {
             statusCode: 200,
             body: JSON.stringify({
                 message: "Lieferantenrequest erhalten und Daten erfolgreich gesendet",
-                sendMatLief
-                //receivedData: requestLieferanten, // Zurück an das Frontend
+                sendMatLief, // Die empfangenen Daten werden direkt zurückgegeben
             }),
         };
     }
@@ -22,8 +20,10 @@ const sendMatLief = async (event) => {
             statusCode: 500,
             body: JSON.stringify({
                 message: "Fehler beim Verarbeiten der Lieferantenanfrage",
+                error: error instanceof Error ? error.message : "Unbekannter Fehler",
             }),
         };
     }
 };
 exports.sendMatLief = sendMatLief;
+//# sourceMappingURL=sendMatLief.js.map

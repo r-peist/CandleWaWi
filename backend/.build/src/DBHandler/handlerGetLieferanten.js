@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLieferanten = void 0;
 const dbclient_1 = require("../db/dbclient"); // Importiere den DB-Wrapper
-const axios_1 = __importDefault(require("axios")); //Für HTTP Aufruf
+const node_fetch_1 = __importDefault(require("node-fetch")); // Für HTTP Aufruf
 const getLieferanten = async (event) => {
     let connection;
     try {
@@ -14,15 +14,25 @@ const getLieferanten = async (event) => {
         // Beispiel-Abfrage: Tabelleninformationen abrufen
         const [rows] = await connection.query("SELECT * FROM lieferant");
         const lieferanten = JSON.stringify(rows);
-        const response = await axios_1.default.post("http://localhost:3001/sendLieferanten", 
-        // der Funktion sendLieferanten werden Daten übergeben
-        { sendLieferanten: lieferanten });
+        // HTTP-Post-Aufruf mit node-fetch
+        const response = await (0, node_fetch_1.default)("http://localhost:3001/sendLieferanten", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ sendLieferanten: lieferanten }),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler: ${response.status}`);
+        }
+        const responseBody = await response.json();
         // Erfolgreiche Antwort mit Abfrageergebnissen
         return {
             statusCode: 200,
             body: JSON.stringify({
                 message: "Datenbank-Abfrage erfolgreich!",
                 data: rows,
+                response: responseBody,
             }),
         };
     }
@@ -57,3 +67,4 @@ const getLieferanten = async (event) => {
     }
 };
 exports.getLieferanten = getLieferanten;
+//# sourceMappingURL=handlerGetLieferanten.js.map

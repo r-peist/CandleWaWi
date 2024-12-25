@@ -1,6 +1,5 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 
-//Endpunkt im Frontend ist "sendLieferanten"
 export const sendMatLief = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
@@ -13,8 +12,7 @@ export const sendMatLief = async (
       statusCode: 200,
       body: JSON.stringify({
         message: "Lieferantenrequest erhalten und Daten erfolgreich gesendet",
-        sendMatLief
-        //receivedData: requestLieferanten, // Zurück an das Frontend
+        sendMatLief, // Die empfangenen Daten werden direkt zurückgegeben
       }),
     };
   } catch (error) {
@@ -24,6 +22,7 @@ export const sendMatLief = async (
       statusCode: 500,
       body: JSON.stringify({
         message: "Fehler beim Verarbeiten der Lieferantenanfrage",
+        error: error instanceof Error ? error.message : "Unbekannter Fehler",
       }),
     };
   }
