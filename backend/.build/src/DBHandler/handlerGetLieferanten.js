@@ -30,7 +30,7 @@ const getLieferanten = async (event) => {
         return {
             statusCode: 200,
             body: JSON.stringify({
-                message: "Datenbank-Abfrage erfolgreich!",
+                message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
                 data: rows,
                 response: responseBody,
             }),
@@ -38,7 +38,7 @@ const getLieferanten = async (event) => {
     }
     catch (error) {
         if (error instanceof Error) {
-            console.error("Datenbankfehler:", error.message);
+            console.error("Datenbankfehler Lieferanten:", error.message);
             return {
                 statusCode: 500,
                 body: JSON.stringify({

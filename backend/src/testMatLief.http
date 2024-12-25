@@ -1,0 +1,6 @@
+### POST request to send lieferantId
+POST http://localhost:3001/getLieferantenFE
+
+{
+  "LiefID": 1
+}

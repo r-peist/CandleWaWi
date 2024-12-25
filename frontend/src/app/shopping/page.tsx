@@ -19,11 +19,13 @@ async function fetchSuppliers() {
 
 const fetchMaterialsForSupplier = async (supplierId: number) => {
     try {
-        const response = await fetch('/api/getMaterials', {
+        console.log("LiefID = ", supplierId);
+        const response = await fetch('/api/suppliermaterials'
+            , {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            //headers: {
+            //    'Content-Type': 'application/json',
+            //},
             body: JSON.stringify({ LiefID: supplierId }),
         });
         if (!response.ok) {

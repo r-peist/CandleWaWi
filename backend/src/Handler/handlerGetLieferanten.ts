@@ -35,14 +35,14 @@ export const getLieferanten = async (
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Datenbank-Abfrage erfolgreich!",
+        message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
         data: rows,
         response: responseBody,
       }),
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Datenbankfehler:", error.message);
+      console.error("Datenbankfehler Lieferanten:", error.message);
 
       return {
         statusCode: 500,

@@ -6,8 +6,9 @@ export const getLieferantFE = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     // Daten aus dem Request-Body extrahieren
-    const receivedLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-    console.log("Empfangene Daten:", receivedLief);
+    const { receivedLief } = JSON.parse(event.body || "{}");
+    //const receivedLief = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+    console.log("Empfangene LieferantenIDs aus dem Frontend: ", receivedLief);
 
     // HTTP-Post-Aufruf mit node-fetch
     const response = await fetch("http://localhost:3001/getMatLief", {

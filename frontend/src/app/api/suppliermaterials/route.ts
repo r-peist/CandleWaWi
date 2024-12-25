@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     try {
         const backendApiUrl = "http://localhost:3001/getLieferantenFE";
-        console.log("Hallo");
         const requestBody = await req.json();
         console.log("Empfangen wurde: ", requestBody);
 
@@ -11,13 +10,14 @@ export async function POST(req: NextRequest) {
             throw new Error("LiefID is required");
         }
 
-        const response = await fetch(backendApiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ LiefID: requestBody.LiefID }),
-        });
+        const response = await fetch(backendApiUrl);
+            //, {
+            //method: "POST",
+            //headers: {
+            //    "Content-Type": "application/json",
+            //},
+            //body: JSON.stringify({ LiefID: requestBody.LiefID }),
+        //});
 
         if (!response.ok) {
             throw new Error(`Backend API Error: ${response.status}`);
