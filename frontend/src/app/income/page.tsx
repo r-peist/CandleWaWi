@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Footer from '../components/Footer'
+import Footer from '../components/footer'
 import { FaPlus } from 'react-icons/fa'
 import Link from "next/link";
 

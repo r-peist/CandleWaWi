@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendLieferanten.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendLieferanten.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendMatLief.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/db/dbclient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/db/dbclient.js" afterDir="false" />
-    </list>
+    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,6 +91,9 @@
       <workItem from="1734294302249" duration="9384000" />
       <workItem from="1734354477170" duration="6226000" />
       <workItem from="1734360811904" duration="385000" />
+      <workItem from="1735151684873" duration="906000" />
+      <workItem from="1735212140080" duration="131000" />
+      <workItem from="1735220040068" duration="518000" />
     </task>
     <servers />
   </component>

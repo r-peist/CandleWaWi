@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import FeatureCard from ".//components/featurecard"
-import Footer from './/components/Footer'
+import FeatureCard from "./components/featurecard"
+import Footer from './components/footer'
 import { FaBoxes, FaShoppingCart, FaTruckLoading } from 'react-icons/fa'
 import {IoBuild} from "react-icons/io5";
 import {MdSell} from "react-icons/md";
