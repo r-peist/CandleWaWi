@@ -25,6 +25,8 @@ export const getLieferanten = async (
       body: JSON.stringify({ sendLieferanten: lieferanten }),
     });
 
+    console.log("Hello World.");
+
     if (!response.ok) {
       throw new Error(`HTTP-Fehler: ${response.status}`);
     }
@@ -40,6 +42,7 @@ export const getLieferanten = async (
         response: responseBody,
       }),
     };
+    console.log("Übertragen: ", responseBody);
   } catch (error) {
     if (error instanceof Error) {
       console.error("Datenbankfehler Lieferanten:", error.message);

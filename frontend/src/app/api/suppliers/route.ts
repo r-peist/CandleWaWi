@@ -5,14 +5,14 @@ export async function GET(req: NextRequest) {
         const backendApiUrl = 'http://localhost:3001/getLieferanten';
 
         // Auf die interne API zugreifen
-        const response = await fetch(backendApiUrl);
+        const response = await fetch(backendApiUrl
         //Von Richard geändert, Body wird nicht benötigt bei einem Trigger, unerklärlicher fehler daraus resultiert...
-            //, {
-            //method: 'GET',
-            //headers: {
-            //    'Content-Type': 'application/json',
-            //},
-        //});
+            , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
         // Backend-Antwort als JSON zurückgeben
         if (!response.ok) {

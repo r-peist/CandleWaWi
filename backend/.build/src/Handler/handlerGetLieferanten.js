@@ -22,6 +22,7 @@ const getLieferanten = async (event) => {
             },
             body: JSON.stringify({ sendLieferanten: lieferanten }),
         });
+        console.log("Hello World.");
         if (!response.ok) {
             throw new Error(`HTTP-Fehler: ${response.status}`);
         }
@@ -35,6 +36,7 @@ const getLieferanten = async (event) => {
                 response: responseBody,
             }),
         };
+        console.log("Übertragen: ", responseBody);
     }
     catch (error) {
         if (error instanceof Error) {
