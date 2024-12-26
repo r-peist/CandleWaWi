@@ -4,25 +4,44 @@ export async function GET(req: NextRequest) {
     try {
         const backendApiUrl = 'http://localhost:3001/getLieferanten';
 
-        // Auf die interne API zugreifen
-        const response = await fetch(backendApiUrl);
-        //Von Richard geändert, Body wird nicht benötigt bei einem Trigger, unerklärlicher fehler daraus resultiert...
-            //, {
-            //method: 'GET',
-            //headers: {
-            //    'Content-Type': 'application/json',
-            //},
-        //});
+        // Fetch-Anfrage mit deaktiviertem Cache
+        const response = await fetch(backendApiUrl, {
+            method: 'GET',
+            cache: 'no-store', // Verhindert Fetch-Caching
+            headers: {
+                'Cache-Control': 'no-store', // Weist Backend an, keine Zwischenspeicherung zu verwenden
+            },
+        });
 
-        // Backend-Antwort als JSON zurückgeben
+        // Überprüfen, ob die Anfrage erfolgreich war
         if (!response.ok) {
             throw new Error(`Backend API Error: ${response.status}`);
         }
 
         const data = await response.json();
-        return NextResponse.json(data);
+
+        // Daten ohne Caching zurückgeben
+        return NextResponse.json(data, {
+            headers: {
+                'Cache-Control': 'no-store, must-revalidate', // Verhindert Caching im Browser oder bei Proxies
+                Pragma: 'no-cache',
+                Expires: '0',
+            },
+        });
     } catch (error: any) {
         console.error('Error in API route:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+
+        // Fehlerantwort ohne Caching
+        return NextResponse.json(
+            { error: error.message },
+            {
+                status: 500,
+                headers: {
+                    'Cache-Control': 'no-store, must-revalidate',
+                    Pragma: 'no-cache',
+                    Expires: '0',
+                },
+            }
+        );
     }
 }
