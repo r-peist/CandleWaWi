@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/Handler/handlerGetLieferanten.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/Handler/handlerGetLieferanten.js" afterDir="false" />
-    </list>
+    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,7 +39,7 @@
     "HTTP Request.suppliers | GET request to example server.executor": "Run",
     "HTTP Request.suppliers | POST request to send lieferantId.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging main",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "F:/1CandleWaWi/CandleWaWi",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -102,6 +100,7 @@
       <workItem from="1735151684873" duration="906000" />
       <workItem from="1735212140080" duration="131000" />
       <workItem from="1735220040068" duration="2952000" />
+      <workItem from="1735234219501" duration="89000" />
     </task>
     <servers />
   </component>

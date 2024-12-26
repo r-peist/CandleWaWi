@@ -1,5 +1,5 @@
 ### POST request to send lieferantId
-POST http://localhost:3000/api/suppliermaterials
+POST http://localhost:3001/getLieferantenFE
 Content-Type: application/json
 
 {
