@@ -12,14 +12,14 @@ provider:
 functions:
   #Einkauf trigger + Lieferanten anzeigen lassen
   getLieferanten:
-    handler: src/DBHandler/handlerGetLieferanten.getLieferanten
+    handler: src/Handler/handlerGetLieferanten.getLieferanten
     events:
       - http:
           path: getLieferanten
           method: get
 
   sendLieferanten:
-    handler: src/FrontendData/sendLieferanten.sendLieferanten
+    handler: src/responseSender/sendLieferanten.sendLieferanten
     events:
       - http:
           path: sendLieferanten
@@ -28,21 +28,21 @@ functions:
 
   #Ausgewählten Lieferanten an DB übergeben und Mats für diesen zurückschicken
   getLieferantFE:
-    handler: src/FrontendData/getLieferantFE.getLieferantFE
+    handler: src/Trigger/getLieferantFE.getLieferantFE
     events:
       - http:
           path: getLieferantenFE
           method: post
 
   getMatLief:
-    handler: src/DBHandler/handlerGetMatLief.getMatLief
+    handler: src/Handler/handlerGetMatLief.getMatLief
     events:
       - http:
           path: getMatLief
           method: post
 
   sendMatLief:
-    handler: src/FrontendData/sendMatLief.sendMatLief
+    handler: src/responseSender/sendMatLief.sendMatLief
     events:
       - http:
           path: sendMatLief

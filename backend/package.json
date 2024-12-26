@@ -22,7 +22,8 @@
   "dependencies": {
     "aws-sdk": "^2.1692.0",
     "dotenv": "^16.4.7",
-    "mysql2": "^3.11.5"
+    "mysql2": "^3.11.5",
+    "node-fetch": "^3.3.2"
   },
   "keywords": [],
   "author": "",
