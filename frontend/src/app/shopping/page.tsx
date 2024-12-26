@@ -16,56 +16,44 @@ async function fetchSuppliers() {
     }
 }
 
-
 const fetchMaterialsForSupplier = async (supplierId: number) => {
     try {
         console.log("LiefID = ", supplierId);
-        const response = await fetch('/api/suppliermaterials'
-            , {
+        const response = await fetch('/api/suppliermaterials', {
             method: 'POST',
-            //headers: {
-            //    'Content-Type': 'application/json',
-            //},
             body: JSON.stringify({ LiefID: supplierId }),
         });
         if (!response.ok) {
             throw new Error('Fehler beim Abrufen der Materialien');
         }
-        const data = await response.json();
-        return data; // Erwartet Materialliste
+        const { data } = await response.json(); // Extrahiert die relevanten Daten
+        return data; // Datenstruktur: [{ MatLiefID, MatID, LiefID, Link, MaterialName, LieferantName }]
     } catch (error) {
         console.error('Fehler beim Laden der Materialien:', error);
         return [];
     }
 };
 
-
-const fetchMaterialDetails = async (materialId: number) => {
-    try {
-        const response = await fetch('/api/materialDetails', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ materialId }),
-        });
-        if (!response.ok) throw new Error('Fehler beim Abrufen der Materialdetails');
-        const data = await response.json();
-        return data; // Enthält Details wie Beschreibung, Lieferant etc.
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
-
 const Home: NextPage = () => {
     const [suppliers, setSuppliers] = useState<{ LiefID: number; Name: string }[]>([]);
     const [selectedSupplier, setSelectedSupplier] = useState<number | null>(null);
-    const [materials, setMaterials] = useState<string[]>([]);
-    const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
-    const [materialDetails, setMaterialDetails] = useState<{ supplier: string; description: string } | null>(null);
+    const [materials, setMaterials] = useState<any[]>([]); // Array mit Material-Daten
     const [cart, setCart] = useState<{ material: string; link: string }[]>([]);
     const [order, setOrder] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+
+    const toggleCartItem = (material, link) => {
+        setCart((prevCart) => {
+            const exists = prevCart.find((item) => item.material === material);
+            if (exists) {
+                // Entferne Material, wenn es bereits im Warenkorb ist
+                return prevCart.filter((item) => item.material !== material);
+            } else {
+                // Füge Material hinzu, wenn es noch nicht im Warenkorb ist
+                return [...prevCart, { material, link }];
+            }
+        });
+    };
 
     // Lieferanten dynamisch laden
     useEffect(() => {
@@ -87,20 +75,7 @@ const Home: NextPage = () => {
         loadMaterials();
     }, [selectedSupplier]);
 
-    // Materialdetails dynamisch laden, wenn ein Material ausgewählt wird
-    useEffect(() => {
-        const loadMaterialDetails = async () => {
-            if (selectedMaterial) {
-                const details = await fetchMaterialDetails(selectedMaterial);
-                setMaterialDetails(details);
-            }
-        };
-        loadMaterialDetails();
-    }, [selectedMaterial]);
-
-    const addToCart = (material: string, link: string) => {
-        setCart((prevCart) => [...prevCart, { material, link }]);
-    };
+    const addToCart = (material, link) => toggleCartItem(material, link);
 
     const submitOrder = () => {
         if (cart.length === 0) {
@@ -129,14 +104,16 @@ const Home: NextPage = () => {
         const newOrder = createOrder(cart);
         setOrder(newOrder);
         setCart([]); // Clear the cart after order creation
+        setShowModal(false);
+        alert(`Bestellung ${newOrder.orderId} ausgeführt`);
     };
 
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <Head>
                 <title>Warenwirtschaft</title>
-                <meta name="description" content="Lieferanten und Materialien" />
-                <link rel="icon" href="/favicon.ico" />
+                <meta name="description" content="Lieferanten und Materialien"/>
+                <link rel="icon" href="/favicon.ico"/>
             </Head>
 
             <header className="mb-8">
@@ -150,81 +127,81 @@ const Home: NextPage = () => {
                         suppliers.map((supplier) => (
                             <li
                                 key={supplier.LiefID}
-                                className="p-4 bg-white shadow rounded cursor-pointer hover:bg-gray-200"
+                                className={`p-4 bg-white shadow-md rounded-lg cursor-pointer transform transition duration-200 ${
+                                    selectedSupplier === supplier.LiefID
+                                        ? "bg-blue-800 text-white hover:bg-blue-600"
+                                        : "hover:bg-gray-100"
+                                }`}
                                 onClick={async () => {
-                                    setSelectedSupplier(supplier.LiefID); // Lieferant speichern
-                                    const materialData = await fetchMaterialsForSupplier(supplier.LiefID);
-                                    setMaterials(materialData); // Materialien speichern
-                                    setSelectedMaterial(null); // Auswahl zurücksetzen
+                                    try {
+                                        setSelectedSupplier(supplier.LiefID); // Lieferant speichern
+                                        const materialData = await fetchMaterialsForSupplier(supplier.LiefID);
+                                        setMaterials(materialData); // Materialien speichern
+                                    } catch (error) {
+                                        console.error("Fehler beim Laden der Materialien:", error);
+                                    }
                                 }}
                             >
-                                {supplier.Name}
+                                <p className="text-center text-lg font-medium">{supplier.Name}</p>
                             </li>
                         ))
                     ) : (
-                        <li className="p-4 bg-white shadow rounded">Keine Lieferanten verfügbar</li>
+                        <li className="p-4 bg-white shadow-md rounded-lg text-center">Keine Lieferanten verfügbar</li>
                     )}
                 </ul>
             </section>
-
 
             {selectedSupplier !== null && (
                 <section>
                     <h2 className="text-2xl font-semibold mb-4">Materialien</h2>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {materials.length > 0 ? (
-                            materials.map((material, index) => (
-                                <li
-                                    key={index}
-                                    className="p-4 bg-white shadow rounded cursor-pointer hover:bg-gray-200"
-                                    onClick={() => setSelectedMaterial(material)}
-                                >
-                                    {material}
-                                </li>
-                            ))
+                            materials.map((material) => {
+                                const isInCart = cart.some((item) => item.material === material.MaterialName);
+
+                                return (
+                                    <li
+                                        key={material.MatLiefID}
+                                        className={`p-4 bg-white shadow-md rounded-lg cursor-pointer flex justify-between items-center transform transition duration-200 ${
+                                            isInCart ? "bg-green-200 border-2 border-green-500" : "hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        <div>
+                                            <p className="font-semibold text-lg">{material.MaterialName}</p>
+                                            <p className="text-sm text-gray-500">Lieferant: {material.LieferantName}</p>
+                                            <a
+                                                href={material.Link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 underline"
+                                            >
+                                                Link zum Material
+                                            </a>
+                                        </div>
+                                        <button
+                                            className={`px-4 py-2 rounded ${
+                                                isInCart
+                                                    ? "bg-red-500 text-white hover:bg-red-600"
+                                                    : "bg-blue-500 text-white hover:bg-blue-600"
+                                            }`}
+                                            onClick={() => toggleCartItem(material.MaterialName, material.Link)}
+                                        >
+                                            {isInCart ? "Entfernen" : "Hinzufügen"}
+                                        </button>
+                                    </li>
+                                );
+                            })
                         ) : (
-                            <li className="p-4 bg-white shadow rounded">Keine Materialien verfügbar</li>
+                            <li className="p-4 bg-white shadow-md rounded-lg text-center">Keine Materialien verfügbar</li>
                         )}
                     </ul>
                 </section>
             )}
 
-            {selectedMaterial && materialDetails && (
-                <section className="mt-8">
-                    <h2 className="text-2xl font-semibold mb-4">Details zu {selectedMaterial}</h2>
-                    <table className="table-auto w-full bg-white shadow rounded">
-                        <tbody>
-                        <tr className="border-b">
-                            <td className="p-4 font-semibold">Material</td>
-                            <td className="p-4">{selectedMaterial}</td>
-                        </tr>
-                        <tr className="border-b">
-                            <td className="p-4 font-semibold">Lieferant</td>
-                            <td className="p-4">{materialDetails.supplier}</td>
-                        </tr>
-                        <tr>
-                            <td className="p-4 font-semibold">Beschreibung</td>
-                            <td className="p-4">
-                                <a href={materialDetails.description} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
-                                    {materialDetails.description}
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button
-                        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                        onClick={() => addToCart(selectedMaterial, materialDetails.description)}
-                    >
-                        Zum Warenkorb hinzufügen
-                    </button>
-                </section>
-            )}
-
             {cart.length > 0 && (
-                <section className="mt-8">
+                <aside className="fixed right-0 top-0 h-full bg-white shadow-lg p-4 w-64">
                     <h2 className="text-2xl font-semibold mb-4">Warenkorb</h2>
-                    <ul className="bg-white shadow rounded p-4">
+                    <ul className="overflow-y-auto max-h-80">
                         {cart.map((item, index) => (
                             <li key={index} className="border-b last:border-0 p-4">
                                 <span className="font-semibold">{item.material}</span> -
@@ -236,11 +213,41 @@ const Home: NextPage = () => {
                     </ul>
                     <button
                         className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-                        onClick={submitOrder}
+                        onClick={() => setShowModal(true)}
                     >
-                        Bestellung abschicken
+                        Einkauf abschließen
                     </button>
-                </section>
+                </aside>
+            )}
+
+            {showModal && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
+                        <h2 className="text-2xl font-semibold mb-4">Bestellung überprüfen</h2>
+                        <ul className="bg-white shadow rounded p-4">
+                            {cart.map((item, index) => (
+                                <li key={index} className="border-b last:border-0 p-4">
+                                    <span className="font-semibold">{item.material}</span> -
+                                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                        {item.link}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                        <button
+                            className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                            onClick={submitOrder}
+                        >
+                            Einkauf in DB hinterlegen
+                        </button>
+                        <button
+                            className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                            onClick={() => setShowModal(false)}
+                        >
+                            Abbrechen
+                        </button>
+                    </div>
+                </div>
             )}
 
             {order && (
@@ -267,7 +274,7 @@ const Home: NextPage = () => {
                                     </a>
                                 </td>
                                 <td className="p-4">{item.quantity}</td>
-                                <td className="p-4">{item.comment || "Keine Kommentare"}</td>
+                                <td className="p-4">{item.comment || 'Keine Kommentare'}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -279,3 +286,4 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+

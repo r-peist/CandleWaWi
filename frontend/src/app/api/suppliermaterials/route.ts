@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/getLieferantenFE";
+        const backendApiUrl = "http://localhost:3001/getLieferantenFE"; // Backend-Endpoint
         const requestBody = await req.json();
         console.log("Empfangen wurde: ", requestBody);
 
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Cache-Control": "no-store", // Verhindert Caching auf Fetch-Ebene
+                "Cache-Control": "no-store", // Verhindert Fetch-Caching
             },
             body: JSON.stringify({ LiefID: requestBody.LiefID }),
             cache: "no-store", // Zusätzliche Fetch-Option
@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
 
         const data = await response.json();
 
-        // Extrahiere nur die relevanten Daten aus der Backend-Antwort
         return NextResponse.json(
             {
                 message: "Materialien erfolgreich abgerufen",
