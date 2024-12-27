@@ -18,7 +18,10 @@ export async function GET(req: NextRequest) {
             throw new Error(`Backend API Error: ${response.status}`);
         }
 
+        //Ausgeklammerte Logs waren für Prüfung der Doppelausführung durch UseEffect von React ~Richard
+        //console.log("Frontend: Anfrage an Backend wird gesendet.");
         const data = await response.json();
+        //console.log("Erhaltene Lieferanten: ", data);
 
         // Daten ohne Caching zurückgeben
         return NextResponse.json(data, {

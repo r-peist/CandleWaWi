@@ -5,7 +5,7 @@ const sendLieferanten = async (event) => {
     try {
         // JSON-Daten aus dem Request-Body lesen
         const { sendLieferanten } = JSON.parse(event.body || "{}");
-        //console.log("Empfangene Daten:", sendLieferanten);
+        //console.log("Empfangene Lieferanten :", sendLieferanten);
         // Daten direkt an das Frontend zurücksenden
         return {
             statusCode: 200,

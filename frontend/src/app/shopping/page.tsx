@@ -129,7 +129,7 @@ const Home: NextPage = () => {
                                 key={supplier.LiefID}
                                 className={`p-4 bg-white shadow-md rounded-lg cursor-pointer transform transition duration-200 ${
                                     selectedSupplier === supplier.LiefID
-                                        ? "bg-blue-800 text-white hover:bg-blue-600"
+                                        ? "bg-blue-500 text-white hover:bg-blue-600"
                                         : "hover:bg-gray-100"
                                 }`}
                                 onClick={async () => {
