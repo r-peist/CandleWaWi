@@ -70,6 +70,21 @@ functions:
           path: sendBestellung
           method: post
 
+  #Inventarabfrage
+  handlerInventar:
+    handler: src/Handler/handlerInventar.handlerInventar
+    events:
+      - http:
+          path: handlerInventar
+          method: get
+
+  sendInventar:
+    handler: src/responseSender/sendInventar.sendInventar
+    events:
+      - http:
+          path: sendInventar
+          method: post
+
 
   #Material des Lieferanten und Lieferant übergeben und
   #Mat, Lief und Link aus DB holen und zurücksenden
