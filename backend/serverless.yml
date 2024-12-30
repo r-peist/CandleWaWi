@@ -48,6 +48,29 @@ functions:
           path: sendMatLief
           method: post
 
+  #Bestellung speichern
+  getBestellung:
+    handler: src/Trigger/getBestellung.getBestellung
+    events:
+      - http:
+          path: getBestellung
+          method: post
+
+  handlerBestellung:
+    handler: src/Handler/handlerBestellung.handlerBestellung
+    events:
+      - http:
+          path: handlerBestellung
+          method: post
+
+  sendBestellung:
+    handler: src/responseSender/sendBestellung.sendBestellung
+    events:
+      - http:
+          path: sendBestellung
+          method: post
+
+
   #Material des Lieferanten und Lieferant übergeben und
   #Mat, Lief und Link aus DB holen und zurücksenden
 
