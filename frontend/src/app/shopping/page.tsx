@@ -2,7 +2,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
-import { FaShoppingCart } from "react-icons/fa";
+import {FaArrowLeft, FaShoppingCart} from "react-icons/fa";
+import { useRouter } from "next/navigation"; // Importiere useRouter für Navigation
 
 // Fetch-Funktionen für die API
 async function fetchSuppliers() {
@@ -44,6 +45,7 @@ const Home: NextPage = () => {
     const [showCartModal, setShowCartModal] = useState(false);
 
     const suppliersLoaded = useRef(false);
+    const router = useRouter(); // Router für Navigation
 
     const toggleCartItem = (material, link, supplier, MatID) => {
         setCart((prevCart) => {
@@ -95,7 +97,7 @@ const Home: NextPage = () => {
         loadMaterials();
     }, [selectedSupplier]);
 
-    const submitOrder = () => {
+    const submitOrder = async () => {
         if (cart.length === 0) {
             alert("Der Warenkorb ist leer!");
             return;
@@ -103,39 +105,68 @@ const Home: NextPage = () => {
 
         const orderData = {
             LiefID: selectedSupplier,
-            ...cart.reduce((acc, item, index) => {
-                acc[`Mat${index + 1}`] = {
-                    MatID: item.MatID,
-                    Menge: item.quantity,
-                };
-                return acc;
-            }, {}),
+            LagerID: 1, // Dummy-Wert, kann angepasst werden
+            Datum: new Date().toISOString().split("T")[0],
+            Materialien: cart.map((item) => ({
+                MatID: item.MatID,
+                Menge: item.quantity,
+            })),
         };
 
-        console.log("Bestellung wird abgeschickt:", orderData);
+        console.log("Bestellung wird vorbereitet:", orderData);
 
-        alert("Einkauf erfolgreich! Bestellung wurde gesendet.");
-        setCart([]);
-        setShowCartModal(false);
+        try {
+            const response = await fetch("/api/bestellung", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Fehler beim Abschicken der Bestellung.");
+            }
+
+            const data = await response.json();
+            console.log("Bestellung erfolgreich:", data);
+
+            alert("Einkauf erfolgreich! Bestellung wurde gesendet.");
+            setCart([]);
+            setShowCartModal(false);
+        } catch (error) {
+            console.error("Fehler beim Abschicken der Bestellung:", error);
+            alert("Fehler beim Abschicken der Bestellung. Bitte versuchen Sie es erneut.");
+        }
     };
 
     return (
         <div className="min-h-screen bg-gray-100 p-8 flex flex-col">
             <Head>
-                <title>Warenwirtschaft</title>
-                <meta name="description" content="Lieferanten und Materialien" />
-                <link rel="icon" href="/favicon.ico" />
+                <title>WaWi - GM - Einkauf</title>
+                <meta name="description" content="Lieferanten und Materialien"/>
+                <link rel="icon" href="/favicon.ico"/>
             </Head>
 
             <header className="mb-8 flex justify-between items-center">
-                <h1 className="text-3xl font-bold">Warenwirtschaftssoftware</h1>
+                <div className="flex items-center space-x-4">
+                    <button
+                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow flex items-center space-x-2"
+                        onClick={() => router.push("/")}
+                    >
+                        <FaArrowLeft size={16}/>
+                        <span>Zurück</span>
+                    </button>
+                    <h1 className="text-3xl font-bold">Warenwirtschaftssoftware</h1>
+                </div>
                 <div
                     className="relative cursor-pointer"
                     onClick={() => setShowCartModal(true)}
                 >
-                    <FaShoppingCart size={30} className="text-gray-700" />
+                    <FaShoppingCart size={30} className="text-gray-700"/>
                     {cart.length > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        <span
+                            className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                             {cart.length}
                         </span>
                     )}
@@ -151,7 +182,7 @@ const Home: NextPage = () => {
                                 key={supplier.LiefID}
                                 className={`p-4 bg-white shadow-md rounded-lg cursor-pointer transform transition duration-200 ${
                                     selectedSupplier === supplier.LiefID
-                                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                                        ? "text-blue-600 border-blue-600 border-2"
                                         : "hover:bg-gray-100"
                                 }`}
                                 onClick={async () => {
