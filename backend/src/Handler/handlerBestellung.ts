@@ -54,7 +54,7 @@ export const handlerBestellung = async (
 
     // Materialien in der Tabelle `MaterialBestellung` speichern
     const materialQuery = `
-        INSERT INTO MaterialBestellung (BestellID, MatID, Menge)
+        INSERT INTO materialbestellung (BestellID, MatID, Menge)
         VALUES (?, ?, ?)
     `;
 
