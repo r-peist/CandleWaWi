@@ -24,7 +24,10 @@
     "aws-sdk": "^2.1692.0",
     "dotenv": "^16.4.7",
     "mysql2": "^3.11.5",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "winston": "^3.17.0",
+    "winston-cloudwatch": "^6.3.0",
+    "zod": "^3.24.1"
   },
   "keywords": [],
   "author": "",
