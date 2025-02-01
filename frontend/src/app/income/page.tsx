@@ -127,7 +127,7 @@ const WorkflowPage = () => {
                     <span>Zurück</span>
                 </button>
                 <h1 className="text-3xl font-bold text-center flex-grow text-gray-800">
-                    Wareneingang Workflow
+                    Wareneingang
                 </h1>
             </header>
 
