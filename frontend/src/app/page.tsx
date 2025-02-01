@@ -17,42 +17,52 @@ const Home: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <main className="flex flex-col items-center justify-center w-full flex-1 px-4">
-          <h1 className="text-4xl font-bold mb-8">Willkommen zur Warenwirtschaftssoftware der Geruchsmanufaktur!</h1>
-          <div className="flex space-x-6">
-              <FeatureCard
-                  title="Wareneingang"
-                  description=""
-                  href="/income"
-                  icon={<FaTruckLoading size={40} />}
-              />
-            <FeatureCard
-                title="Einkauf"
-                description=""
-                href="/shopping"
-                icon={<FaShoppingCart size={40} />}
-            />
-            <FeatureCard
-                title="Inventar"
-                description=""
-                href="/inventory"
-                icon={<FaBoxes size={40} />}
-            />
-              <FeatureCard
-                  title="Herstellen"
-                  description=""
-                  href="/production"
-                  icon={<IoBuild  size={40} />}
-              />
-              <FeatureCard
-                  title="Verkauf"
-                  description=""
-                  href="/sale"
-                  icon={<MdSell size={40} />}
-              />
-          </div>
-        </main>
-          <Footer />
+          <main className="flex flex-col items-center justify-center w-full flex-1 px-4">
+              <h1 className="text-4xl font-bold mb-8">Willkommen zur Warenwirtschaftssoftware der
+                  Geruchsmanufaktur!</h1>
+              <div className="flex space-x-6">
+                  <FeatureCard
+                      title="Wareneingang"
+                      description=""
+                      href="/income"
+                      icon={<FaTruckLoading size={40}/>}
+                  />
+                  <FeatureCard
+                      title="Einkauf"
+                      description=""
+                      href="/shopping"
+                      icon={<FaShoppingCart size={40}/>}
+                  />
+                  <FeatureCard
+                      title="Inventar"
+                      description=""
+                      href="/inventory"
+                      icon={<FaBoxes size={40}/>}
+                  />
+                  <FeatureCard
+                      title="Herstellen"
+                      description=""
+                      href="/production"
+                      icon={<IoBuild size={40}/>}
+                  />
+                  <FeatureCard
+                      title="Verkauf"
+                      description=""
+                      href="/sale"
+                      icon={<MdSell size={40}/>}
+                  />
+              </div>
+              <div className="flex space-x-6 mt-8">
+                  <FeatureCard
+                      title="Chef"
+                      description=""
+                      href="/changes"
+                      icon={<IoBuild size={40}/>}
+                  />
+
+              </div>
+          </main>
+          <Footer/>
       </div>
   )
 }

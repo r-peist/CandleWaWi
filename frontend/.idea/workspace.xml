@@ -54,6 +54,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\1CandleWaWi\CandleWaWi\frontend\src\app\changes\changes3" />
+    </key>
+  </component>
   <component name="RunManager" selected="HTTP Request.Bestell | POST request to send getBestellung">
     <configuration name="All in Inventar" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/src/app/api/Inventar.http">
       <method v="2" />
@@ -108,7 +113,7 @@
       <workItem from="1735550431562" duration="2467000" />
       <workItem from="1735565317935" duration="44000" />
       <workItem from="1735565812289" duration="10000" />
-      <workItem from="1738427873773" duration="3916000" />
+      <workItem from="1738427873773" duration="8317000" />
     </task>
     <servers />
   </component>
