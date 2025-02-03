@@ -10,11 +10,12 @@ const dummyWarehouses = [
     { LagerID: 3, Name: "Messe" },
 ];
 
-// Dummy-Inventar-Daten (hier entspricht "id" auch der MatID)
+// Dummy-Inventar-Daten (hier entspricht "id" auch der MatID, und es wurde ein SKU-Feld ergänzt)
 const dummyInventory = [
     {
         id: 1,
         Material: "Wachs_Soja_40.000g",
+        SKU: "WAX-001-NAT",
         Kategorie: "Rohmaterial",
         MaterialKategorie: "Wachs",
         Lager: "Burgstraße",
@@ -25,6 +26,7 @@ const dummyInventory = [
     {
         id: 2,
         Material: "Glas_Braun_180ml",
+        SKU: "CON-001-GLASS-BROWN",
         Kategorie: "Verpackungsmat",
         MaterialKategorie: "Behältnis",
         Lager: "Keller",
@@ -52,10 +54,12 @@ const InventoryPage = () => {
     const [inventory, setInventory] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedItem, setSelectedItem] = useState(null);
+    // Erweiterter State inkl. SKU
     const [editData, setEditData] = useState({
         Menge: "",
         LagerID: "",
         Status: "true",
+        SKU: "",
     });
     // State für die m-m Zuordnungen (materiallieferant)
     const [materialSuppliers, setMaterialSuppliers] = useState([]);
@@ -82,8 +86,9 @@ const InventoryPage = () => {
             Menge: item.Menge,
             LagerID: item.LagerID,
             Status: item.Status,
+            SKU: item.SKU || "",
         });
-        // Beim Öffnen des Modals wird die Bearbeitung der Lieferantenassociation zurückgesetzt
+        // Zurücksetzen der Lieferantenassociation-Bearbeitung
         setSupplierEditData({
             editing: false,
             MatLiefID: null,
@@ -116,6 +121,7 @@ const InventoryPage = () => {
                                 (wh) => wh.LagerID === parseInt(editData.LagerID)
                             )?.Name || item.Lager,
                         Status: editData.Status,
+                        SKU: editData.SKU,
                     }
                     : item
             )
@@ -219,6 +225,7 @@ const InventoryPage = () => {
                     <thead>
                     <tr className="border-b bg-gray-200 text-gray-800">
                         <th className="p-4 text-left font-semibold">Material</th>
+                        <th className="p-4 text-left font-semibold">SKU</th>
                         <th className="p-4 text-left font-semibold">Kategorie</th>
                         <th className="p-4 text-left font-semibold">Material-Kategorie</th>
                         <th className="p-4 text-left font-semibold">Lager</th>
@@ -235,6 +242,7 @@ const InventoryPage = () => {
                                 onClick={() => openModal(item)}
                             >
                                 <td className="p-4">{item.Material}</td>
+                                <td className="p-4">{item.SKU}</td>
                                 <td className="p-4">{item.Kategorie}</td>
                                 <td className="p-4">{item.MaterialKategorie}</td>
                                 <td className="p-4">{item.Lager}</td>
@@ -252,7 +260,7 @@ const InventoryPage = () => {
                         ))
                     ) : (
                         <tr>
-                            <td className="p-4 text-center text-gray-600" colSpan="6">
+                            <td className="p-4 text-center text-gray-600" colSpan="7">
                                 Kein Material gefunden.
                             </td>
                         </tr>
@@ -261,7 +269,7 @@ const InventoryPage = () => {
                 </table>
             </section>
 
-            {/* Modal zum Bearbeiten eines Materials inklusive Lieferantenverwaltung */}
+            {/* Modal zum Bearbeiten eines Materials inklusive Lieferantenverwaltung und SKU */}
             {selectedItem && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -280,6 +288,18 @@ const InventoryPage = () => {
                         <h2 className="text-3xl font-semibold mb-6 text-gray-800">
                             {selectedItem.Material} bearbeiten
                         </h2>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">SKU</label>
+                            <input
+                                type="text"
+                                value={editData.SKU}
+                                onChange={(e) =>
+                                    setEditData({ ...editData, SKU: e.target.value })
+                                }
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
                         <div className="mb-4">
                             <label className="block text-gray-700">Menge</label>
                             <input

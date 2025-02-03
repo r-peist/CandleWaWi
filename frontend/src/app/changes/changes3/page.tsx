@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaSave, FaArrowLeft } from "react-icons/fa";
 
-// Dummy-Daten, die später von deinen echten API-Endpunkten ersetzt werden können
+// Dummy-Daten, die später von echten API-Endpunkten ersetzt werden können
 const dummyCategories = [
     { KatID: 1, Name: "Endprodukt" },
     { KatID: 4, Name: "Rohmaterial" },
@@ -56,16 +56,15 @@ const NewProductPage = () => {
         name: "",
         sku: "",
         category: "",
-        materialCategory: "",
+        materialCategory: "", // Hier entscheidet der Benutzer per Dropdown
         active: true,
         warehouse: "",
         quantity: 0,
         supplier: "",
         supplierLink: "",
-        productType: "", // z. B. "docht", "deckel", "behaelter"
     });
 
-    // Produktspezifische Zusatzfelder (für docht, deckel, behältnis)
+    // Produktspezifische Zusatzfelder
     const [extraDetails, setExtraDetails] = useState({
         // Für "docht"
         dochtLaenge: "",
@@ -73,14 +72,22 @@ const NewProductPage = () => {
         // Für "deckel"
         deckelFarbe: "",
         deckelMaterial: "",
+        deckelZusatzname: "",
         // Für "behältnis"
         behalterFarbe: "",
         behalterHoehe: "",
         behalterBreite: "",
         behalterFuellmenge: "",
+        behalterZusatzname: "", // Neu: Zusatzname für Behältnis
+        // Für "warnettikett"
+        warnettikettName: "",
+        warnettikettFarbe: "",
+        warnettikettHoehe: "",
+        warnettikettBreite: "",
+        warnettikettMaterial: "",
     });
 
-    // Simuliere API-Aufrufe mit Dummy-Daten (hier mit setTimeout)
+    // Simuliere API-Aufrufe (Dummy-Daten)
     useEffect(() => {
         setTimeout(() => {
             setCategories(dummyCategories);
@@ -90,7 +97,7 @@ const NewProductPage = () => {
         }, 500);
     }, []);
 
-    // Allgemeine Eingaben bearbeiten
+    // Allgemeine Eingabefelder bearbeiten
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setProductData((prev) => ({
@@ -108,38 +115,52 @@ const NewProductPage = () => {
         }));
     };
 
-    // Formular absenden (Payload zusammenstellen und simuliert absenden)
+    // Formular absenden – Payload zusammenstellen (Dummy-Log)
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         let payload = { ...productData };
 
-        // Produkttyp-spezifische Felder anhängen
-        if (productData.productType === "docht") {
+        // Hänge produktspezifische Felder an, basierend auf der gewählten Material-Kategorie
+        if (productData.materialCategory === "3") {
+            // Docht
             payload = {
                 ...payload,
                 laenge: extraDetails.dochtLaenge,
                 materialDetail: extraDetails.dochtMaterial,
             };
-        } else if (productData.productType === "deckel") {
+        } else if (productData.materialCategory === "11") {
+            // Deckel
             payload = {
                 ...payload,
                 farbe: extraDetails.deckelFarbe,
                 materialDetail: extraDetails.deckelMaterial,
+                zusatzname: extraDetails.deckelZusatzname,
             };
-        } else if (productData.productType === "behaelter") {
+        } else if (productData.materialCategory === "4") {
+            // Behältnis
             payload = {
                 ...payload,
                 farbe: extraDetails.behalterFarbe,
                 hoehe: extraDetails.behalterHoehe,
                 breite: extraDetails.behalterBreite,
                 fuellmenge: extraDetails.behalterFuellmenge,
+                zusatzname: extraDetails.behalterZusatzname, // Zusatzname für Behältnis
+            };
+        } else if (productData.materialCategory === "12") {
+            // WarnEtikett
+            payload = {
+                ...payload,
+                warnettikettName: extraDetails.warnettikettName,
+                warnettikettFarbe: extraDetails.warnettikettFarbe,
+                warnettikettHoehe: extraDetails.warnettikettHoehe,
+                warnettikettBreite: extraDetails.warnettikettBreite,
+                warnettikettMaterial: extraDetails.warnettikettMaterial,
             };
         }
 
-        // Hier könntest du nun einen POST-Request an dein Backend schicken.
-        // Zum Simulieren loggen wir den Payload und navigieren zurück.
         console.log("New Product Payload:", payload);
+        // Später POST-Request an /api/material (oder /api/recipes, falls Rezeptanlage)
         router.push("/changes");
     };
 
@@ -236,7 +257,7 @@ const NewProductPage = () => {
                 </div>
 
                 {/* Lager & Lieferant */}
-                <h2 className="text-2xl font-semibold my-4">Lager &amp; Lieferant</h2>
+                <h2 className="text-2xl font-semibold my-4">Lager & Lieferant</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-gray-700">Lagerort</label>
@@ -296,28 +317,9 @@ const NewProductPage = () => {
                     </div>
                 </div>
 
-                {/* Produkttyp-spezifische Details */}
-                <h2 className="text-2xl font-semibold my-4">
-                    Produkttyp-spezifische Details
-                </h2>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Produkttyp auswählen</label>
-                    <select
-                        name="productType"
-                        value={productData.productType}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    >
-                        <option value="">-- Auswahl --</option>
-                        <option value="none">Kein spezieller Typ</option>
-                        <option value="docht">Docht</option>
-                        <option value="deckel">Deckel</option>
-                        <option value="behaelter">Behältnis</option>
-                    </select>
-                </div>
-
-                {productData.productType === "docht" && (
+                {/* Zusätzliche Felder je nach gewählter Material-Kategorie */}
+                {productData.materialCategory === "3" && (
+                    // Docht
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label className="block text-gray-700">Docht Länge</label>
@@ -344,7 +346,8 @@ const NewProductPage = () => {
                     </div>
                 )}
 
-                {productData.productType === "deckel" && (
+                {productData.materialCategory === "11" && (
+                    // Deckel
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label className="block text-gray-700">Deckel Farbe</label>
@@ -368,10 +371,21 @@ const NewProductPage = () => {
                                 required
                             />
                         </div>
+                        <div className="md:col-span-2">
+                            <label className="block text-gray-700">Zusatzname (optional)</label>
+                            <input
+                                type="text"
+                                name="deckelZusatzname"
+                                value={extraDetails.deckelZusatzname || ""}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
                     </div>
                 )}
 
-                {productData.productType === "behaelter" && (
+                {productData.materialCategory === "4" && (
+                    // Behältnis
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label className="block text-gray-700">Behälter Farbe</label>
@@ -407,11 +421,82 @@ const NewProductPage = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-gray-700">Füllmenge</label>
+                            <label className="block text-gray-700">Füllmenge (ml)</label>
                             <input
                                 type="number"
                                 name="behalterFuellmenge"
                                 value={extraDetails.behalterFuellmenge}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+                        <div className="md:col-span-2">
+                            <label className="block text-gray-700">Zusatzname (optional)</label>
+                            <input
+                                type="text"
+                                name="behalterZusatzname"
+                                value={extraDetails.behalterZusatzname || ""}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {productData.materialCategory === "12" && (
+                    // WarnEtikett
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label className="block text-gray-700">Warnettikett Name</label>
+                            <input
+                                type="text"
+                                name="warnettikettName"
+                                value={extraDetails.warnettikettName}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700">Warnettikett Farbe</label>
+                            <input
+                                type="text"
+                                name="warnettikettFarbe"
+                                value={extraDetails.warnettikettFarbe}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700">Höhe</label>
+                            <input
+                                type="number"
+                                name="warnettikettHoehe"
+                                value={extraDetails.warnettikettHoehe}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700">Breite</label>
+                            <input
+                                type="number"
+                                name="warnettikettBreite"
+                                value={extraDetails.warnettikettBreite}
+                                onChange={handleExtraChange}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+                        <div className="md:col-span-2">
+                            <label className="block text-gray-700">Material</label>
+                            <input
+                                type="text"
+                                name="warnettikettMaterial"
+                                value={extraDetails.warnettikettMaterial}
                                 onChange={handleExtraChange}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
