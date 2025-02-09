@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlerInventar = void 0;
 const dbclient_1 = require("../db/dbclient"); // Importiere den DB-Wrapper
 const node_fetch_1 = __importDefault(require("node-fetch")); // Für HTTP Aufruf
+const validizeInventar_1 = require("../validizer/functions/validizeInventar");
 const handlerInventar = async (event) => {
+    const requestBody = event.body ? JSON.parse(event.body) : {};
     let connection;
     const inventar = [];
     try {
@@ -92,14 +94,16 @@ const handlerInventar = async (event) => {
                 Status: active
             });
         }
-        console.log(inventar);
+        const inventarObject = { Inventar: inventar };
+        console.log("handlerInventory JSON: ", inventarObject);
+        const validData = (0, validizeInventar_1.validateInventar)(inventarObject);
         // HTTP-Post-Aufruf mit node-fetch
         const response = await (0, node_fetch_1.default)("http://localhost:3001/sendInventar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ inventar: inventar }),
+            body: JSON.stringify(validData),
         });
         if (!response.ok) {
             throw new Error(`HTTP-Fehler: ${response.status}`);
@@ -109,7 +113,7 @@ const handlerInventar = async (event) => {
         return {
             statusCode: 200,
             body: JSON.stringify({
-                message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
+                message: "Datenbank-Abfrage des Inventars an sendInventory geschickt.",
                 data: rows,
                 response: responseBody,
             }),
@@ -117,11 +121,11 @@ const handlerInventar = async (event) => {
     }
     catch (error) {
         if (error instanceof Error) {
-            console.error("Datenbankfehler Lieferanten:", error.message);
+            console.error("Fehler bei Sendung des Inventars an sendInventory:", error.message);
             return {
                 statusCode: 500,
                 body: JSON.stringify({
-                    message: "Fehler bei der Datenbankabfrage mit Error Typpiesierung",
+                    message: "Fehler bei Sendung des Inventars an sendInventory mit Error Typpiesierung",
                     error: error.message,
                 }),
             };
@@ -131,8 +135,8 @@ const handlerInventar = async (event) => {
             return {
                 statusCode: 500,
                 body: JSON.stringify({
-                    message: "Fehler bei der Datenbankabfrage ohne Error Typpiesierung",
-                    error: "Ein unbekannter Fehler ist aufgetreten.",
+                    message: "Fehler bei Sendung des Inventars an sendInventory ohne Error Typpiesierung",
+                    error: "Ein unbekannter Fehler ist aufgetreten bei Sendung des Inventars an sendInventory.",
                 }),
             };
         }

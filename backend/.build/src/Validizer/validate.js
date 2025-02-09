@@ -35,7 +35,7 @@ const validate = (schema, handler) => {
             }
             console.error("Validation or Execution Error:", error);
             return {
-                statusCode: 500,
+                statusCode: 400,
                 body: JSON.stringify({ error: "Internal Server Error" }),
             };
         }

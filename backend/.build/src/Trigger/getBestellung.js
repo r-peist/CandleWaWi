@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBestellung = void 0;
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const validate_1 = require("../validizer/validate");
-const schemaBestellung_1 = require("../validizer/schemaBestellung");
+const schemaBestellung_1 = require("../validizer/schemata/schemaBestellung");
 const Errors = __importStar(require("../error/errors"));
 const logger_1 = __importDefault(require("../utils/logger"));
 const processBestellung = async (event) => {

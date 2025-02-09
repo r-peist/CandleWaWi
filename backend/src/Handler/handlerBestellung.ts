@@ -7,7 +7,7 @@ export const handlerBestellung = async (
 ): Promise<APIGatewayProxyResult> => {
 
     let connection;
-
+    
   try {
     // Überprüfen, ob der Body korrekt ist
     const body = JSON.parse(event.body || "{}");

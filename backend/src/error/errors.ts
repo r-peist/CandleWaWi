@@ -10,6 +10,14 @@ export class CustomError extends Error {
     }
 }
 
+// 500 - Datenbankfehler
+export class DatabaseError extends CustomError {
+    constructor(message: string, details?: any) {
+        super(message, 500, details);
+    }
+}
+
+
 // Fehler für Validierungsprobleme
 export class ValidationError extends CustomError {
     constructor(message: string, details?: any) {

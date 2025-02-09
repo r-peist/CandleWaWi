@@ -1,10 +1,14 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { closePool, getConnection } from "../db/dbclient"; // Importiere den DB-Wrapper
 import fetch from "node-fetch"; // Für HTTP Aufruf
+import { validateInventar } from "../validizer/functions/validizeInventar"
 
 export const handlerInventar = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
+
+  const requestBody = event.body ? JSON.parse(event.body) : {};
+
   let connection;
 
   const inventar: Array<{
@@ -117,7 +121,10 @@ export const handlerInventar = async (
         })
     }
 
-    console.log(inventar);
+    const inventarObject = {Inventar: inventar};
+    console.log("handlerInventory JSON: ", inventarObject);
+
+    const validData = validateInventar(inventarObject);
 
     // HTTP-Post-Aufruf mit node-fetch
     const response = await fetch("http://localhost:3001/sendInventar", {
@@ -125,7 +132,7 @@ export const handlerInventar = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ inventar: inventar }),
+      body: JSON.stringify( validData ),
     });
 
     if (!response.ok) {
@@ -138,19 +145,19 @@ export const handlerInventar = async (
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
+        message: "Datenbank-Abfrage des Inventars an sendInventory geschickt.",
         data: rows,
         response: responseBody,
       }),
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Datenbankfehler Lieferanten:", error.message);
+      console.error("Fehler bei Sendung des Inventars an sendInventory:", error.message);
 
       return {
         statusCode: 500,
         body: JSON.stringify({
-          message: "Fehler bei der Datenbankabfrage mit Error Typpiesierung",
+          message: "Fehler bei Sendung des Inventars an sendInventory mit Error Typpiesierung",
           error: error.message,
         }),
       };
@@ -160,8 +167,8 @@ export const handlerInventar = async (
       return {
         statusCode: 500,
         body: JSON.stringify({
-          message: "Fehler bei der Datenbankabfrage ohne Error Typpiesierung",
-          error: "Ein unbekannter Fehler ist aufgetreten.",
+          message: "Fehler bei Sendung des Inventars an sendInventory ohne Error Typpiesierung",
+          error: "Ein unbekannter Fehler ist aufgetreten bei Sendung des Inventars an sendInventory.",
         }),
       };
     }

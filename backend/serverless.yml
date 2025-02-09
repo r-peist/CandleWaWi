@@ -78,6 +78,13 @@ functions:
           path: handlerInventar
           method: get
 
+  validizeInventar:
+    handler: src/validizer/functions/validizeInventar.validateInventar
+    events:
+      - http:
+          path: validizeInventar
+          method: post
+
   sendInventar:
     handler: src/responseSender/sendInventar.sendInventar
     events:

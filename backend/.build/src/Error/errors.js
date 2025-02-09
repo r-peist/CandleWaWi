@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NotImplementedError = exports.GatewayTimeoutError = exports.ServiceUnavailableError = exports.BadGatewayError = exports.InternalServerError = exports.UnprocessableEntityError = exports.TooManyRequestsError = exports.NotFoundError = exports.ForbiddenError = exports.UnauthorizedError = exports.ValidationError = exports.CustomError = void 0;
+exports.NotImplementedError = exports.GatewayTimeoutError = exports.ServiceUnavailableError = exports.BadGatewayError = exports.InternalServerError = exports.UnprocessableEntityError = exports.TooManyRequestsError = exports.NotFoundError = exports.ForbiddenError = exports.UnauthorizedError = exports.ValidationError = exports.DatabaseError = exports.CustomError = void 0;
 class CustomError extends Error {
     constructor(message, statusCode, details) {
         super(message);
@@ -10,6 +10,13 @@ class CustomError extends Error {
     }
 }
 exports.CustomError = CustomError;
+// 500 - Datenbankfehler
+class DatabaseError extends CustomError {
+    constructor(message, details) {
+        super(message, 500, details);
+    }
+}
+exports.DatabaseError = DatabaseError;
 // Fehler für Validierungsprobleme
 class ValidationError extends CustomError {
     constructor(message, details) {

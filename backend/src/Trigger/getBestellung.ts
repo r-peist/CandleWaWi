@@ -1,7 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import fetch from "node-fetch";
 import { validate } from "../validizer/validate";
-import { BestellungSchema } from "../validizer/schemaBestellung";
+import { BestellungSchema } from "../validizer/schemata/schemaBestellung";
 import * as Errors from "../error/errors";
 import { z } from "zod";
 import logger from "../utils/logger";
