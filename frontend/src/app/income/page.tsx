@@ -3,11 +3,24 @@ import { useState, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation"; // Importiere useRouter
 
-// Dummy-API-Funktionen
+// Dummy-API-Funktionen (hier mit Status-Feld)
 const fetchOpenOrders = async () => {
     return [
-        { orderId: 1, items: [{ MatID: 1, Material: "Material A", Menge: 10 }] },
-        { orderId: 2, items: [{ MatID: 2, Material: "Material B", Menge: 5 }] },
+        {
+            orderId: 1,
+            status: "in_pruefung",
+            items: [{ MatID: 1, Material: "Material A", Menge: 10 }],
+        },
+        {
+            orderId: 2,
+            status: "open",
+            items: [{ MatID: 2, Material: "Material B", Menge: 5 }],
+        },
+        {
+            orderId: 3,
+            status: "open",
+            items: [{ MatID: 3, Material: "Material C", Menge: 8 }],
+        },
     ];
 };
 
@@ -27,12 +40,12 @@ const updateOrderStatus = async (orderId, status) => {
 };
 
 const WorkflowPage = () => {
-    const [step, setStep] = useState(1); // Workflow-Schritte
-    const [openOrders, setOpenOrders] = useState([]); // Offene Bestellungen
-    const [selectedOrder, setSelectedOrder] = useState(null); // Ausgewählte Bestellung
-    const [comment, setComment] = useState(""); // Kommentar
-    const [adjustedItems, setAdjustedItems] = useState([]); // Angepasste Artikel
-    const router = useRouter(); // Router für Navigation
+    const [step, setStep] = useState(1); // 1: Übersicht, 2: Korrektur
+    const [openOrders, setOpenOrders] = useState([]); // Alle Bestellungen
+    const [selectedOrder, setSelectedOrder] = useState(null); // Bestellung, die korrigiert werden soll
+    const [comment, setComment] = useState(""); // Kommentar für Korrektur
+    const [adjustedItems, setAdjustedItems] = useState([]); // Angepasste Artikel (neue Mengen)
+    const router = useRouter();
 
     useEffect(() => {
         loadOpenOrders();
@@ -43,12 +56,47 @@ const WorkflowPage = () => {
         setOpenOrders(orders);
     };
 
-    const handleSelectOrder = (order) => {
-        setSelectedOrder(order);
-        setAdjustedItems(order.items.map((item) => ({ ...item, adjustedQuantity: item.Menge })));
-        setStep(2);
+    // Unterteile die Bestellungen in zwei Gruppen:
+    const infoOrders = openOrders.filter(
+        (order) => order.status === "in_pruefung"
+    );
+    const actionableOrders = openOrders.filter(
+        (order) => order.status !== "in_pruefung"
+    );
+
+    // Aktion: Bestellung buchen
+    const handleBookOrder = async (order) => {
+        if (window.confirm("Bist du dir sicher, dass du die Bestellung buchen willst?")) {
+            const response = await updateOrderStatus(order.orderId, "closed");
+            if (response.success) {
+                alert(`Bestellung ${order.orderId} wurde gebucht!`);
+                await loadOpenOrders();
+            } else {
+                alert("Fehler beim Buchen der Bestellung.");
+            }
+        }
     };
 
+    // Aktion: Fehlerhaft – Bestellung als fehlerhaft markieren und Korrektur starten
+    const handleMarkFaulty = async (order) => {
+        if (window.confirm("Bist du dir sicher, dass du die Bestellung als fehlerhaft markieren willst?")) {
+            const response = await updateOrderStatus(order.orderId, "in_pruefung");
+            if (response.success) {
+                setSelectedOrder(order);
+                setAdjustedItems(
+                    order.items.map((item) => ({
+                        ...item,
+                        adjustedQuantity: item.Menge,
+                    }))
+                );
+                setStep(2);
+            } else {
+                alert("Fehler beim Markieren der Bestellung als fehlerhaft.");
+            }
+        }
+    };
+
+    // In Schritt 2: Menge anpassen
     const handleAdjustQuantity = (matId, newQuantity) => {
         setAdjustedItems((prevItems) =>
             prevItems.map((item) =>
@@ -59,54 +107,33 @@ const WorkflowPage = () => {
         );
     };
 
+    // In Schritt 2: Korrektur abschließen
     const handleNextStep = async () => {
-        if (step === 2) {
-            if (
-                !adjustedItems.some((item) => item.adjustedQuantity !== item.Menge) &&
-                !comment
-            ) {
-                const response = await updateOrderStatus(selectedOrder.orderId, "closed");
-                if (!response.success) {
-                    alert("Fehler beim Aktualisieren der Bestellung.");
-                    return;
-                }
-                alert("Bestellung erfolgreich abgeschlossen!");
-                setStep(1);
-                setSelectedOrder(null);
-                await loadOpenOrders(); // Aktualisiere die offene Bestellliste
-                return;
-            }
-
-            if (!comment) {
-                alert("Bitte schreiben Sie einen Kommentar für die Anpassungen.");
-                return;
-            }
-
-            const commentResponse = await submitComment(selectedOrder.orderId, comment);
-            if (!commentResponse.success) {
-                alert("Fehler beim Speichern des Kommentars.");
-                return;
-            }
+        if (!comment) {
+            alert("Bitte geben Sie einen Kommentar zur Korrektur ein.");
+            return;
         }
-
-        if (step === 3) {
-            const inventoryResponse = await updateInventory(selectedOrder.orderId);
-            if (!inventoryResponse.success) {
-                alert("Fehler beim Aktualisieren des Lagerbestands.");
-                return;
-            }
-
-            const orderResponse = await updateOrderStatus(selectedOrder.orderId, "closed");
-            if (!orderResponse.success) {
-                alert("Fehler beim Abschließen der Bestellung.");
-                return;
-            }
-
-            alert("Bestellung erfolgreich abgeschlossen und Lagerbestand aktualisiert!");
-            setStep(1);
-            setSelectedOrder(null);
-            await loadOpenOrders(); // Aktualisiere die offene Bestellliste
+        const commentResponse = await submitComment(selectedOrder.orderId, comment);
+        if (!commentResponse.success) {
+            alert("Fehler beim Speichern des Kommentars.");
+            return;
         }
+        const inventoryResponse = await updateInventory(selectedOrder.orderId);
+        if (!inventoryResponse.success) {
+            alert("Fehler beim Aktualisieren des Lagerbestands.");
+            return;
+        }
+        const orderResponse = await updateOrderStatus(selectedOrder.orderId, "closed");
+        if (!orderResponse.success) {
+            alert("Fehler beim Abschließen der Bestellung.");
+            return;
+        }
+        alert("Bestellung erfolgreich abgeschlossen und Lagerbestand aktualisiert!");
+        setStep(1);
+        setSelectedOrder(null);
+        setComment("");
+        setAdjustedItems([]);
+        await loadOpenOrders();
     };
 
     const handleCancel = () => {
@@ -131,20 +158,22 @@ const WorkflowPage = () => {
                 </h1>
             </header>
 
-            <div className="bg-white shadow-md rounded-lg p-6 max-w-2xl mx-auto">
-                {step === 1 && (
-                    <div>
+            <div className="max-w-3xl mx-auto space-y-8">
+                {/* Bereich: Inventarkorrektur (nur Info) */}
+                {infoOrders.length > 0 && (
+                    <div className="bg-gray-200 p-4 rounded-lg">
                         <h2 className="text-2xl font-semibold mb-4 text-center">
-                            Offene Bestellungen
+                            Inventarkorrektur (nur Info)
                         </h2>
                         <ul className="space-y-4">
-                            {openOrders.map((order) => (
+                            {infoOrders.map((order) => (
                                 <li
                                     key={order.orderId}
-                                    className="p-4 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 cursor-pointer"
-                                    onClick={() => handleSelectOrder(order)}
+                                    className="p-4 bg-gray-100 rounded-lg shadow-md"
                                 >
-                                    <p className="font-semibold">Bestell-ID: {order.orderId}</p>
+                                    <p className="font-semibold">
+                                        Bestell-ID: {order.orderId} (Status: {order.status})
+                                    </p>
                                     <ul className="mt-2">
                                         {order.items.map((item) => (
                                             <li key={item.MatID} className="text-sm">
@@ -158,14 +187,62 @@ const WorkflowPage = () => {
                     </div>
                 )}
 
-                {step === 2 && selectedOrder && (
-                    <div>
+                {/* Bereich: Offene Bestellungen */}
+                {actionableOrders.length > 0 && (
+                    <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-2xl font-semibold mb-4 text-center">
-                            Bestand prüfen und anpassen
+                            Offene Bestellungen
+                        </h2>
+                        <ul className="space-y-4">
+                            {actionableOrders.map((order) => (
+                                <li
+                                    key={order.orderId}
+                                    className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col gap-2"
+                                >
+                                    <div>
+                                        <p className="font-semibold">
+                                            Bestell-ID: {order.orderId} (Status: {order.status})
+                                        </p>
+                                        <ul className="mt-1 text-sm text-gray-700">
+                                            {order.items.map((item) => (
+                                                <li key={item.MatID}>
+                                                    {item.Material} - {item.Menge} Stück
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="flex justify-end gap-4">
+                                        <button
+                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                            onClick={() => handleBookOrder(order)}
+                                        >
+                                            Bestellung buchen
+                                        </button>
+                                        <button
+                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                            onClick={() => handleMarkFaulty(order)}
+                                        >
+                                            Fehlerhaft
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
+                {/* Schritt 2: Inventarkorrektur */}
+                {step === 2 && selectedOrder && (
+                    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                            Inventarkorrektur für Bestellung {selectedOrder.orderId}
                         </h2>
                         <ul className="divide-y divide-gray-300">
                             {adjustedItems.map((item) => (
-                                <li key={item.MatID} className="flex justify-between items-center py-4">
+                                <li
+                                    key={item.MatID}
+                                    className="flex justify-between items-center py-4"
+                                >
                                     <div>
                                         <p className="font-semibold">{item.Material}</p>
                                         <p className="text-sm text-gray-600">
@@ -177,7 +254,10 @@ const WorkflowPage = () => {
                                         className="w-24 border rounded px-2 py-1"
                                         value={item.adjustedQuantity}
                                         onChange={(e) =>
-                                            handleAdjustQuantity(item.MatID, parseInt(e.target.value, 10))
+                                            handleAdjustQuantity(
+                                                item.MatID,
+                                                parseInt(e.target.value, 10)
+                                            )
                                         }
                                     />
                                 </li>
@@ -185,34 +265,11 @@ const WorkflowPage = () => {
                         </ul>
                         <textarea
                             className="w-full mt-4 px-4 py-2 border rounded-lg"
-                            placeholder="Kommentar für Änderungen..."
+                            placeholder="Kommentar für Korrektur..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                         />
                         <div className="mt-4 flex justify-between">
-                            <button
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
-                                onClick={handleCancel}
-                            >
-                                Abbrechen
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                onClick={handleNextStep}
-                            >
-                                Weiter
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {step === 3 && selectedOrder && (
-                    <div className="text-center">
-                        <h2 className="text-2xl font-semibold mb-4">Inventarkorrektur abschließen</h2>
-                        <p className="mb-6 text-gray-600">
-                            Bestätigung, dass alle Anpassungen vorgenommen wurden.
-                        </p>
-                        <div className="flex justify-between">
                             <button
                                 className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
                                 onClick={handleCancel}
