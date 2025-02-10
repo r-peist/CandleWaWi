@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `bestellung` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 REPLACE INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`, `status`, `Kommentar`) VALUES
-	(1, 1, 1, '2024-02-12', 'in_pruefung'),
+	(1, 1, 1, '2024-02-12', 'pruefung'),
 	(2, 1, 1, '2024-04-22', 'offen'),
 	(3, 1, 1, '2024-09-11', 'abgeschlossen'),
 	(4, 3, 1, '2024-12-02', 'abgelehnt');
