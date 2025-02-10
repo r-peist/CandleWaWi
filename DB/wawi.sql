@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `bestellung` (
   `LiefID` int(11) NOT NULL,
   `LagerID` int(11) NOT NULL,
   `Bestelldatum` date NOT NULL,
-  `status` ENUM('offen', 'in_pruefung', 'abgeschlossen', 'abgelehnt') NOT NULL DEFAULT 'offen',
+  `status` ENUM('offen', 'pruefung', 'abgeschlossen') NOT NULL DEFAULT 'offen',
   PRIMARY KEY (`BestellID`),
   KEY `Bestellung_LiefID` (`LiefID`),
   KEY `Bestellung_LagerID` (`LagerID`),
