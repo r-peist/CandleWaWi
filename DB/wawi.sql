@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS `bestellung` (
   `LagerID` int(11) NOT NULL,
   `Bestelldatum` date NOT NULL,
   `status` ENUM('offen', 'in_pruefung', 'abgeschlossen', 'abgelehnt') NOT NULL DEFAULT 'offen',
-  `Kommentar` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`BestellID`),
   KEY `Bestellung_LiefID` (`LiefID`),
   KEY `Bestellung_LagerID` (`LagerID`),
@@ -59,10 +58,10 @@ CREATE TABLE IF NOT EXISTS `bestellung` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 REPLACE INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`, `status`, `Kommentar`) VALUES
-	(1, 1, 1, '2024-02-12', 'in_pruefung', 'Fehlt 1, es waren 3 bestellt'),
-	(2, 1, 1, '2024-04-22', 'offen', NULL),
-	(3, 1, 1, '2024-09-11', 'abgeschlossen', NULL),
-	(4, 3, 1, '2024-12-02', 'abgelehnt', NULL);
+	(1, 1, 1, '2024-02-12', 'in_pruefung'),
+	(2, 1, 1, '2024-04-22', 'offen'),
+	(3, 1, 1, '2024-09-11', 'abgeschlossen'),
+	(4, 3, 1, '2024-12-02', 'abgelehnt');
 
 -- --------------------------------------------------------
 -- Tabelle: deckel
@@ -218,9 +217,7 @@ CREATE TABLE IF NOT EXISTS `materialbestellung` (
   `MatBestID` int(11) NOT NULL AUTO_INCREMENT,
   `BestellID` int(11) NOT NULL,
   `MatID` int(11) NOT NULL,
-  `urspruengliche_menge` int(11) NOT NULL,
-  `angenommene_menge` int(11) DEFAULT NULL,
-  `Kommentar` varchar(150) DEFAULT NULL,
+  `Menge` int(11) NOT NULL,
   PRIMARY KEY (`MatBestID`),
   KEY `MatBestell_BestellID` (`BestellID`),
   KEY `MatBestell_MatID` (`MatID`),
@@ -229,9 +226,9 @@ CREATE TABLE IF NOT EXISTS `materialbestellung` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 REPLACE INTO `materialbestellung` (`MatBestID`, `BestellID`, `MatID`, `urspruengliche_menge`, `angenommene_menge`, `Kommentar`) VALUES
-	(1, 1, 1, 3, 2, 'Fehlt 1, es waren 3 bestellt'),
-	(2, 1, 3, 42, 42, NULL),
-	(3, 1, 6, 42, 42, NULL);
+	(1, 1, 1, 3),
+	(2, 1, 3, 42),
+	(3, 1, 6, 42);
 
 -- --------------------------------------------------------
 -- Tabelle: materialkategorie
