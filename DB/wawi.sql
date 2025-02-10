@@ -57,11 +57,11 @@ CREATE TABLE IF NOT EXISTS `bestellung` (
   CONSTRAINT `Bestellung_LiefID` FOREIGN KEY (`LiefID`) REFERENCES `lieferant` (`LiefID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
-REPLACE INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`, `status`, `Kommentar`) VALUES
+REPLACE INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`, `status`) VALUES
 	(1, 1, 1, '2024-02-12', 'pruefung'),
 	(2, 1, 1, '2024-04-22', 'offen'),
 	(3, 1, 1, '2024-09-11', 'abgeschlossen'),
-	(4, 3, 1, '2024-12-02', 'abgelehnt');
+	(4, 3, 1, '2024-12-02', 'offen');
 
 -- --------------------------------------------------------
 -- Tabelle: deckel
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `materialbestellung` (
   CONSTRAINT `MatBestell_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
-REPLACE INTO `materialbestellung` (`MatBestID`, `BestellID`, `MatID`, `urspruengliche_menge`, `angenommene_menge`, `Kommentar`) VALUES
+REPLACE INTO `materialbestellung` (`MatBestID`, `BestellID`, `MatID`, `Menge`) VALUES
 	(1, 1, 1, 3),
 	(2, 1, 3, 42),
 	(3, 1, 6, 42);
