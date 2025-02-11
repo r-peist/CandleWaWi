@@ -1,0 +1,7 @@
+{
+    "Lieferanten": [
+      { "LiefID": 1, "Name": "Amazon" },
+      { "LiefID": 2, "Name": "Destrebution" },
+      { "LiefID": 3, "Name": "ExternerLadeneinkauf" }
+    ]
+  }

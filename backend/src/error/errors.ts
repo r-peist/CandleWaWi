@@ -1,3 +1,8 @@
+interface ErrorResponse {
+    statusCode: number;
+    body: string;
+}
+
 export class CustomError extends Error {
     public statusCode: number;
     public details?: any;
@@ -96,3 +101,51 @@ export class NotImplementedError extends CustomError {
         super(message, 501, details);
     }
 }
+
+// Mapping von Fehlernamen zu aussagekräftigen Log-Meldungen
+const errorLabels: Record<string, string> = {
+    DatabaseError: 'Datenbankfehler',
+    ValidationError: 'Validierungsfehler',
+    UnauthorizedError: 'Autorisierungsfehler',
+    ForbiddenError: 'Zugriffsfehler',
+    NotFoundError: 'Nicht gefunden',
+    TooManyRequestsError: 'Zu viele Anfragen',
+    UnprocessableEntityError: 'Nicht verarbeitbare Entität',
+    InternalServerError: 'Interner Serverfehler',
+    BadGatewayError: 'Bad Gateway',
+    ServiceUnavailableError: 'Dienst nicht verfügbar',
+    GatewayTimeoutError: 'Gateway Timeout',
+    NotImplementedError: 'Nicht implementiert',
+  };
+  
+  export function handleError(error: unknown, source?: string): ErrorResponse {
+    // Erstelle einen Zusatztext, falls ein Source-Name angegeben wurde.
+    const sourceInfo = source ? ` (Quelle: ${source})` : '';
+  
+    // Wenn der Fehler eine Instanz unserer benutzerdefinierten Fehler ist
+    if (error instanceof CustomError) {
+      const label = errorLabels[error.name] || 'Fehler';
+      console.error(`${label}${sourceInfo}:`, error.message, error.details, error.stack);
+      return {
+        statusCode: error.statusCode,
+        body: JSON.stringify({
+          message: error.message,
+          details: error.details,
+          // Optional: Den Funktionsnamen auch im Response-Body zurückgeben
+          source: source
+        }),
+      };
+    } else {
+      // Falls der Fehler nicht den erwarteten Typ hat
+      console.error(`Unbekannter Fehler${sourceInfo}:`, error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: 'Ein unbekannter Fehler ist aufgetreten.',
+          error: String(error),
+          source: source
+        }),
+      };
+    }
+  }
+  

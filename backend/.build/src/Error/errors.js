@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotImplementedError = exports.GatewayTimeoutError = exports.ServiceUnavailableError = exports.BadGatewayError = exports.InternalServerError = exports.UnprocessableEntityError = exports.TooManyRequestsError = exports.NotFoundError = exports.ForbiddenError = exports.UnauthorizedError = exports.ValidationError = exports.DatabaseError = exports.CustomError = void 0;
+exports.handleError = handleError;
 class CustomError extends Error {
     constructor(message, statusCode, details) {
         super(message);
@@ -95,4 +96,49 @@ class NotImplementedError extends CustomError {
     }
 }
 exports.NotImplementedError = NotImplementedError;
+// Mapping von Fehlernamen zu aussagekräftigen Log-Meldungen
+const errorLabels = {
+    DatabaseError: 'Datenbankfehler',
+    ValidationError: 'Validierungsfehler',
+    UnauthorizedError: 'Autorisierungsfehler',
+    ForbiddenError: 'Zugriffsfehler',
+    NotFoundError: 'Nicht gefunden',
+    TooManyRequestsError: 'Zu viele Anfragen',
+    UnprocessableEntityError: 'Nicht verarbeitbare Entität',
+    InternalServerError: 'Interner Serverfehler',
+    BadGatewayError: 'Bad Gateway',
+    ServiceUnavailableError: 'Dienst nicht verfügbar',
+    GatewayTimeoutError: 'Gateway Timeout',
+    NotImplementedError: 'Nicht implementiert',
+};
+function handleError(error, source) {
+    // Erstelle einen Zusatztext, falls ein Source-Name angegeben wurde.
+    const sourceInfo = source ? ` (Quelle: ${source})` : '';
+    // Wenn der Fehler eine Instanz unserer benutzerdefinierten Fehler ist
+    if (error instanceof CustomError) {
+        const label = errorLabels[error.name] || 'Fehler';
+        console.error(`${label}${sourceInfo}:`, error.message, error.details, error.stack);
+        return {
+            statusCode: error.statusCode,
+            body: JSON.stringify({
+                message: error.message,
+                details: error.details,
+                // Optional: Den Funktionsnamen auch im Response-Body zurückgeben
+                source: source
+            }),
+        };
+    }
+    else {
+        // Falls der Fehler nicht den erwarteten Typ hat
+        console.error(`Unbekannter Fehler${sourceInfo}:`, error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: 'Ein unbekannter Fehler ist aufgetreten.',
+                error: String(error),
+                source: source
+            }),
+        };
+    }
+}
 //# sourceMappingURL=errors.js.map

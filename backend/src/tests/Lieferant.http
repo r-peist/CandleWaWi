@@ -1,0 +1,2 @@
+### GET request to trigger getLieferanten
+GET http://localhost:3001/getLieferanten

@@ -36,10 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBestellung = void 0;
 const node_fetch_1 = __importDefault(require("node-fetch"));
-const validate_1 = require("../validizer/validate");
-const schemaBestellung_1 = require("../validizer/schemata/schemaBestellung");
 const Errors = __importStar(require("../error/errors"));
 const logger_1 = __importDefault(require("../utils/logger"));
 const processBestellung = async (event) => {
@@ -86,34 +83,7 @@ const processBestellung = async (event) => {
         };
     }
     catch (error) {
-        console.error("Fehler beim Verarbeiten der Bestellung:", error);
-        if (error instanceof Errors.CustomError) {
-            // Behandlung von bekannten Fehlerklassen
-            return {
-                statusCode: error.statusCode,
-                body: JSON.stringify({
-                    message: error.message,
-                    details: error.details,
-                }),
-            };
-        }
-        // Generischer Fallback für unbekannte Fehler
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: "Interner Serverfehler beim Verarbeiten der Anfrage!",
-                error: error instanceof Error ? error.message : "Fehler beim Senden der Daten an handlerBestellung",
-                details: {
-                    function: "getBestellung",
-                    input: event.validatedBody, // Original-Input des Clients
-                    timestamp: new Date().toISOString(),
-                    code: "FOLLOW_FUNCTION_ERROR",
-                    hints: "Prüfen Sie die Struktur des JSON-Bodys auf fehlende Pflichtfelder.",
-                },
-            }),
-        };
+        return Errors.handleError(error, "getBestellung");
     }
 };
-// Middleware mit Funktionskontext
-exports.getBestellung = (0, validate_1.validate)(schemaBestellung_1.BestellungSchema, processBestellung);
 //# sourceMappingURL=getBestellung.js.map

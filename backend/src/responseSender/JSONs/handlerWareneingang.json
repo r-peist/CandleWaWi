@@ -1,0 +1,71 @@
+
+{
+    "Wareneingang": {
+      "offen": [
+        {
+          "BestellID": 2,
+          "LiefID": 1,
+          "LagerID": 1,
+          "Bestelldatum": "2024-04-21T22:00:00.000Z",
+          "Materialien": [
+            {
+              "MatID": 6,
+              "Name": "Holzdeckel_Braun",
+              "Menge": 42
+            }
+          ]
+        },
+        {
+          "BestellID": 4,
+          "LiefID": 3,
+          "LagerID": 1,
+          "Bestelldatum": "2024-12-01T23:00:00.000Z",
+          "Materialien": [
+            {
+                "MatID": 6,
+                "Name": "Holzdeckel_Braun",
+                "Menge": 42
+              }
+          ]
+        },
+        {
+          "BestellID": 5,
+          "LiefID": 1,
+          "LagerID": 1,
+          "Bestelldatum": "2025-02-09T23:00:00.000Z",
+          "Materialien": [
+            {
+              "MatID": 1,
+              "Name": "Wachs_Soja_40.000g",
+              "Menge": 1
+            }
+          ]
+        }
+      ],
+      "pruefung": [
+        {
+          "BestellID": 1,
+          "LiefID": 1,
+          "LagerID": 1,
+          "Bestelldatum": "2024-02-11T23:00:00.000Z",
+          "Materialien": [
+            {
+              "MatID": 6,
+              "Name": "Holzdeckel_Braun",
+              "Menge": 42
+            },
+            {
+              "MatID": 6,
+              "Name": "Holzdeckel_Braun",
+              "Menge": 42
+            },
+            {
+              "MatID": 6,
+              "Name": "Holzdeckel_Braun",
+              "Menge": 42
+            }
+          ]
+        }
+      ]
+    }
+  }

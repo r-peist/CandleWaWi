@@ -1,0 +1,20 @@
+{
+    "MatLiefs": [
+      {
+        "MatLiefID": 1,
+        "MatID": 1,
+        "LiefID": 1,
+        "Link": "https://www.amazon.de/",
+        "MaterialName": "Wachs_Soja_40.000g",
+        "LieferantName": "'Amazon"
+      },
+      {
+        "MatLiefID": 2,
+        "MatID": 2,
+        "LiefID": 1,
+        "Link": "https://www.amazon.de/",
+        "MaterialName": "Wachs_Soja_60.000g",
+        "LieferantName": "Amazon"
+      }
+    ]
+  }

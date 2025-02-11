@@ -1,0 +1,3 @@
+### POST request to send handlerWareneingang
+POST http://localhost:3001/handlerWareneingang
+#DB muss mit validen Dummywerten befüllt werden damit Test klappt
