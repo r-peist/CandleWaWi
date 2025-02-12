@@ -114,14 +114,14 @@ CREATE TABLE IF NOT EXISTS `inventarkorrektur` (
 -- Exportiere Daten aus Tabelle wawi.inventarkorrektur: ~0 rows (ungefähr)
 
 -- Exportiere Struktur von Tabelle wawi.invkorr_bestellung
-CREATE TABLE IF NOT EXISTS `invkorr_bestellung` (
-  `InvKorrBestID` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `invkorr_material` (
+  `InvKorrMatID` int(11) NOT NULL,
   `MatID` int(11) NOT NULL,
   `Menge` int(11) NOT NULL,
-  PRIMARY KEY (`InvKorrBestID`),
+  PRIMARY KEY (`InvKorrMatID`),
   KEY `BestellID_MatID` (`MatID`),
   CONSTRAINT `BestellID_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `InvKorrBestID_InvKorrID` FOREIGN KEY (`InvKorrBestID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `InvKorrMatID_InvKorrID` FOREIGN KEY (`InvKorrMatID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Exportiere Daten aus Tabelle wawi.invkorr_bestellung: ~0 rows (ungefähr)
