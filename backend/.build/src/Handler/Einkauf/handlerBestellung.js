@@ -60,7 +60,7 @@ const handlerBestellung = async (event) => {
         console.log("Abgerufene BestellID: ", bestellID);
         // Materialien in der Tabelle `MaterialBestellung` speichern
         const materialQuery = `
-        INSERT INTO MaterialBestellung (BestellID, MatID, Menge)
+        INSERT INTO materialbestellung (BestellID, MatID, Menge)
         VALUES (?, ?, ?)
     `;
         for (const material of Materialien) {

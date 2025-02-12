@@ -35,13 +35,6 @@ functions:
           path: getLieferanten
           method: get
 
-  #handlerBestellung: DÜRFTE NICHT MEHGR BENÖTIGT WERDEN
-   # handler: src/handler/Einkauf/handlerBestellung.handlerBestellung
-    #events:
-     # - http:
-      #    path: handlerBestellung
-       #   method: post
-
   #Inventarabfrage
   handlerInventar:
     handler: src/handler/Inventar/handlerInventar.handlerInventar
@@ -51,7 +44,6 @@ functions:
           method: get
 
   #Wareneingang
-
   handlerWareneingang:
     handler: src/handler/Wareneingang/handlerWareneingang.handlerWareneingang
     events:
