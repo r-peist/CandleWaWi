@@ -1,0 +1,11 @@
+### GET request to example server
+POST http://localhost:3000/api/suppliermaterials
+Content-Type: application/json
+
+{
+  "Lieferant": {
+    "LiefID": 1
+  }
+}
+
+###

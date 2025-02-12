@@ -1,10 +1,10 @@
-// /api/inventar.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/handlerInventar"; // Backend-Endpoint
-        console.log("Frontend: Anfrage an Backend wird gesendet...");
+        const backendApiUrl = "http://localhost:3001/handlerWareneingang"; // Backend-URL
+
+        console.log("Frontend: Anfrage an Backend Wareneingang wird gesendet...");
 
         const response = await fetch(backendApiUrl, {
             method: "GET",
@@ -14,20 +14,17 @@ export async function GET(req: NextRequest) {
         });
 
         if (!response.ok) {
-            throw new Error(`Fehler beim Abrufen der Inventar-Daten: ${response.status}`);
+            throw new Error(`Fehler beim Abrufen der Wareneingang-Daten: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("Frontend: Daten erfolgreich erhalten:", data);
 
-        // Extrahiere das Inventar-Array aus dem verschachtelten Objekt
-        const inventar = data?.response?.sendInventar?.inventar;
-
-        if (!inventar || !Array.isArray(inventar)) {
-            throw new Error("Inventar-Daten fehlen oder haben das falsche Format");
+        // Prüfen, ob die Wareneingangsdaten vorhanden sind
+        if (!data.Wareneingang) {
+            throw new Error("Wareneingangsdaten fehlen oder sind ungültig.");
         }
 
-        return NextResponse.json(inventar, {
+        return NextResponse.json(data.Wareneingang, {
             headers: {
                 "Cache-Control": "no-store, must-revalidate",
                 "Pragma": "no-cache",
@@ -35,7 +32,7 @@ export async function GET(req: NextRequest) {
             },
         });
     } catch (error: any) {
-        console.error("Fehler in der API-Route Inventar:", error);
+        console.error("Fehler in der API-Route Wareneingang:", error);
         return NextResponse.json(
             { message: "Ein Fehler ist aufgetreten.", error: error.message },
             {

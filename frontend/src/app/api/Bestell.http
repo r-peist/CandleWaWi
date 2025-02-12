@@ -1,18 +1,22 @@
 ### POST request to send getBestellung
-POST http://localhost:3001/getBestellung
+POST http://localhost:3001/validatedGetMatLief
+Content-Type: application/json
 
 {
+  "Bestellung": {
     "LiefID": 1,
     "LagerID": 1,
-    "Datum": "2024-12-30",
+    "Datum": "2013-11-11",
     "Materialien": [
-        {
-            "MatID": 1,
-            "Menge": 3
-        },
-        {
-            "MatID": 2,
-            "Menge": 1
-        }
+      {
+        "MatID": 1,
+        "Menge": 20
+      },
+      {
+        "MatID": 2,
+        "Menge": 20
+      }
     ]
+  }
 }
+

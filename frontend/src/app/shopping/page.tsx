@@ -2,27 +2,31 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
-import {FaArrowLeft, FaShoppingCart} from "react-icons/fa";
-import { useRouter } from "next/navigation"; // Importiere useRouter für Navigation
+import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
-// Fetch-Funktionen für die API
+// Lieferanten abrufen – es wird nun die Eigenschaft "Lieferanten" erwartet
 async function fetchSuppliers() {
     try {
         const response = await fetch("/api/suppliers", { method: "GET" });
         if (!response.ok) throw new Error("Fehler beim Abrufen der Lieferanten");
-        const { data } = await response.json();
-        return data;
+        const { Lieferanten } = await response.json();
+        return Lieferanten;
     } catch (error) {
         console.error(error);
         return [];
     }
 }
 
+// Materialien für einen Lieferanten abrufen – Request-Body entspricht { Lieferant: { LiefID: ... } }
 const fetchMaterialsForSupplier = async (supplierId: number) => {
     try {
         const response = await fetch("/api/suppliermaterials", {
             method: "POST",
-            body: JSON.stringify({ LiefID: supplierId }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ Lieferant: { LiefID: supplierId } }),
         });
         if (!response.ok) {
             throw new Error("Fehler beim Abrufen der Materialien");
@@ -45,18 +49,16 @@ const Home: NextPage = () => {
     const [showCartModal, setShowCartModal] = useState(false);
 
     const suppliersLoaded = useRef(false);
-    const router = useRouter(); // Router für Navigation
+    const router = useRouter();
 
-    const toggleCartItem = (material, link, supplier, MatID) => {
+    const toggleCartItem = (material: string, link: string, supplier: string, MatID: number) => {
         setCart((prevCart) => {
             const exists = prevCart.find((item) => item.material === material);
             if (exists) {
                 return prevCart.filter((item) => item.material !== material);
             } else {
                 if (prevCart.length > 0 && prevCart[0].supplier !== supplier) {
-                    alert(
-                        "Sie können nur Artikel von einem Lieferanten in den Warenkorb legen."
-                    );
+                    alert("Sie können nur Artikel von einem Lieferanten in den Warenkorb legen.");
                     return prevCart;
                 }
                 return [...prevCart, { material, link, supplier, MatID, quantity: 1 }];
@@ -64,12 +66,10 @@ const Home: NextPage = () => {
         });
     };
 
-    const updateCartItemQuantity = (material, newQuantity) => {
+    const updateCartItemQuantity = (material: string, newQuantity: number) => {
         setCart((prevCart) =>
             prevCart.map((item) =>
-                item.material === material
-                    ? { ...item, quantity: Math.max(1, newQuantity) }
-                    : item
+                item.material === material ? { ...item, quantity: Math.max(1, newQuantity) } : item
             )
         );
     };
@@ -86,7 +86,7 @@ const Home: NextPage = () => {
         }
     }, []);
 
-    // Materialien dynamisch laden, wenn ein Lieferant ausgewählt wird
+    // Materialien laden, wenn ein Lieferant ausgewählt wurde
     useEffect(() => {
         const loadMaterials = async () => {
             if (selectedSupplier !== null) {
@@ -97,6 +97,7 @@ const Home: NextPage = () => {
         loadMaterials();
     }, [selectedSupplier]);
 
+    // Bestellung abschicken – Request-Body wird als { Bestellung: { ... } } versendet
     const submitOrder = async () => {
         if (cart.length === 0) {
             alert("Der Warenkorb ist leer!");
@@ -105,7 +106,7 @@ const Home: NextPage = () => {
 
         const orderData = {
             LiefID: selectedSupplier,
-            LagerID: 1, // Dummy-Wert, kann angepasst werden
+            LagerID: 1, // Dummy-Wert, anpassbar
             Datum: new Date().toISOString().split("T")[0],
             Materialien: cart.map((item) => ({
                 MatID: item.MatID,
@@ -121,7 +122,7 @@ const Home: NextPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(orderData),
+                body: JSON.stringify({ Bestellung: orderData }),
             });
 
             if (!response.ok) {
@@ -144,8 +145,8 @@ const Home: NextPage = () => {
         <div className="min-h-screen bg-gray-100 p-8 flex flex-col">
             <Head>
                 <title>WaWi - GM - Einkauf</title>
-                <meta name="description" content="Lieferanten und Materialien"/>
-                <link rel="icon" href="/favicon.ico"/>
+                <meta name="description" content="Lieferanten und Materialien" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <header className="mb-8 flex justify-between items-center">
@@ -154,7 +155,7 @@ const Home: NextPage = () => {
                         className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow flex items-center space-x-2"
                         onClick={() => router.push("/")}
                     >
-                        <FaArrowLeft size={16}/>
+                        <FaArrowLeft size={16} />
                         <span>Zurück</span>
                     </button>
                     <h1 className="text-3xl font-bold">Warenwirtschaftssoftware</h1>
@@ -163,12 +164,11 @@ const Home: NextPage = () => {
                     className="relative cursor-pointer"
                     onClick={() => setShowCartModal(true)}
                 >
-                    <FaShoppingCart size={30} className="text-gray-700"/>
+                    <FaShoppingCart size={30} className="text-gray-700" />
                     {cart.length > 0 && (
-                        <span
-                            className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                            {cart.length}
-                        </span>
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {cart.length}
+            </span>
                     )}
                 </div>
             </header>
@@ -188,9 +188,7 @@ const Home: NextPage = () => {
                                 onClick={async () => {
                                     try {
                                         setSelectedSupplier(supplier.LiefID);
-                                        const materialData = await fetchMaterialsForSupplier(
-                                            supplier.LiefID
-                                        );
+                                        const materialData = await fetchMaterialsForSupplier(supplier.LiefID);
                                         setMaterials(materialData);
                                     } catch (error) {
                                         console.error("Fehler beim Laden der Materialien:", error);
@@ -228,9 +226,7 @@ const Home: NextPage = () => {
                                         }`}
                                     >
                                         <div>
-                                            <p className="font-semibold text-lg">
-                                                {material.MaterialName}
-                                            </p>
+                                            <p className="font-semibold text-lg">{material.MaterialName}</p>
                                             <p className="text-sm text-gray-500">
                                                 Lieferant: {material.LieferantName}
                                             </p>
@@ -370,7 +366,6 @@ const Home: NextPage = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
