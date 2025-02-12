@@ -1,0 +1,1 @@
+{"version":3,"file":"handlerlieferant.js","sourceRoot":"","sources":["../../../../src/validation/schemata/handlerlieferant.ts"],"names":[],"mappings":";;;AAAA,6BAAwB;AAEX,QAAA,sBAAsB,GAAG,OAAC,CAAC,MAAM,CAAC;IAC7C,WAAW,EAAE,OAAC,CAAC,KAAK,CAClB,OAAC,CAAC,MAAM,CAAC;QACP,MAAM,EAAE,OAAC,CAAC,MAAM,EAAE;QAClB,IAAI,EAAE,OAAC,CAAC,MAAM,EAAE;KACjB,CAAC,CACH;CACF,CAAC,CAAC"}

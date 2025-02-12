@@ -1,0 +1,8 @@
+{"Datum":"2024-12-30","LagerID":1,"LiefID":1,"Materialien":[{"MatID":1,"Menge":3},{"MatID":2,"Menge":1}],"level":"info","message":"Empfangener Body aus dem Frontend für Bestellung:","timestamp":"2024-12-30T23:58:02.302Z"}
+{"level":"info","message":"Erfolgreiche Antwort aus Backend: Erfolgreich verarbeitet!","timestamp":"2024-12-30T23:58:02.635Z"}
+{"Datum":"2024-12-30","LagerID":1,"LiefID":1,"Materialien":[{"MatID":1,"Menge":3},{"MatID":2,"Menge":1}],"level":"info","message":"Empfangener Body aus dem Frontend für Bestellung:","timestamp":"2024-12-31T00:03:51.903Z"}
+{"error":"Not Found","level":"info","message":"Fehler aus Backend-Handler: Not Found","statusCode":404,"timestamp":"2024-12-31T00:03:51.931Z"}
+{"Datum":"2024-12-31","LagerID":1,"LiefID":1,"Materialien":[{"MatID":1,"Menge":6},{"MatID":2,"Menge":1}],"level":"info","message":"Empfangener Body aus dem Frontend für Bestellung:","timestamp":"2024-12-31T13:01:16.586Z"}
+{"level":"info","message":"Erfolgreiche Antwort aus Backend: Erfolgreich verarbeitet!","timestamp":"2024-12-31T13:01:16.959Z"}
+{"Datum":"2025-02-10","LagerID":1,"LiefID":1,"Materialien":[{"MatID":1,"Menge":1}],"level":"info","message":"Empfangener Body aus dem Frontend für Bestellung:","timestamp":"2025-02-10T22:39:13.025Z"}
+{"data":{"bestellID":5,"message":"Bestellung und Materialien erfolgreich gespeichert."},"level":"info","message":"Erfolgreiche Antwort aus Backend: Erfolgreich verarbeitet!","timestamp":"2025-02-10T22:39:13.344Z"}
