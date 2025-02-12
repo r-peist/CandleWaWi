@@ -12,6 +12,7 @@ export const bestellungSchema = z.object({
     Bestellung: z.object({
         LiefID: z.number().min(1, "LiefID muss eine positive Zahl sein."),
         LagerID: z.number().min(1, "LagerID muss eine positive Zahl sein."),
+        Benutzer: z.string().min(1, "Benutzer muss hinterlegt sein."),
         Datum: z.string().refine(
             (date) => !isNaN(Date.parse(date)),
             "Datum muss ein gültiges Datumsformat sein (YYYY-MM-DD)."

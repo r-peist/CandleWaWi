@@ -1,0 +1,77 @@
+{
+    "Inventar": [
+      {
+        "Material": "Wachs_Soja_40.000g",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Wachs",
+        "Lager": "Burgstraße",
+        "Menge": 2,
+        "Status": "true"
+      },
+      {
+        "Material": "Wachs_Soja_60.000g",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Wachs",
+        "Lager": "Burgstraße",
+        "Menge": 4,
+        "Status": "false"
+      },
+      {
+        "Material": "Glas_Braun_180ml",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Behältnis",
+        "Lager": "Burgstraße",
+        "Menge": 42,
+        "Status": "true"
+      },
+      {
+        "Material": "Glas_Schwarz_300ml",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Behältnis",
+        "Lager": "Burgstraße",
+        "Menge": 42,
+        "Status": "true"
+      },
+      {
+        "Material": "Glas_Weiß_300ml",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Behältnis",
+        "Lager": "Burgstraße",
+        "Menge": 42,
+        "Status": "false"
+      },
+      {
+        "Material": "Holzdeckel_Braun",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Deckel",
+        "Lager": "Burgstraße",
+        "Menge": 42,
+        "Status": "true"
+      },
+      {
+        "Material": "Aludeckel_Schwarz",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Deckel",
+        "Lager": "Burgstraße",
+        "Menge": 42,
+        "Status": "true"
+      },
+      {
+        "Material": "Docht_Baumwolle1",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Docht",
+        "Lager": "Burgstraße",
+        "Menge": 112,
+        "Status": "true"
+      },
+      {
+        "Material": "Docht_Holz1",
+        "Kategorie": "Rohmaterial",
+        "MaterialKategorie": "Docht",
+        "Lager": "Burgstraße",
+        "Menge": 55,
+        "Status": "false"
+      }
+    ]
+  }
+  

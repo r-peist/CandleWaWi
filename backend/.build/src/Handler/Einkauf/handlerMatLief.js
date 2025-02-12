@@ -32,48 +32,40 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handlerBestellung = void 0;
+exports.handlerMatLief = void 0;
 const dbclient_1 = require("../../db/dbclient"); // Importiere den DB-Wrapper
-const node_fetch_1 = __importDefault(require("node-fetch"));
 const Errors = __importStar(require("../../error/errors"));
 const validate_1 = require("../../validation/validate");
-const handlerBestellung = async (event) => {
+const handlerMatLief = async (event) => {
     let connection;
     try {
-        // Überprüfen, ob der Body korrekt ist
-        const { Bestellung: { LiefID, LagerID, Datum, Benutzer, Materialien } } = event.validatedBody;
-        console.log("Validierte Daten aus FE sind: LiefID: ", LiefID, ", LagerID: ", LagerID, ", Datum: ", Datum, ", Benutzer", Benutzer);
+        // JSON-Daten aus dem Request-Body lesen
+        const { Lieferant: { LiefID } } = event.validatedBody;
+        const liefID = LiefID;
+        console.log("Empfangene LiefID:", liefID);
         // Verbindung zur Datenbank herstellen
         connection = await (0, dbclient_1.getConnection)();
         // SQL-Abfrage mit Joins, um MaterialName und LieferantName abzurufen
-        const query = `
-        INSERT INTO bestellung (LiefID, LagerID, Bestelldatum, Benutzer)
-        VALUES (?, ?, ?, ?)
-    `;
-        const [result] = await connection.execute(query, [LiefID, LagerID, Datum, Benutzer]);
-        // Die automatisch generierte ID (BestellID) abrufen
-        const bestellID = result.insertId;
-        console.log("Abgerufene BestellID: ", bestellID);
-        // Materialien in der Tabelle `MaterialBestellung` speichern
-        const materialQuery = `
-        INSERT INTO materialbestellung (BestellID, MatID, Menge)
-        VALUES (?, ?, ?)
-    `;
-        for (const material of Materialien) {
-            const { MatID, Menge } = material;
-            if (!MatID || !Menge) {
-                throw new Error("MatID und Menge müssen für jedem Material angegeben werden.");
-            }
-            await connection.execute(materialQuery, [bestellID, MatID, Menge]);
-        }
-        const BestellID = { BestellID: { BestellID: bestellID } };
-        console.log("Bestellobjekt: ", BestellID);
-        const validatedData = (0, validate_1.validateData)("bestellIDSchema", BestellID);
-        const response = await (0, node_fetch_1.default)("http://localhost:3001/responseSender", {
+        const [rows] = await connection.query(`
+      SELECT 
+        ml.MatLiefID,
+        ml.MatID,
+        ml.LiefID,
+        ml.Link,
+        m.Name AS MaterialName,
+        l.Name AS LieferantName
+      FROM materiallieferant ml
+      INNER JOIN material m ON ml.MatID = m.MatID
+      INNER JOIN lieferant l ON ml.LiefID = l.LiefID
+      WHERE ml.LiefID = ?
+    `, [liefID]);
+        const MatLiefs = { MatLiefs: rows };
+        //Validierung des JSONs
+        const validatedData = (0, validate_1.validateData)("matLiefSchema", MatLiefs);
+        //console.log("Validierte Daten in handler: ", validatedData);
+        // HTTP-Post-Aufruf mit node-fetch
+        const response = await fetch("http://localhost:3001/responseSender", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -81,17 +73,18 @@ const handlerBestellung = async (event) => {
             body: JSON.stringify(validatedData),
         });
         const responseBody = await response.json();
+        // Erfolgreiche Antwort mit Abfrageergebnissen
         return {
             statusCode: 200,
             body: JSON.stringify({
-                message: "Generierte BestellID erfolgreich an responseSender geschickt",
+                message: "Datenbank-Abfrage erfolgreich!",
                 data: validatedData,
                 response: responseBody,
             }),
         };
     }
     catch (error) {
-        return Errors.handleError(error, "handlerBestellung");
+        return Errors.handleError(error, "handlerGetMatLief");
     }
     finally {
         // Verbindung freigeben
@@ -101,5 +94,5 @@ const handlerBestellung = async (event) => {
         await (0, dbclient_1.closePool)();
     }
 };
-exports.handlerBestellung = handlerBestellung;
-//# sourceMappingURL=handlerBestellung.js.map
+exports.handlerMatLief = handlerMatLief;
+//# sourceMappingURL=handlerMatLief.js.map

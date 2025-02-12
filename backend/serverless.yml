@@ -27,6 +27,20 @@ functions:
           path: validatedGetMatLief
           method: post
 
+  validatedBuchung:
+    handler: src/validation/wrapper.validatedGetBuchung
+    events:
+      - http:
+          path: validatedBuchung
+          method: post
+
+  validatedInvKorrWE:
+    handler: src/validation/wrapper.validateGetInvKorrWE
+    events:
+      - http:
+          path: validatedInvKorrWE
+          method: post
+
   #Bestellung 
   handlerGetLieferanten:
     handler: src/handler/Einkauf/handlerGetLieferanten.getLieferanten

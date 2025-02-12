@@ -4,28 +4,27 @@ import fetch from "node-fetch";
 import * as Errors from "../../error/errors";
 import { ValidatedEvent } from "../../interfaces";
 import { validateData } from "../../validation/validate";
-import { dateType } from "aws-sdk/clients/iam";
 
 export const handlerBestellung = async (
-  event: ValidatedEvent<{ Bestellung: { LiefID: number, LagerID: number, Datum: string, Materialien: [] }}>
+  event: ValidatedEvent<{ Bestellung: { LiefID: number, LagerID: number, Datum: string, Benutzer: string, Materialien: [] }}>
   ): Promise<APIGatewayProxyResult> => {
 
   let connection;
   try {
     // Überprüfen, ob der Body korrekt ist
-    const { Bestellung: { LiefID, LagerID, Datum, Materialien }} = event.validatedBody;
-    console.log("Validierte Daten aus FE sind: LiefID: ", LiefID, ", LagerID: ", LagerID, ", Datum: ", Datum);
+    const { Bestellung: { LiefID, LagerID, Datum, Benutzer, Materialien }} = event.validatedBody;
+    console.log("Validierte Daten aus FE sind: LiefID: ", LiefID, ", LagerID: ", LagerID, ", Datum: ", Datum, ", Benutzer", Benutzer);
 
     // Verbindung zur Datenbank herstellen
     connection = await getConnection();
     
     // SQL-Abfrage mit Joins, um MaterialName und LieferantName abzurufen
     const query = `
-        INSERT INTO bestellung (LiefID, LagerID, Bestelldatum)
-        VALUES (?, ?, ?)
+        INSERT INTO bestellung (LiefID, LagerID, Bestelldatum, Benutzer)
+        VALUES (?, ?, ?, ?)
     `;
 
-    const [result]: any = await connection.execute(query, [LiefID, LagerID, Datum]); 
+    const [result]: any = await connection.execute(query, [LiefID, LagerID, Datum, Benutzer]); 
 
     // Die automatisch generierte ID (BestellID) abrufen
     const bestellID = result.insertId;
@@ -69,5 +68,11 @@ export const handlerBestellung = async (
     };
   } catch (error) {
     return Errors.handleError(error, "handlerBestellung");
+  } finally {
+    // Verbindung freigeben
+    if (connection) {
+      connection.release();
+    }
+    await closePool();
   }
 };

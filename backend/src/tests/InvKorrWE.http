@@ -1,0 +1,11 @@
+### POST request to send Buchung
+POST http://localhost:3001/validatedInvKorrWE
+
+{
+    "InvKorrWE": {
+        "Kommentar": "Hier Text digga",
+        "Datum": "2222-12-22",
+        "Benutzer": "default",
+        "BestellID": 13
+    }
+}

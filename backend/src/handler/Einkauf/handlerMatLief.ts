@@ -4,7 +4,7 @@ import * as Errors from "../../error/errors";
 import { ValidatedEvent } from "../../interfaces";
 import { validateData } from "../../validation/validate";
 
-export const getMatLief = async (
+export const handlerMatLief = async (
   event: ValidatedEvent<{Lieferant: {LiefID: number}}>
   ): Promise<APIGatewayProxyResult> => {
   let connection;
