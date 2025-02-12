@@ -59,7 +59,7 @@
       <recent name="F:\1CandleWaWi\CandleWaWi\frontend\src\app\changes\changes3" />
     </key>
   </component>
-  <component name="RunManager" selected="HTTP Request.Bestell | POST request to send getBestellung">
+  <component name="RunManager" selected="HTTP Request.Inventar | POST request to send getBestellung">
     <configuration name="All in Inventar" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/src/app/api/Inventar.http">
       <method v="2" />
     </configuration>
@@ -77,9 +77,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.Inventar | POST request to send getBestellung" />
         <item itemvalue="HTTP Request.Bestell | POST request to send getBestellung" />
         <item itemvalue="HTTP Request.suppliers | POST request to send lieferantId" />
-        <item itemvalue="HTTP Request.Inventar | POST request to send getBestellung" />
         <item itemvalue="HTTP Request.supl | GET request to example server" />
         <item itemvalue="HTTP Request.All in Inventar" />
       </list>
@@ -117,7 +117,10 @@
       <workItem from="1738507585834" duration="774000" />
       <workItem from="1738595684811" duration="4792000" />
       <workItem from="1739115952288" duration="1198000" />
-      <workItem from="1739124799470" duration="1532000" />
+      <workItem from="1739124799470" duration="1762000" />
+      <workItem from="1739280532657" duration="2712000" />
+      <workItem from="1739287629899" duration="453000" />
+      <workItem from="1739351718635" duration="3267000" />
     </task>
     <servers />
   </component>
