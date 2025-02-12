@@ -1,14 +1,11 @@
 // validatedHandlers.ts
 import { validate } from "./validate";
-import { getMatLief } from "../handler/Einkauf/handlerGetMatLief";
+import { handlerMatLief } from "../handler/Einkauf/handlerMatLief";
 import { handlerBestellung } from "../handler/Einkauf/handlerBestellung";
+import { handlerBuchung } from "../handler/Wareneingang/handlerBuchung";
+import { handlerInvKorrWE } from "../handler/Wareneingang/handlerInvKorrWE";
 
-export const validatedGetLieferantFE = validate("lieferantSchema", getMatLief);
+export const validatedGetLieferantFE = validate("lieferantSchema", handlerMatLief);
 export const validatedGetMatLief = validate("bestellungSchema", handlerBestellung);
-
-// Beispiel für einen weiteren Endpunkt, der Daten enthält (z. B. Inventardaten)
-// Angenommen, dein Schema heißt "inventorySchema" und dein Handler heißt inventoryHandler
-
-//export const validatedInventoryHandler = validate("inventorySchema", inventoryHandler);
-
-// Weitere validierte Handler können hier analog definiert werden.
+export const validatedGetBuchung = validate("buchungSchema", handlerBuchung);
+export const validateGetInvKorrWE = validate("invkorrWESchema", handlerInvKorrWE);

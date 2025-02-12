@@ -6,3 +6,5 @@ export * from "./handlerlieferant";
 export * from "./inventar";
 export * from "./wareneingang";
 export * from "./bestellID";
+export * from "./buchung";
+export * from "./invkorrWE";

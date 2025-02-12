@@ -3,6 +3,7 @@
             "LiefID": 1,
             "LagerID": 1,
             "Datum": "2011-11-11",
+            "Benutzer": "default",
             "Materialien": [
                 {
                     "MatID": 1,

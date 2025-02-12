@@ -22,4 +22,6 @@ __exportStar(require("./handlerlieferant"), exports);
 __exportStar(require("./inventar"), exports);
 __exportStar(require("./wareneingang"), exports);
 __exportStar(require("./bestellID"), exports);
+__exportStar(require("./buchung"), exports);
+__exportStar(require("./invkorrWE"), exports);
 //# sourceMappingURL=index.js.map
