@@ -14,7 +14,7 @@ const ProductionOverviewPage = () => {
     };
 
     const handleBack = () => {
-        router.back();
+        router.push("/");
     };
 
     return (
