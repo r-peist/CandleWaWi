@@ -142,28 +142,25 @@ const Home: NextPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8 flex flex-col">
+        <div className="min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 p-8 flex flex-col">
             <Head>
                 <title>WaWi - GM - Einkauf</title>
                 <meta name="description" content="Lieferanten und Materialien" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <header className="mb-8 flex justify-between items-center">
+            <header className="mb-10 flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                     <button
-                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow flex items-center space-x-2"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 transition duration-300"
                         onClick={() => router.push("/")}
                     >
-                        <FaArrowLeft size={16} />
-                        <span>Zurück</span>
+                        <FaArrowLeft size={18} className="text-gray-700" />
+                        <span className="text-gray-700">Zurück</span>
                     </button>
-                    <h1 className="text-3xl font-bold">Warenwirtschaftssoftware</h1>
+                    <h1 className="text-3xl font-bold text-gray-800">Warenwirtschaftssoftware</h1>
                 </div>
-                <div
-                    className="relative cursor-pointer"
-                    onClick={() => setShowCartModal(true)}
-                >
+                <div className="relative cursor-pointer" onClick={() => setShowCartModal(true)}>
                     <FaShoppingCart size={30} className="text-gray-700" />
                     {cart.length > 0 && (
                         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -173,33 +170,29 @@ const Home: NextPage = () => {
                 </div>
             </header>
 
-            <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">Lieferanten</h2>
+            <section className="mb-10">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-800">Lieferanten</h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {suppliers.length > 0 ? (
                         suppliers.map((supplier) => (
                             <li
                                 key={supplier.LiefID}
-                                className={`p-4 bg-white shadow-md rounded-lg cursor-pointer transform transition duration-200 ${
+                                className={`p-4 bg-white rounded-xl shadow-md cursor-pointer transform transition duration-200 hover:shadow-lg ${
                                     selectedSupplier === supplier.LiefID
-                                        ? "text-blue-600 border-blue-600 border-2"
-                                        : "hover:bg-gray-100"
+                                        ? "border-2 border-blue-600 text-blue-600"
+                                        : "hover:bg-gray-50"
                                 }`}
                                 onClick={async () => {
-                                    try {
-                                        setSelectedSupplier(supplier.LiefID);
-                                        const materialData = await fetchMaterialsForSupplier(supplier.LiefID);
-                                        setMaterials(materialData);
-                                    } catch (error) {
-                                        console.error("Fehler beim Laden der Materialien:", error);
-                                    }
+                                    setSelectedSupplier(supplier.LiefID);
+                                    const materialData = await fetchMaterialsForSupplier(supplier.LiefID);
+                                    setMaterials(materialData);
                                 }}
                             >
                                 <p className="text-center text-lg font-medium">{supplier.Name}</p>
                             </li>
                         ))
                     ) : (
-                        <li className="p-4 bg-white shadow-md rounded-lg text-center">
+                        <li className="p-4 bg-white rounded-xl shadow-md text-center text-gray-700">
                             Keine Lieferanten verfügbar
                         </li>
                     )}
@@ -207,26 +200,27 @@ const Home: NextPage = () => {
             </section>
 
             {selectedSupplier !== null && (
-                <section>
-                    <h2 className="text-2xl font-semibold mb-4">Materialien</h2>
+                <section className="mb-10">
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Materialien</h2>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {materials.length > 0 ? (
                             materials.map((material) => {
                                 const isInCart = cart.some(
                                     (item) => item.material === material.MaterialName
                                 );
-
                                 return (
                                     <li
                                         key={material.MatLiefID}
-                                        className={`p-4 bg-white shadow-md rounded-lg cursor-pointer flex justify-between items-center transform transition duration-200 ${
+                                        className={`p-4 bg-white rounded-xl shadow-md cursor-pointer flex justify-between items-center transform transition duration-200 ${
                                             isInCart
                                                 ? "bg-green-200 border-2 border-green-500"
-                                                : "hover:bg-gray-100"
+                                                : "hover:bg-gray-50"
                                         }`}
                                     >
                                         <div>
-                                            <p className="font-semibold text-lg">{material.MaterialName}</p>
+                                            <p className="font-semibold text-lg text-gray-800">
+                                                {material.MaterialName}
+                                            </p>
                                             <p className="text-sm text-gray-500">
                                                 Lieferant: {material.LieferantName}
                                             </p>
@@ -234,13 +228,13 @@ const Home: NextPage = () => {
                                                 href={material.Link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-blue-500 underline"
+                                                className="text-blue-500 underline text-sm"
                                             >
                                                 Link zum Material
                                             </a>
                                         </div>
                                         <button
-                                            className={`px-4 py-2 rounded ${
+                                            className={`px-4 py-2 rounded transition duration-300 ${
                                                 isInCart
                                                     ? "bg-red-500 text-white hover:bg-red-600"
                                                     : "bg-blue-500 text-white hover:bg-blue-600"
@@ -260,7 +254,7 @@ const Home: NextPage = () => {
                                 );
                             })
                         ) : (
-                            <li className="p-4 bg-white shadow-md rounded-lg text-center">
+                            <li className="p-4 bg-white rounded-xl shadow-md text-center text-gray-700">
                                 Keine Materialien verfügbar
                             </li>
                         )}
@@ -270,28 +264,23 @@ const Home: NextPage = () => {
 
             {showCartModal && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
+                    <div className="bg-white p-8 rounded-xl shadow-xl w-3/4 max-w-2xl relative">
                         <button
-                            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+                            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none text-2xl"
                             onClick={() => setShowCartModal(false)}
                         >
-                            ✕
+                            &times;
                         </button>
-                        <h2 className="text-3xl font-semibold mb-6 text-gray-800">🛒 Ihr Warenkorb</h2>
+                        <h2 className="text-3xl font-semibold mb-6 text-gray-800 text-center">🛒 Ihr Warenkorb</h2>
                         {cart.length === 0 ? (
                             <p className="text-center text-gray-600">Ihr Warenkorb ist leer.</p>
                         ) : (
                             <div className="overflow-y-auto max-h-80">
                                 <ul className="divide-y divide-gray-300">
                                     {cart.map((item, index) => (
-                                        <li
-                                            key={index}
-                                            className="py-4 flex justify-between items-center"
-                                        >
+                                        <li key={index} className="py-4 flex justify-between items-center">
                                             <div>
-                                                <p className="font-semibold text-lg text-gray-800">
-                                                    {item.material}
-                                                </p>
+                                                <p className="font-semibold text-lg text-gray-800">{item.material}</p>
                                                 <a
                                                     href={item.link}
                                                     target="_blank"
@@ -316,22 +305,14 @@ const Home: NextPage = () => {
                                                         min={1}
                                                         value={item.quantity}
                                                         onChange={(e) =>
-                                                            updateCartItemQuantity(
-                                                                item.material,
-                                                                parseInt(e.target.value, 10)
-                                                            )
+                                                            updateCartItemQuantity(item.material, parseInt(e.target.value, 10))
                                                         }
                                                     />
                                                 </div>
                                                 <button
                                                     className="text-red-500 hover:text-red-700 font-semibold"
                                                     onClick={() =>
-                                                        toggleCartItem(
-                                                            item.material,
-                                                            item.link,
-                                                            item.supplier,
-                                                            item.MatID
-                                                        )
+                                                        toggleCartItem(item.material, item.link, item.supplier, item.MatID)
                                                     }
                                                 >
                                                     Entfernen
@@ -349,13 +330,13 @@ const Home: NextPage = () => {
                                 </p>
                                 <div className="flex space-x-4">
                                     <button
-                                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow"
+                                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow transition duration-300"
                                         onClick={submitOrder}
                                     >
                                         Bestellung abschicken
                                     </button>
                                     <button
-                                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow"
+                                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow transition duration-300"
                                         onClick={() => setShowCartModal(false)}
                                     >
                                         Schließen

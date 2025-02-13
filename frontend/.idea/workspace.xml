@@ -38,6 +38,7 @@
     "HTTP Request.Bestell | POST request to send getBestellung.executor": "Run",
     "HTTP Request.Inventar | POST request to send getBestellung.executor": "Run",
     "HTTP Request.buchung | #1.executor": "Run",
+    "HTTP Request.invkorre | GET request to example server.executor": "Run",
     "HTTP Request.supl | GET request to example server.executor": "Run",
     "HTTP Request.suplmat | GET request to example server.executor": "Run",
     "HTTP Request.suppliers | #1.executor": "Run",
@@ -62,14 +63,14 @@
       <recent name="F:\1CandleWaWi\CandleWaWi\frontend\src\app\changes\changes3" />
     </key>
   </component>
-  <component name="RunManager" selected="HTTP Request.buchung | #1">
-    <configuration name="Bestell | POST request to send getBestellung" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/Bestell.http" requestIdentifier="POST request to send getBestellung" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="HTTP Request.invkorre | GET request to example server">
     <configuration name="Inventar | POST request to send getBestellung" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/Inventar.http" requestIdentifier="POST request to send getBestellung" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="buchung | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/buchung.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="invkorre | GET request to example server" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/invkorre.http" requestIdentifier="GET request to example server" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="suppliers | POST request to send lieferantId" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="POST request to send lieferantId" runType="Run single request">
@@ -80,11 +81,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.invkorre | GET request to example server" />
         <item itemvalue="HTTP Request.buchung | #1" />
         <item itemvalue="HTTP Request.wareneingang | GET request to example server" />
         <item itemvalue="HTTP Request.Inventar | POST request to send getBestellung" />
         <item itemvalue="HTTP Request.suppliers | POST request to send lieferantId" />
-        <item itemvalue="HTTP Request.Bestell | POST request to send getBestellung" />
       </list>
     </recent_temporary>
   </component>

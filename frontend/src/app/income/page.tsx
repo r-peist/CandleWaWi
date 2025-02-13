@@ -70,7 +70,7 @@ export default function Income() {
         loadOpenOrders();
     }, []);
 
-    // Damit auch bei "Back"-Navigation (z. B. mit dem Browser-Back-Button) immer neu geladen wird:
+    // Damit auch bei "Back"-Navigation immer neu geladen wird:
     useEffect(() => {
         const handlePageShow = (event: any) => {
             if (event.persisted) {
@@ -167,55 +167,57 @@ export default function Income() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <header className="mb-8 flex justify-between items-center">
+        <div className="min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 p-8">
+            <header className="mb-10 flex justify-between items-center">
                 <button
-                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow flex items-center space-x-2"
+                    className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 transition duration-300"
                     onClick={() => router.push("/")}
                 >
-                    <IoMdArrowBack size={16} />
-                    <span>Zurück</span>
+                    <IoMdArrowBack size={20} className="text-gray-700" />
+                    <span className="text-gray-700">Zurück</span>
                 </button>
-                <h1 className="text-3xl font-bold text-center flex-grow text-gray-800">
+                <h1 className="text-4xl font-bold text-gray-800 text-center flex-grow">
                     Wareneingang
                 </h1>
             </header>
 
             <div className="max-w-3xl mx-auto space-y-8">
-                {error && <div>Error: {error}</div>}
-                {loading && <div>Lade Daten…</div>}
+                {error && <div className="text-red-600 text-center">{error}</div>}
+                {loading && <div className="text-center text-gray-600">Lade Daten…</div>}
 
                 {/* Offene Bestellungen */}
                 {actionableOrders.length > 0 && (
-                    <div className="bg-white p-4 rounded-lg shadow">
-                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                    <div className="bg-white p-6 rounded-xl shadow-lg">
+                        <h2 className="text-2xl font-semibold mb-6 text-center">
                             Offene Bestellungen
                         </h2>
-                        <ul className="space-y-4">
+                        <ul className="space-y-6">
                             {actionableOrders.map((order) => (
                                 <li
                                     key={order.orderId}
-                                    className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col gap-2"
+                                    className="p-6 bg-gray-50 rounded-xl shadow hover:shadow-xl transition duration-300 flex flex-col gap-4"
                                 >
                                     <div>
-                                        <p className="font-semibold">Bestell-ID: {order.orderId}</p>
-                                        <ul className="mt-1 text-sm text-gray-700">
+                                        <p className="font-semibold text-lg">
+                                            Bestell-ID: {order.orderId}
+                                        </p>
+                                        <ul className="mt-2 text-sm text-gray-700">
                                             {order.items.map((item) => (
                                                 <li key={item.MatID}>
-                                                    {item.Material} - {item.Menge} Stück
+                                                    {item.Material} – {item.Menge} Stück
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
                                     <div className="flex justify-end gap-4">
                                         <button
-                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                            className="px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition duration-300"
                                             onClick={() => handleBookOrder(order)}
                                         >
                                             Bestellung buchen
                                         </button>
                                         <button
-                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                            className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-300"
                                             onClick={() => handleMarkFaulty(order)}
                                         >
                                             Fehlerhaft
@@ -229,21 +231,23 @@ export default function Income() {
 
                 {/* Bestellungen in Prüfung (Info – ausgegraut) */}
                 {infoOrders.length > 0 && (
-                    <div className="bg-gray-200 p-4 rounded-lg">
-                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                    <div className="bg-gray-200 p-6 rounded-xl">
+                        <h2 className="text-2xl font-semibold mb-6 text-center">
                             Bestellungen in Prüfung
                         </h2>
-                        <ul className="space-y-4">
+                        <ul className="space-y-6">
                             {infoOrders.map((order) => (
                                 <li
                                     key={order.orderId}
-                                    className="p-4 bg-gray-100 rounded-lg shadow-md opacity-50"
+                                    className="p-6 bg-gray-100 rounded-xl shadow-md opacity-60"
                                 >
-                                    <p className="font-semibold">Bestell-ID: {order.orderId}</p>
-                                    <ul className="mt-2">
+                                    <p className="font-semibold text-lg">
+                                        Bestell-ID: {order.orderId}
+                                    </p>
+                                    <ul className="mt-3 text-sm text-gray-700">
                                         {order.items.map((item) => (
-                                            <li key={item.MatID} className="text-sm">
-                                                {item.Material} - {item.Menge} Stück
+                                            <li key={item.MatID}>
+                                                {item.Material} – {item.Menge} Stück
                                             </li>
                                         ))}
                                     </ul>
@@ -260,25 +264,25 @@ export default function Income() {
                         onClick={() => setShowBookModal(false)}
                     >
                         <div
-                            className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full"
+                            className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <h2 className="text-xl font-semibold mb-4 text-center">
+                            <h2 className="text-2xl font-semibold mb-4 text-center">
                                 Bestätigung
                             </h2>
-                            <p className="mb-4 text-center">
-                                Bist du dir sicher, dass du die Bestellung{" "}
+                            <p className="mb-6 text-center">
+                                Bist du sicher, dass du die Bestellung{" "}
                                 {orderForBooking.orderId} buchen möchtest?
                             </p>
                             <div className="flex justify-end gap-4">
                                 <button
-                                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded transition duration-300"
                                     onClick={() => setShowBookModal(false)}
                                 >
                                     Abbrechen
                                 </button>
                                 <button
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition duration-300"
                                     onClick={confirmBookOrder}
                                 >
                                     Buchen
@@ -295,31 +299,31 @@ export default function Income() {
                         onClick={cancelFaultyOrder}
                     >
                         <div
-                            className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full"
+                            className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <h2 className="text-xl font-semibold mb-4 text-center">
+                            <h2 className="text-2xl font-semibold mb-4 text-center">
                                 Fehlermeldung senden
                             </h2>
-                            <p className="mb-4 text-center">
+                            <p className="mb-6 text-center">
                                 Bitte geben Sie einen Kommentar ein, um die Bestellung{" "}
                                 {selectedOrder.orderId} als fehlerhaft zu melden.
                             </p>
                             <textarea
-                                className="w-full mb-4 px-4 py-2 border rounded-lg"
+                                className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Kommentar..."
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
                             />
                             <div className="flex justify-end gap-4">
                                 <button
-                                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded transition duration-300"
                                     onClick={cancelFaultyOrder}
                                 >
                                     Abbrechen
                                 </button>
                                 <button
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition duration-300"
                                     onClick={confirmFaultyOrder}
                                 >
                                     Fehlermeldung senden
