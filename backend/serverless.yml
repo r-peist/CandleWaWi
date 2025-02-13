@@ -5,21 +5,21 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
-  region: us-east-1 # Optional: AWS-Region
+  region: eu-central-1 # Optional: AWS-Region
   environment: # Optional: Umgebungsvariablen
     NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
 
 functions:
   #Einkauf trigger + Lieferanten anzeigen lassen
   getLieferanten:
-    handler: src/DBHandler/handlerGetLieferanten.getLieferanten
+    handler: src/Handler/handlerGetLieferanten.getLieferanten
     events:
       - http:
           path: getLieferanten
           method: get
 
   sendLieferanten:
-    handler: src/FrontendData/sendLieferanten.sendLieferanten
+    handler: src/responseSender/sendLieferanten.sendLieferanten
     events:
       - http:
           path: sendLieferanten
@@ -28,25 +28,63 @@ functions:
 
   #Ausgewählten Lieferanten an DB übergeben und Mats für diesen zurückschicken
   getLieferantFE:
-    handler: src/FrontendData/getLieferantFE.getLieferantFE
+    handler: src/Trigger/getLieferantFE.getLieferantFE
     events:
       - http:
           path: getLieferantenFE
           method: post
 
   getMatLief:
-    handler: src/DBHandler/handlerGetMatLief.getMatLief
+    handler: src/Handler/handlerGetMatLief.getMatLief
     events:
       - http:
           path: getMatLief
           method: post
 
   sendMatLief:
-    handler: src/FrontendData/sendMatLief.sendMatLief
+    handler: src/responseSender/sendMatLief.sendMatLief
     events:
       - http:
           path: sendMatLief
           method: post
+
+  #Bestellung speichern
+  getBestellung:
+    handler: src/Trigger/getBestellung.getBestellung
+    events:
+      - http:
+          path: getBestellung
+          method: post
+
+  handlerBestellung:
+    handler: src/Handler/handlerBestellung.handlerBestellung
+    events:
+      - http:
+          path: handlerBestellung
+          method: post
+
+  sendBestellung:
+    handler: src/responseSender/sendBestellung.sendBestellung
+    events:
+      - http:
+          path: sendBestellung
+          method: post
+
+  #Inventarabfrage
+  handlerInventar:
+    handler: src/Handler/handlerInventar.handlerInventar
+    events:
+      - http:
+          path: handlerInventar
+          method: get
+
+  sendInventar:
+    handler: src/responseSender/sendInventar.sendInventar
+    events:
+      - http:
+          path: sendInventar
+          method: post
+
 
   #Material des Lieferanten und Lieferant übergeben und
   #Mat, Lief und Link aus DB holen und zurücksenden
@@ -57,6 +95,7 @@ plugins:
 
 custom:
   serverless-offline:
+    log: true
     httpPort: 3001 # Der lokale Server läuft auf Port 3001
     noPrependStageInUrl: true # Kein Prefix für Umgebungen (z. B. dev)
 

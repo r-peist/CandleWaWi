@@ -1,67 +1,314 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Link from "next/link";
-import { FaPlus } from 'react-icons/fa';
-import Footer from '../components/Footer';
+"use client";
+import { useRouter } from "next/navigation"; // Importiere useRouter
+import { useEffect, useState } from "react";
+import { IoMdArrowBack } from "react-icons/io";
 
+// Omars Änderungen
 //Andere lösung, weil kein user client
-import { getSession } from '@auth0/nextjs-auth0';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { redirect } from 'next/navigation';
 
-const Wareneingang: NextPage = async () => {
-    // Authentifizierungsstatus überprüfen
-    const session = await getSession();
+// Dummy-API-Funktionen (hier mit Status-Feld)
+const fetchOpenOrders = async () => {
+    
+    return [
+        {
+            orderId: 1,
+            status: "in_pruefung",
+            items: [{ MatID: 1, Material: "Material A", Menge: 10 }],
+        },
+        {
+            orderId: 2,
+            status: "open",
+            items: [{ MatID: 2, Material: "Material B", Menge: 5 }],
+        },
+        {
+            orderId: 3,
+            status: "open",
+            items: [{ MatID: 3, Material: "Material C", Menge: 8 }],
+        },
+    ];
+};
 
-    if (!session?.user) {
-        // Nicht authentifiziert: Benutzer zur Homepage weiterleiten
-        redirect('/');
-    }
+const updateInventory = async (orderId) => {
+    console.log("Lagerbestand aktualisiert für Bestellung:", orderId);
+    return { success: true };
+};
 
+const submitComment = async (orderId, comment) => {
+    console.log("Kommentar abgeschickt:", { orderId, comment });
+    return { success: true };
+};
+
+const updateOrderStatus = async (orderId, status) => {
+    console.log("Bestellungsstatus aktualisiert:", { orderId, status });
+    return { success: true };
+};
+
+const WorkflowPage = () => {
+// Omars Änderungen
+    const { user, isLoading } = useUser();
+    const [step, setStep] = useState(1); // 1: Übersicht, 2: Korrektur
+    const [openOrders, setOpenOrders] = useState([]); // Alle Bestellungen
+    const [selectedOrder, setSelectedOrder] = useState(null); // Bestellung, die korrigiert werden soll
+    const [comment, setComment] = useState(""); // Kommentar für Korrektur
+    const [adjustedItems, setAdjustedItems] = useState([]); // Angepasste Artikel (neue Mengen)
+    const router = useRouter();
+
+    //Omar Änderungen
+    // Authentifizierung überprüfen
+    useEffect(() => {
+        if (!isLoading && !user) {
+            redirect('/');
+        }
+    }, [isLoading, user ]);
+    useEffect(() => {
+        loadOpenOrders();
+    }, []);
+
+    const loadOpenOrders = async () => {
+        const orders = await fetchOpenOrders();
+        setOpenOrders(orders);
+    };
+
+    // Unterteile die Bestellungen in zwei Gruppen:
+    const infoOrders = openOrders.filter(
+        (order) => order.status === "in_pruefung"
+    );
+    const actionableOrders = openOrders.filter(
+        (order) => order.status !== "in_pruefung"
+    );
+
+    // Aktion: Bestellung buchen
+    const handleBookOrder = async (order) => {
+        if (window.confirm("Bist du dir sicher, dass du die Bestellung buchen willst?")) {
+            const response = await updateOrderStatus(order.orderId, "closed");
+            if (response.success) {
+                alert(`Bestellung ${order.orderId} wurde gebucht!`);
+                await loadOpenOrders();
+            } else {
+                alert("Fehler beim Buchen der Bestellung.");
+            }
+        }
+    };
+
+    // Aktion: Fehlerhaft – Bestellung als fehlerhaft markieren und Korrektur starten
+    const handleMarkFaulty = async (order) => {
+        if (window.confirm("Bist du dir sicher, dass du die Bestellung als fehlerhaft markieren willst?")) {
+            const response = await updateOrderStatus(order.orderId, "in_pruefung");
+            if (response.success) {
+                setSelectedOrder(order);
+                setAdjustedItems(
+                    order.items.map((item) => ({
+                        ...item,
+                        adjustedQuantity: item.Menge,
+                    }))
+                );
+                setStep(2);
+            } else {
+                alert("Fehler beim Markieren der Bestellung als fehlerhaft.");
+            }
+        }
+    };
+
+    // In Schritt 2: Menge anpassen
+    const handleAdjustQuantity = (matId, newQuantity) => {
+        setAdjustedItems((prevItems) =>
+            prevItems.map((item) =>
+                item.MatID === matId
+                    ? { ...item, adjustedQuantity: Math.max(0, newQuantity) }
+                    : item
+            )
+        );
+    };
+
+    // In Schritt 2: Korrektur abschließen
+    const handleNextStep = async () => {
+        if (!comment) {
+            alert("Bitte geben Sie einen Kommentar zur Korrektur ein.");
+            return;
+        }
+        const commentResponse = await submitComment(selectedOrder.orderId, comment);
+        if (!commentResponse.success) {
+            alert("Fehler beim Speichern des Kommentars.");
+            return;
+        }
+        const inventoryResponse = await updateInventory(selectedOrder.orderId);
+        if (!inventoryResponse.success) {
+            alert("Fehler beim Aktualisieren des Lagerbestands.");
+            return;
+        }
+        const orderResponse = await updateOrderStatus(selectedOrder.orderId, "closed");
+        if (!orderResponse.success) {
+            alert("Fehler beim Abschließen der Bestellung.");
+            return;
+        }
+        alert("Bestellung erfolgreich abgeschlossen und Lagerbestand aktualisiert!");
+        setStep(1);
+        setSelectedOrder(null);
+        setComment("");
+        setAdjustedItems([]);
+        await loadOpenOrders();
+    };
+
+    const handleCancel = () => {
+        setStep(1);
+        setSelectedOrder(null);
+        setComment("");
+        setAdjustedItems([]);
+    };
+ // Omars Änderungen
+    // Authentifizierung überprüfen
+    useEffect(() => {
+        if (!isLoading && !user) {
+            redirect('/');
+        }
+    }, [isLoading, user ]);
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-            <Head>
-                <title>Wareneingang</title>
-                <meta name="description" content="Verwalte eingehende Waren effizient." />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+        <div className="min-h-screen bg-gray-100 p-8">
+            <header className="mb-8 flex justify-between items-center">
+                <button
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow flex items-center space-x-2"
+                    onClick={() => router.push("/")}
+                >
+                    <IoMdArrowBack size={16} />
+                    <span>Zurück</span>
+                </button>
+                <h1 className="text-3xl font-bold text-center flex-grow text-gray-800">
+                    Wareneingang
+                </h1>
+            </header>
 
-            <main className="flex flex-col items-center justify-center w-full flex-1 px-4">
-
-                <h1 className="text-4xl font-bold mb-8">Wareneingang</h1>
-                <p className="mb-4 text-gray-600">Hier kannst du eingehende Waren überprüfen und hinzufügen.</p>
-
-
-
-                <div className="flex justify-center items-center space-x-4">
-                    <Link href="/wehinzu" className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors">
-                        <FaPlus className="mr-2" />
-                        Neuen Wareneingang hinzufügen
-                    </Link>
-                </div>
-
-
-                {/* Platz für zukünftige Eingänge oder Listen */}
-                <div className="mt-8 w-full max-w-4xl">
-                    <h2 className="text-2xl font-semibold mb-4">Eingehende Waren:</h2>
-                    <div className="bg-white shadow-md rounded-lg p-6">
-                        {/* Beispiel-Daten - Diese könnten später dynamisch geladen werden */}
-                        <ul>
-                            <li className="mb-2">Bestellung #001234 - 10x Artikel A - Eingetroffen am 10.10.2024</li>
-                            <li className="mb-2">Bestellung #001235 - 20x Artikel B - Eingetroffen am 11.10.2024</li>
-                            <li className="mb-2">Bestellung #001236 - 5x Artikel C - Eingetroffen am 12.10.2024</li>
+            <div className="max-w-3xl mx-auto space-y-8">
+                {/* Bereich: Inventarkorrektur (nur Info) */}
+                {infoOrders.length > 0 && (
+                    <div className="bg-gray-200 p-4 rounded-lg">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                            Inventarkorrektur (nur Info)
+                        </h2>
+                        <ul className="space-y-4">
+                            {infoOrders.map((order) => (
+                                <li
+                                    key={order.orderId}
+                                    className="p-4 bg-gray-100 rounded-lg shadow-md"
+                                >
+                                    <p className="font-semibold">
+                                        Bestell-ID: {order.orderId} (Status: {order.status})
+                                    </p>
+                                    <ul className="mt-2">
+                                        {order.items.map((item) => (
+                                            <li key={item.MatID} className="text-sm">
+                                                {item.Material} - {item.Menge} Stück
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
                         </ul>
                     </div>
-                </div>
+                )}
 
-                <Link href="/" className="mt-4 inline-block text-blue-500 hover:underline">
-                    &larr; Zurück
-                </Link>
+                {/* Bereich: Offene Bestellungen */}
+                {actionableOrders.length > 0 && (
+                    <div className="bg-white p-4 rounded-lg shadow">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                            Offene Bestellungen
+                        </h2>
+                        <ul className="space-y-4">
+                            {actionableOrders.map((order) => (
+                                <li
+                                    key={order.orderId}
+                                    className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col gap-2"
+                                >
+                                    <div>
+                                        <p className="font-semibold">
+                                            Bestell-ID: {order.orderId} (Status: {order.status})
+                                        </p>
+                                        <ul className="mt-1 text-sm text-gray-700">
+                                            {order.items.map((item) => (
+                                                <li key={item.MatID}>
+                                                    {item.Material} - {item.Menge} Stück
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="flex justify-end gap-4">
+                                        <button
+                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                            onClick={() => handleBookOrder(order)}
+                                        >
+                                            Bestellung buchen
+                                        </button>
+                                        <button
+                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                            onClick={() => handleMarkFaulty(order)}
+                                        >
+                                            Fehlerhaft
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
-            </main>
-
-            <Footer/>
+                {/* Schritt 2: Inventarkorrektur */}
+                {step === 2 && selectedOrder && (
+                    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                            Inventarkorrektur für Bestellung {selectedOrder.orderId}
+                        </h2>
+                        <ul className="divide-y divide-gray-300">
+                            {adjustedItems.map((item) => (
+                                <li
+                                    key={item.MatID}
+                                    className="flex justify-between items-center py-4"
+                                >
+                                    <div>
+                                        <p className="font-semibold">{item.Material}</p>
+                                        <p className="text-sm text-gray-600">
+                                            Ursprünglich: {item.Menge} Stück
+                                        </p>
+                                    </div>
+                                    <input
+                                        type="number"
+                                        className="w-24 border rounded px-2 py-1"
+                                        value={item.adjustedQuantity}
+                                        onChange={(e) =>
+                                            handleAdjustQuantity(
+                                                item.MatID,
+                                                parseInt(e.target.value, 10)
+                                            )
+                                        }
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                        <textarea
+                            className="w-full mt-4 px-4 py-2 border rounded-lg"
+                            placeholder="Kommentar für Korrektur..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                        />
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+                                onClick={handleCancel}
+                            >
+                                Abbrechen
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                                onClick={handleNextStep}
+                            >
+                                Abschluss
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default Wareneingang
+export default WorkflowPage;

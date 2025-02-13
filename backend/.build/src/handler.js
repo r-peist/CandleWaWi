@@ -49,3 +49,4 @@ const getData = async (event) => {
     }
 };
 exports.getData = getData;
+//# sourceMappingURL=handler.js.map

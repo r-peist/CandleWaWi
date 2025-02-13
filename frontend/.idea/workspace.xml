@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/DBHandler/handlerGetMatLief.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/getLieferantFE.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendLieferanten.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendLieferanten.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendMatLief.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/FrontendData/sendMatLief.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/db/dbclient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/db/dbclient.js" afterDir="false" />
-    </list>
+    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,8 +13,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="HTTP Request" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -38,7 +32,12 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;HTTP Request.All in Inventar.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.All in supl.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.All in suppliers.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.Bestell | POST request to send getBestellung.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.Inventar | POST request to send getBestellung.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.supl | GET request to example server.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.suppliers | #1.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.suppliers | GET request to example server.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.suppliers | POST request to send lieferantId.executor&quot;: &quot;Run&quot;,
@@ -55,25 +54,34 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="HTTP Request.suppliers | POST request to send lieferantId">
-    <configuration name="All in suppliers" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/src/app/api/suppliers.http">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\1CandleWaWi\CandleWaWi\frontend\src\app\changes\changes3" />
+    </key>
+  </component>
+  <component name="RunManager" selected="HTTP Request.Bestell | POST request to send getBestellung">
+    <configuration name="All in Inventar" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/src/app/api/Inventar.http">
       <method v="2" />
     </configuration>
-    <configuration name="suppliers | GET request to example server" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="GET request to example server" runType="Run single request">
+    <configuration name="Bestell | POST request to send getBestellung" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/Bestell.http" requestIdentifier="POST request to send getBestellung" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="Inventar | POST request to send getBestellung" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/Inventar.http" requestIdentifier="POST request to send getBestellung" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="supl | GET request to example server" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/supl.http" requestIdentifier="GET request to example server" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="suppliers | POST request to send lieferantId" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="POST request to send lieferantId" runType="Run single request">
       <method v="2" />
     </configuration>
-    <configuration name="suppliers | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="#1" runType="Run single request">
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.Bestell | POST request to send getBestellung" />
         <item itemvalue="HTTP Request.suppliers | POST request to send lieferantId" />
-        <item itemvalue="HTTP Request.All in suppliers" />
-        <item itemvalue="HTTP Request.suppliers | #1" />
-        <item itemvalue="HTTP Request.suppliers | GET request to example server" />
+        <item itemvalue="HTTP Request.Inventar | POST request to send getBestellung" />
+        <item itemvalue="HTTP Request.supl | GET request to example server" />
+        <item itemvalue="HTTP Request.All in Inventar" />
       </list>
     </recent_temporary>
   </component>
@@ -97,6 +105,19 @@
       <workItem from="1734294302249" duration="9384000" />
       <workItem from="1734354477170" duration="6226000" />
       <workItem from="1734360811904" duration="385000" />
+      <workItem from="1735151684873" duration="906000" />
+      <workItem from="1735212140080" duration="131000" />
+      <workItem from="1735220040068" duration="2952000" />
+      <workItem from="1735234219501" duration="5588000" />
+      <workItem from="1735306505204" duration="1522000" />
+      <workItem from="1735550431562" duration="2467000" />
+      <workItem from="1735565317935" duration="44000" />
+      <workItem from="1735565812289" duration="10000" />
+      <workItem from="1738427873773" duration="8317000" />
+      <workItem from="1738507585834" duration="774000" />
+      <workItem from="1738595684811" duration="4792000" />
+      <workItem from="1739115952288" duration="1198000" />
+      <workItem from="1739124799470" duration="1532000" />
     </task>
     <servers />
   </component>

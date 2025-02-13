@@ -1,27 +1,50 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { closePool, getConnection } from "../db/dbclient"; // Importiere den DB-Wrapper
-import { sendLieferanten } from "../FrontendData/sendLieferanten";
-import axios from "axios"; //Für HTTP Aufruf
 
-export const getLieferanten = async (
+export const getMatLief = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   let connection;
 
   try {
+    // JSON-Daten aus dem Request-Body lesen
+    const lieferant = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+    console.log("Empfangene Daten:", lieferant);
+
+    // Zugriff auf das Feld LiefID
+    const liefID = lieferant?.LiefID;
+
+    if (!liefID) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: "LiefID fehlt in der Anfrage!",
+        }),
+      };
+    }
+
     // Verbindung zur Datenbank herstellen
     connection = await getConnection();
 
-    // Beispiel-Abfrage: Tabelleninformationen abrufen
-    const [rows] = await connection.query("SELECT * FROM lieferant");
-
-    const lieferanten = JSON.stringify(rows);
-
-    const response = await axios.post(
-      "http://localhost:3001/sendLieferanten",
-      // der Funktion sendLieferanten werden Daten übergeben
-      { sendLieferanten: lieferanten }
+    // SQL-Abfrage mit Joins, um MaterialName und LieferantName abzurufen
+    const [rows] = await connection.query(
+      `
+      SELECT 
+        ml.MatLiefID,
+        ml.MatID,
+        ml.LiefID,
+        ml.Link,
+        m.Name AS MaterialName,
+        l.Name AS LieferantName
+      FROM materiallieferant ml
+      INNER JOIN material m ON ml.MatID = m.MatID
+      INNER JOIN lieferant l ON ml.LiefID = l.LiefID
+      WHERE ml.LiefID = ?
+    `,
+      [liefID]
     );
+
+    console.log("Abfrageergebnisse:", rows);
 
     // Erfolgreiche Antwort mit Abfrageergebnissen
     return {
@@ -34,7 +57,7 @@ export const getLieferanten = async (
   } catch (error) {
     if (error instanceof Error) {
       console.error("Datenbankfehler:", error.message);
-   
+
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -44,7 +67,7 @@ export const getLieferanten = async (
       };
     } else {
       console.error("Unbekannter Fehler:", error);
-  
+
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -53,7 +76,6 @@ export const getLieferanten = async (
         }),
       };
     }
-  
   } finally {
     // Verbindung freigeben
     if (connection) {

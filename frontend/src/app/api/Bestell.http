@@ -1,0 +1,18 @@
+### POST request to send getBestellung
+POST http://localhost:3001/getBestellung
+
+{
+    "LiefID": 1,
+    "LagerID": 1,
+    "Datum": "2024-12-30",
+    "Materialien": [
+        {
+            "MatID": 1,
+            "Menge": 3
+        },
+        {
+            "MatID": 2,
+            "Menge": 1
+        }
+    ]
+}
