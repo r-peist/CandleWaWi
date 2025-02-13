@@ -3,27 +3,7 @@ import { useState, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
-// Dummy-API-Funktionen (Status-Feld)
-const fetchOpenOrders = async () => {
-    return [
-        {
-            orderId: 1,
-            status: "in_pruefung",
-            items: [{ MatID: 1, Material: "Material A", Menge: 10 }],
-        },
-        {
-            orderId: 2,
-            status: "open",
-            items: [{ MatID: 2, Material: "Material B", Menge: 5 }],
-        },
-        {
-            orderId: 3,
-            status: "open",
-            items: [{ MatID: 3, Material: "Material C", Menge: 8 }],
-        },
-    ];
-};
-
+// Dummy-API-Funktionen für noch nicht integrierte Funktionen
 const updateInventory = async (orderId) => {
     console.log("Lagerbestand aktualisiert für Bestellung:", orderId);
     return { success: true };
@@ -39,35 +19,98 @@ const updateOrderStatus = async (orderId, status) => {
     return { success: true };
 };
 
-const income = () => {
-    const [openOrders, setOpenOrders] = useState([]); // Alle Bestellungen
-    const [selectedOrder, setSelectedOrder] = useState(null); // Für fehlerhafte Meldung bzw. Modal
-    const [comment, setComment] = useState(""); // Kommentar für Fehlerhaft-Meldung
-    const [showBookModal, setShowBookModal] = useState(false); // Steuert das Buchungs-Bestätigungsmodal
+export default function Income() {
+    const [openOrders, setOpenOrders] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [comment, setComment] = useState("");
+    const [showBookModal, setShowBookModal] = useState(false);
     const [orderForBooking, setOrderForBooking] = useState(null);
-    const [showFaultyModal, setShowFaultyModal] = useState(false); // Steuert das Fehlerhaft-Modal (Popup)
+    const [showFaultyModal, setShowFaultyModal] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
+
+    // Funktion zum Laden der Daten – es wird garantiert immer ein echter Fetch ausgeführt
+    const loadOpenOrders = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch("/api/income", {
+                cache: "no-store",
+                next: { revalidate: 0, dynamic: "force-dynamic" }
+            });
+
+            if (!res.ok) {
+                throw new Error(`Fehler: ${res.status}`);
+            }
+
+            const result = await res.json();
+
+            if (!result.offen || !result.pruefung) {
+                throw new Error("Leere oder ungültige Antwort vom Backend!");
+            }
+
+            // Falls das Backend keine Daten liefert, soll es stoppen:
+            if (result.offen.length === 0 && result.pruefung.length === 0) {
+                throw new Error("Keine offenen Bestellungen gefunden!");
+            }
+
+
+            setOpenOrders([
+                ...result.offen.map(order => ({
+                    orderId: order.BestellID,
+                    status: "open",
+                    items: order.Materialien.map(mat => ({
+                        MatID: mat.MatID,
+                        Material: mat.Name,
+                        Menge: mat.Menge
+                    }))
+                })),
+                ...result.pruefung.map(order => ({
+                    orderId: order.BestellID,
+                    status: "in_pruefung",
+                    items: order.Materialien.map(mat => ({
+                        MatID: mat.MatID,
+                        Material: mat.Name,
+                        Menge: mat.Menge
+                    }))
+                }))
+            ]);
+        } catch (err) {
+            console.error("Fehler beim Laden der Bestellungen:", err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
         loadOpenOrders();
     }, []);
 
-    const loadOpenOrders = async () => {
-        const orders = await fetchOpenOrders();
-        setOpenOrders(orders);
-    };
+    // Damit auch bei "Back"-Navigation (bspw. mit dem Browser-Back-Button) immer neu geladen wird:
+    useEffect(() => {
+        const handlePageShow = (event) => {
+            if (event.persisted) {
+                loadOpenOrders();
+            }
+        };
 
-    // Unterteile Bestellungen in zwei Gruppen:
-    // Offene Bestellungen (bearbeitbar)
+        window.addEventListener("pageshow", handlePageShow);
+        return () => {
+            window.removeEventListener("pageshow", handlePageShow);
+        };
+    }, []);
+
+    // Aufteilung in bearbeitbare Bestellungen und solche in Prüfung
     const actionableOrders = openOrders.filter(
         (order) => order.status !== "in_pruefung"
     );
-    // Bestellungen, die in Prüfung sind (nur Info – ausgegraut)
     const infoOrders = openOrders.filter(
         (order) => order.status === "in_pruefung"
     );
 
-    // Modal: Buchung bestätigen (wie gehabt)
+    // Buchung initiieren
     const handleBookOrder = (order) => {
         setOrderForBooking(order);
         setShowBookModal(true);
@@ -87,7 +130,7 @@ const income = () => {
         }
     };
 
-    // Fehlerhaft: Statt eines Bestätigungsdialogs öffnet sich ein Modal mit Kommentar-Eingabe.
+    // Fehlerhaft-Meldung initiieren
     const handleMarkFaulty = (order) => {
         setSelectedOrder(order);
         setShowFaultyModal(true);
@@ -103,7 +146,7 @@ const income = () => {
             alert("Fehler beim Speichern des Kommentars.");
             return;
         }
-        // Setze den Status der Bestellung auf "in_pruefung"
+        // Setze den Bestellungsstatus auf "in_pruefung"
         const statusResponse = await updateOrderStatus(selectedOrder.orderId, "in_pruefung");
         if (!statusResponse.success) {
             alert("Fehler beim Aktualisieren des Bestellungsstatus.");
@@ -138,7 +181,10 @@ const income = () => {
             </header>
 
             <div className="max-w-3xl mx-auto space-y-8">
-                {/* Bereich: Offene Bestellungen */}
+                {error && <div>Error: {error}</div>}
+                {loading && <div>Lade Daten…</div>}
+
+                {/* Offene Bestellungen */}
                 {actionableOrders.length > 0 && (
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-2xl font-semibold mb-4 text-center">
@@ -151,9 +197,7 @@ const income = () => {
                                     className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col gap-2"
                                 >
                                     <div>
-                                        <p className="font-semibold">
-                                            Bestell-ID: {order.orderId}
-                                        </p>
+                                        <p className="font-semibold">Bestell-ID: {order.orderId}</p>
                                         <ul className="mt-1 text-sm text-gray-700">
                                             {order.items.map((item) => (
                                                 <li key={item.MatID}>
@@ -182,7 +226,7 @@ const income = () => {
                     </div>
                 )}
 
-                {/* Bereich: Bestellungen in Prüfung (nur Info, ausgegraut) */}
+                {/* Bestellungen in Prüfung (Info – ausgegraut) */}
                 {infoOrders.length > 0 && (
                     <div className="bg-gray-200 p-4 rounded-lg">
                         <h2 className="text-2xl font-semibold mb-4 text-center">
@@ -194,9 +238,7 @@ const income = () => {
                                     key={order.orderId}
                                     className="p-4 bg-gray-100 rounded-lg shadow-md opacity-50"
                                 >
-                                    <p className="font-semibold">
-                                        Bestell-ID: {order.orderId}
-                                    </p>
+                                    <p className="font-semibold">Bestell-ID: {order.orderId}</p>
                                     <ul className="mt-2">
                                         {order.items.map((item) => (
                                             <li key={item.MatID} className="text-sm">
@@ -286,6 +328,4 @@ const income = () => {
             </div>
         </div>
     );
-};
-
-export default income;
+}
