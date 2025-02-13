@@ -3,22 +3,6 @@ import { useState, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
-// Dummy-API-Funktionen für noch nicht integrierte Funktionen
-const updateInventory = async (orderId) => {
-    console.log("Lagerbestand aktualisiert für Bestellung:", orderId);
-    return { success: true };
-};
-
-const submitComment = async (orderId, comment) => {
-    console.log("Kommentar abgeschickt:", { orderId, comment });
-    return { success: true };
-};
-
-const updateOrderStatus = async (orderId, status) => {
-    console.log("Bestellungsstatus aktualisiert:", { orderId, status });
-    return { success: true };
-};
-
 export default function Income() {
     const [openOrders, setOpenOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -30,13 +14,13 @@ export default function Income() {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    // Funktion zum Laden der Daten – es wird garantiert immer ein echter Fetch ausgeführt
+    // Funktion zum Laden der offenen Bestellungen
     const loadOpenOrders = async () => {
         setLoading(true);
         try {
             const res = await fetch("/api/income", {
                 cache: "no-store",
-                next: { revalidate: 0, dynamic: "force-dynamic" }
+                next: { revalidate: 0, dynamic: "force-dynamic" },
             });
 
             if (!res.ok) {
@@ -54,28 +38,27 @@ export default function Income() {
                 throw new Error("Keine offenen Bestellungen gefunden!");
             }
 
-
             setOpenOrders([
-                ...result.offen.map(order => ({
+                ...result.offen.map((order) => ({
                     orderId: order.BestellID,
                     status: "open",
-                    items: order.Materialien.map(mat => ({
+                    items: order.Materialien.map((mat) => ({
                         MatID: mat.MatID,
                         Material: mat.Name,
-                        Menge: mat.Menge
-                    }))
+                        Menge: mat.Menge,
+                    })),
                 })),
-                ...result.pruefung.map(order => ({
+                ...result.pruefung.map((order) => ({
                     orderId: order.BestellID,
                     status: "in_pruefung",
-                    items: order.Materialien.map(mat => ({
+                    items: order.Materialien.map((mat) => ({
                         MatID: mat.MatID,
                         Material: mat.Name,
-                        Menge: mat.Menge
-                    }))
-                }))
+                        Menge: mat.Menge,
+                    })),
+                })),
             ]);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Fehler beim Laden der Bestellungen:", err);
             setError(err.message);
         } finally {
@@ -83,14 +66,13 @@ export default function Income() {
         }
     };
 
-
     useEffect(() => {
         loadOpenOrders();
     }, []);
 
-    // Damit auch bei "Back"-Navigation (bspw. mit dem Browser-Back-Button) immer neu geladen wird:
+    // Damit auch bei "Back"-Navigation (z. B. mit dem Browser-Back-Button) immer neu geladen wird:
     useEffect(() => {
-        const handlePageShow = (event) => {
+        const handlePageShow = (event: any) => {
             if (event.persisted) {
                 loadOpenOrders();
             }
@@ -118,13 +100,24 @@ export default function Income() {
 
     const confirmBookOrder = async () => {
         if (orderForBooking) {
-            const response = await updateOrderStatus(orderForBooking.orderId, "closed");
-            if (response.success) {
-                alert(`Bestellung ${orderForBooking.orderId} wurde gebucht!`);
-                setShowBookModal(false);
-                setOrderForBooking(null);
-                await loadOpenOrders();
-            } else {
+            try {
+                const response = await fetch("/api/bookorder", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ orderId: orderForBooking.orderId }),
+                });
+                const result = await response.json();
+
+                if (result.Status?.success) {
+                    alert(`Bestellung ${orderForBooking.orderId} wurde gebucht!`);
+                    setShowBookModal(false);
+                    setOrderForBooking(null);
+                    await loadOpenOrders();
+                } else {
+                    alert("Fehler beim Buchen der Bestellung.");
+                }
+            } catch (error) {
+                console.error("Fehler beim Buchen:", error);
                 alert("Fehler beim Buchen der Bestellung.");
             }
         }
@@ -141,22 +134,30 @@ export default function Income() {
             alert("Bitte geben Sie einen Kommentar zur Fehlerhaft-Meldung ein.");
             return;
         }
-        const commentResponse = await submitComment(selectedOrder.orderId, comment);
-        if (!commentResponse.success) {
-            alert("Fehler beim Speichern des Kommentars.");
-            return;
+        try {
+            const response = await fetch("/api/faultyorder", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    orderId: selectedOrder.orderId,
+                    comment: comment,
+                }),
+            });
+            const result = await response.json();
+
+            if (result.Status?.success) {
+                alert("Bestellung wurde als fehlerhaft markiert und in Prüfung gesetzt.");
+                setShowFaultyModal(false);
+                setSelectedOrder(null);
+                setComment("");
+                await loadOpenOrders();
+            } else {
+                alert("Fehler beim Senden der Fehlermeldung.");
+            }
+        } catch (error) {
+            console.error("Fehler beim Senden der Fehlermeldung:", error);
+            alert("Fehler beim Senden der Fehlermeldung.");
         }
-        // Setze den Bestellungsstatus auf "in_pruefung"
-        const statusResponse = await updateOrderStatus(selectedOrder.orderId, "in_pruefung");
-        if (!statusResponse.success) {
-            alert("Fehler beim Aktualisieren des Bestellungsstatus.");
-            return;
-        }
-        alert("Bestellung wurde als fehlerhaft markiert und in Prüfung gesetzt.");
-        setShowFaultyModal(false);
-        setSelectedOrder(null);
-        setComment("");
-        await loadOpenOrders();
     };
 
     const cancelFaultyOrder = () => {
@@ -266,7 +267,8 @@ export default function Income() {
                                 Bestätigung
                             </h2>
                             <p className="mb-4 text-center">
-                                Bist du dir sicher, dass du die Bestellung {orderForBooking.orderId} buchen möchtest?
+                                Bist du dir sicher, dass du die Bestellung{" "}
+                                {orderForBooking.orderId} buchen möchtest?
                             </p>
                             <div className="flex justify-end gap-4">
                                 <button
@@ -300,7 +302,8 @@ export default function Income() {
                                 Fehlermeldung senden
                             </h2>
                             <p className="mb-4 text-center">
-                                Bitte geben Sie einen Kommentar ein, um die Bestellung {selectedOrder.orderId} als fehlerhaft zu melden.
+                                Bitte geben Sie einen Kommentar ein, um die Bestellung{" "}
+                                {selectedOrder.orderId} als fehlerhaft zu melden.
                             </p>
                             <textarea
                                 className="w-full mb-4 px-4 py-2 border rounded-lg"

@@ -1,0 +1,9 @@
+
+POST http://localhost:3001/validatedBuchung
+Content-Type: application/json
+
+{
+  "Buchung": {
+    "BestellID": 1
+  }
+}

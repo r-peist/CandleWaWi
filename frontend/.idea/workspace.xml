@@ -30,45 +30,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.All in Inventar.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.All in supl.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.All in suppliers.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.Bestell | POST request to send getBestellung.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.Inventar | POST request to send getBestellung.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.supl | GET request to example server.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.suplmat | GET request to example server.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.suppliers | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.suppliers | GET request to example server.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.suppliers | POST request to send lieferantId.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.wareneingang | GET request to example server.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;F:/1CandleWaWi/CandleWaWi&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;F:\\1CandleWaWi\\CandleWaWi\\frontend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.All in Inventar.executor": "Run",
+    "HTTP Request.All in supl.executor": "Run",
+    "HTTP Request.All in suppliers.executor": "Run",
+    "HTTP Request.Bestell | POST request to send getBestellung.executor": "Run",
+    "HTTP Request.Inventar | POST request to send getBestellung.executor": "Run",
+    "HTTP Request.buchung | #1.executor": "Run",
+    "HTTP Request.supl | GET request to example server.executor": "Run",
+    "HTTP Request.suplmat | GET request to example server.executor": "Run",
+    "HTTP Request.suppliers | #1.executor": "Run",
+    "HTTP Request.suppliers | GET request to example server.executor": "Run",
+    "HTTP Request.suppliers | POST request to send lieferantId.executor": "Run",
+    "HTTP Request.wareneingang | GET request to example server.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "F:/1CandleWaWi/CandleWaWi",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "F:\\1CandleWaWi\\CandleWaWi\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\1CandleWaWi\CandleWaWi\frontend\src\app\changes\changes3" />
     </key>
   </component>
-  <component name="RunManager" selected="HTTP Request.wareneingang | GET request to example server">
+  <component name="RunManager" selected="HTTP Request.buchung | #1">
     <configuration name="Bestell | POST request to send getBestellung" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/Bestell.http" requestIdentifier="POST request to send getBestellung" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="Inventar | POST request to send getBestellung" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/Inventar.http" requestIdentifier="POST request to send getBestellung" runType="Run single request">
       <method v="2" />
     </configuration>
-    <configuration name="suplmat | GET request to example server" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suplmat.http" requestIdentifier="GET request to example server" runType="Run single request">
+    <configuration name="buchung | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/buchung.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="suppliers | POST request to send lieferantId" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/app/api/suppliers.http" requestIdentifier="POST request to send lieferantId" runType="Run single request">
@@ -79,11 +80,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.buchung | #1" />
         <item itemvalue="HTTP Request.wareneingang | GET request to example server" />
         <item itemvalue="HTTP Request.Inventar | POST request to send getBestellung" />
         <item itemvalue="HTTP Request.suppliers | POST request to send lieferantId" />
         <item itemvalue="HTTP Request.Bestell | POST request to send getBestellung" />
-        <item itemvalue="HTTP Request.suplmat | GET request to example server" />
       </list>
     </recent_temporary>
   </component>

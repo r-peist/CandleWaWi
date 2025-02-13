@@ -24,8 +24,6 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        console.log(`[API] Backend-Status: ${response.status}`);
-
         if (!response.ok) {
             throw new Error(`Fehler beim Abrufen der Wareneingang-Daten: ${response.status}`);
         }
@@ -40,8 +38,6 @@ export async function GET(req: NextRequest) {
                 { status: 500 }
             );
         }
-
-        console.log("[API] Antwort vom Backend:", JSON.stringify(result, null, 2));
 
         if (!result.data || !result.data.Wareneingang) {
             throw new Error("Wareneingangsdaten fehlen oder sind ungültig.");
