@@ -13,10 +13,14 @@ const ProductionOverviewPage = () => {
         router.push("/production/creation");
     };
 
+    const handleBack = () => {
+        router.back();
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8 flex flex-col items-center justify-center">
             <h1 className="text-4xl font-bold mb-8">Produktion</h1>
-            <div className="flex gap-8">
+            <div className="flex gap-8 mb-4">
                 <button
                     onClick={handleNeuentwicklung}
                     className="px-6 py-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
@@ -30,6 +34,12 @@ const ProductionOverviewPage = () => {
                     Herstellung
                 </button>
             </div>
+            <button
+                onClick={handleBack}
+                className="px-6 py-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            >
+                Zurück
+            </button>
         </div>
     );
 };
