@@ -11,6 +11,8 @@ export async function GET(req: NextRequest) {
             headers: {
                 "Cache-Control": "no-store",
             },
+            // Erzwingt, dass immer eine frische Antwort abgerufen wird
+            next: { revalidate: 0 },
         });
 
         if (!response.ok) {
@@ -21,7 +23,9 @@ export async function GET(req: NextRequest) {
         console.log("Frontend: Daten erfolgreich erhalten:", data);
 
         // Extrahiere das Inventar-Array aus dem verschachtelten Objekt
-        const inventar = data?.response?.sendInventar?.inventar;
+        // Vorher: data?.response?.sendInventar?.inventar
+        // Neu: data?.response?.data?.Inventar
+        const inventar = data?.response?.data?.Inventar;
 
         if (!inventar || !Array.isArray(inventar)) {
             throw new Error("Inventar-Daten fehlen oder haben das falsche Format");
