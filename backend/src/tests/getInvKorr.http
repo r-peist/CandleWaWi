@@ -1,0 +1,2 @@
+### GET request to trigger handlerGetInvKorr.ts
+GET http://localhost:3001/handlerGetInvKorr

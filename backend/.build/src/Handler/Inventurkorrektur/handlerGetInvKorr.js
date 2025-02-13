@@ -36,20 +36,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLieferanten = void 0;
+exports.handlerGetInvKor = void 0;
 const dbclient_1 = require("../../db/dbclient"); // Importiere den DB-Wrapper
 const node_fetch_1 = __importDefault(require("node-fetch")); // Für HTTP Aufruf
 const Errors = __importStar(require("../../error/errors"));
-const validate_1 = require("../../validation/validate");
-const getLieferanten = async (event) => {
+const handlerGetInvKor = async (event) => {
     let connection;
     try {
         // Verbindung zur Datenbank herstellen
         connection = await (0, dbclient_1.getConnection)();
-        // Beispiel-Abfrage: Tabelleninformationen abrufen
-        const [Lieferanten] = await connection.query("SELECT * FROM lieferant");
-        const lieferanten = { Lieferanten: Lieferanten };
-        const validatedData = (0, validate_1.validateData)("handlerlieferantSchema", lieferanten);
+        const validatedData = "";
         // HTTP-Post-Aufruf mit node-fetch
         const response = await (0, node_fetch_1.default)("http://localhost:3001/responseSender", {
             method: "POST",
@@ -80,5 +76,5 @@ const getLieferanten = async (event) => {
         await (0, dbclient_1.closePool)();
     }
 };
-exports.getLieferanten = getLieferanten;
-//# sourceMappingURL=handlerGetLieferanten.js.map
+exports.handlerGetInvKor = handlerGetInvKor;
+//# sourceMappingURL=handlerGetInvKorr.js.map

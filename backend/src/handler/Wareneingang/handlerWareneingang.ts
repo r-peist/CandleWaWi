@@ -2,7 +2,7 @@ import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { closePool, getConnection } from "../../db/dbclient"; // Importiere den DB-Wrapper
 import * as Errors from "../../error/errors";
 import { validateData } from "../../validation/validate";
-import { Material, Bestellung, BestellungenStatus } from "../../interfaces";
+import { MaterialBest, Bestellung, BestellungenStatus } from "../../interfaces";
 
 export const handlerWareneingang = async (
   event: APIGatewayEvent
@@ -42,7 +42,7 @@ export const handlerWareneingang = async (
       `;
       const [materialRows]: any = await connection.execute(queryMaterialien, [BestellID]);
 
-      let materialien: Material = {
+      let materialien: MaterialBest = {
         MatID: 0,
         Name: "",
         Menge: 0,

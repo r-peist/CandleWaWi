@@ -5,8 +5,8 @@ export interface ValidatedEvent<T = Record<string, unknown>> extends Omit<APIGat
   validatedBody: T;
 }
 
-//Interfaces für src/handler/Wareneingang/handlerWareneingang
-export interface Material {
+//Interfaces für src/handler/Wareneingang/handlerWareneingang.ts
+export interface MaterialBest {
   MatID: number;
   Name: string;
   Menge: number;
@@ -16,12 +16,38 @@ export interface Bestellung {
   LiefID: number;
   LagerID: number;
   Bestelldatum: string;
-  Materialien: Material[];
+  Materialien: MaterialBest[];
 }
 export interface BestellungenStatus {
   Wareneingang: {
     offen: Bestellung[];
     pruefung: Bestellung[];
   }
+}
+
+//Interfaces für src/handler/Inventarkorrektur/handlerGetInvKorr.ts
+export interface InvKorrMats {
+  MatID: number;
+  Name: string;
+  Menge: number;
+  neue_Menge: number;
+  Kommentar: string;
+  Datum: string;
+  Benutzer: string;
+}
+
+export interface InvKorrBest {
+  BestellID: number;
+  Kommentar: string;
+  Datum: string;
+  Benutzer: string;
+  Material: MaterialInvKorr[];
+}
+
+export interface MaterialInvKorr {
+  MatID: number;
+  Name: string;
+  Menge: string;
+  neue_Menge: string;
 }
 

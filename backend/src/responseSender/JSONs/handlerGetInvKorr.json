@@ -1,0 +1,47 @@
+{
+    "Inventarkorrektur": {
+      "InvKorrMats": [
+        {
+          "MatID": 101,
+          "Name": "Material A",
+          "Menge": 10,
+          "neue_Menge": 12,
+          "Kommentar": "Korrektur Erhöhung",
+          "Datum": "2024-04-21",
+          "Benutzer": "admin"
+        },
+        {
+          "MatID": 102,
+          "Name": "Material B",
+          "Menge": 5,
+          "neue_Menge": 3,
+          "Kommentar": "Korrektur Reduzierung",
+          "Datum": "2024-04-21",
+          "Benutzer": "admin"
+        }
+      ],
+      "InvKorrBest": [
+        {
+          "BestellID": 2001,
+          "Kommentar": "Bestellung korrigiert",
+          "Datum": "2024-04-21",
+          "Benutzer": "admin",
+          "Material": [
+            {
+              "MatID": 101,
+              "Name": "Material A",
+              "Menge": 10,
+              "neue_Menge": 12
+            },
+            {
+              "MatID": 102,
+              "Name": "Material B",
+              "Menge": 5,
+              "neue_Menge": 3
+            }
+          ]
+        }
+      ]
+    }
+  }
+  

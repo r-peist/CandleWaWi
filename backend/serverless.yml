@@ -65,6 +65,14 @@ functions:
           path: handlerWareneingang
           method: get
 
+  #Inventarkorrektur
+  handlerGetInvKorr:
+    handler: src/handler/Inventarkorrektur/handlerGetInvKorr.handlerGetInvKorr
+    events:
+      - http:
+          path: handlerGetInvKorr
+          method: get
+
   #Sender
   responseSender:
     handler: src/responseSender/responseSender.responseSender

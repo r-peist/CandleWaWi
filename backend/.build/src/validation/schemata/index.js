@@ -24,4 +24,5 @@ __exportStar(require("./wareneingang"), exports);
 __exportStar(require("./bestellID"), exports);
 __exportStar(require("./buchung"), exports);
 __exportStar(require("./invkorrWE"), exports);
+__exportStar(require("./getInvKorr"), exports);
 //# sourceMappingURL=index.js.map

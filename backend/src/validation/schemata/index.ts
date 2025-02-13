@@ -8,3 +8,4 @@ export * from "./wareneingang";
 export * from "./bestellID";
 export * from "./buchung";
 export * from "./invkorrWE";
+export * from "./getInvKorr";

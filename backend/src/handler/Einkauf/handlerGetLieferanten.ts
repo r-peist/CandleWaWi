@@ -14,11 +14,10 @@ export const getLieferanten = async (
     connection = await getConnection();
 
     // Beispiel-Abfrage: Tabelleninformationen abrufen
-    const [rows] = await connection.query("SELECT * FROM lieferant");
-    const lieferanten = { Lieferanten: rows };
+    const [Lieferanten] = await connection.query("SELECT * FROM lieferant");
+    const lieferanten = { Lieferanten: Lieferanten };
 
     const validatedData = validateData("handlerlieferantSchema", lieferanten)
-
 
     // HTTP-Post-Aufruf mit node-fetch
     const response = await fetch("http://localhost:3001/responseSender", {
@@ -36,7 +35,7 @@ export const getLieferanten = async (
       statusCode: 200,
       body: JSON.stringify({
         message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
-        data: rows,
+        data: validatedData,
         response: responseBody,
       }),
     };
