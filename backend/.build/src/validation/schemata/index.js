@@ -25,4 +25,7 @@ __exportStar(require("./bestellID"), exports);
 __exportStar(require("./buchung"), exports);
 __exportStar(require("./invkorrWE"), exports);
 __exportStar(require("./getInvKorr"), exports);
+__exportStar(require("./rezepte"), exports);
+__exportStar(require("./neuesrezept"), exports);
+__exportStar(require("./upsertRezeptResponse"), exports);
 //# sourceMappingURL=index.js.map

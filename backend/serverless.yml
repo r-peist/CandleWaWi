@@ -41,6 +41,13 @@ functions:
           path: validatedInvKorrWE
           method: post
 
+  validateUpsertRezept:
+    handler: src/validation/wrapper.validateUpsertRezept
+    events:
+      - http:
+          path: validateUpsertRezept
+          method: post
+
   #Bestellung 
   handlerGetLieferanten:
     handler: src/handler/Einkauf/handlerGetLieferanten.getLieferanten
@@ -63,6 +70,14 @@ functions:
     events:
       - http:
           path: handlerWareneingang
+          method: get
+
+  #Herstellung
+  handlergetRezept:
+    handler: src/handler/Herstellung/Neuentwicklung/handlerGetRezept.handlerGetRezept
+    events:
+      - http:
+          path: handlerGetRezept
           method: get
 
   #Inventarkorrektur

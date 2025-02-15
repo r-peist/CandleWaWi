@@ -1,0 +1,25 @@
+### POST request to handlerUpsertRezept "Releasedate": "2222-12-22",
+POST http://localhost:3001/validateUpsertRezept
+
+{
+    "Rezept": {
+        "ZP": 
+            {   
+                "Name": "test",
+                "Beschreibung": "hallo",
+                "Releasedatum": "2222-12-12",
+                "Zutaten": [
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    },
+                    {
+                        "MatID": 2,
+                        "Menge": 3
+                    }
+                ]
+            }
+        
+        
+    }
+}

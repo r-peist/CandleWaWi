@@ -1,0 +1,57 @@
+{
+    "Rezept": {
+        "Kerze": [
+            {
+                "RezeptKerzeID": 1,
+                "Name": "",
+                "MatID": 1,
+                "Name_Mat": "",
+                "BehaelterID": 1,
+                "Behaelter_name": "",
+                "DeckelID": "",
+                "Deckel_name": "",
+                "DochtID": 1,
+                "Docht_name": "",
+                "WarnEttID": 1,
+                "WarnEtt_name": "",
+                "ZPRezeptID": 1,
+                "ZP_name": ""
+            }
+        ],
+    "SprayDiff": [
+            {
+                "RezeptSprayDifID": 1,
+                "Name": "",
+                "BehaelterID": 1,
+                "Behaelter_name": "",
+                "DeckelID": 1,
+                "Deckel_name": "",
+                "WarnEttID": 1,
+                "WarnEtt_name": "",
+                "ZPRezeptID1": 1,
+                "ZP_name1": "",
+                "ZPRezeptID2": 2,
+                "ZP_name2": ""
+            }
+        ],
+    "ZP": [
+            {   
+                "ZPRezeptID": 3,
+                "Name": "",
+                "Beschreibung": "",
+                "Releasedate": "YYYY-MM-DD",
+                "Changedate": "YYYY-MM-DD",
+                "Zutaten": [
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    },
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    }
+                ]
+            }
+        ]
+    }
+}

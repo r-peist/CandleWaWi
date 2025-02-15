@@ -1,0 +1,130 @@
+#Update Kerze
+{
+    "Rezept": {
+        "Kerze": 
+            {
+                "RezeptKerzeID": 1,
+                "Name": "a",
+                "MatID": 1,
+                "Name_Mat": "a",
+                "BehaelterID": 1,
+                "Behaelter_name": "a",
+                "DeckelID": "a",
+                "Deckel_name": "a",
+                "DochtID": 1,
+                "Docht_name": "a",
+                "WarnEttID": 1,
+                "WarnEtt_name": "a",
+                "ZPRezeptID": 1,
+                "ZP_name": "a"
+            }
+    }
+}
+
+#INSERT Kerze
+{
+    "Rezept": {
+        "Kerze": 
+            {
+                "Name": "b",
+                "MatID": 1,
+                "Name_Mat": "a",
+                "BehaelterID": 1,
+                "Behaelter_name": "a",
+                "DeckelID": "a",
+                "Deckel_name": "a",
+                "DochtID": 1,
+                "Docht_name": "a",
+                "WarnEttID": 1,
+                "WarnEtt_name": "a",
+                "ZPRezeptID": 1,
+                "ZP_name": "a"
+            }
+    }
+}
+
+#UPDATE SprayDiff
+{
+    "Rezept": {
+    "SprayDiff": 
+            {
+                "RezeptSprayDifID": 1,
+                "Name": "a",
+                "BehaelterID": 1,
+                "Behaelter_name": "a",
+                "DeckelID": 1,
+                "Deckel_name": "a",
+                "WarnEttID": 1,
+                "WarnEtt_name": "a",
+                "ZPRezeptID1": 1,
+                "ZP_name1": "a",
+                "ZPRezeptID2": 2,
+                "ZP_name2": "a"
+            }
+    }
+}
+
+#INSERT SprayDiff
+{
+    "Rezept": {
+    "SprayDiff": 
+            {
+                "Name": "a",
+                "BehaelterID": 1,
+                "Behaelter_name": "a",
+                "DeckelID": 1,
+                "Deckel_name": "a",
+                "WarnEttID": 1,
+                "WarnEtt_name": "a",
+                "ZPRezeptID1": 1,
+                "ZP_name1": "a",
+                "ZPRezeptID2": 2,
+                "ZP_name2": "a"
+            }
+    }
+}
+
+#UPDATE ZP
+{
+    "Rezept": {
+    "ZP":
+            {   
+                "ZPRezeptID": 3,
+                "Name": "a",
+                "Beschreibung": "a",
+                "Changedate": "2015-11-02",              
+                "Zutaten": [
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    },
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    }
+                ]
+            }
+    }
+}
+
+#INSERT ZP 
+{
+    "Rezept": {
+    "ZP":
+            {   
+                "Name": "b",
+                "Beschreibung": "a",
+                "Releasedate": "2015-11-02",              
+                "Zutaten": [
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    },
+                    {
+                        "MatID": 1,
+                        "Menge": 3
+                    }
+                ]
+            }
+    }
+}

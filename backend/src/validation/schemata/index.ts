@@ -9,3 +9,6 @@ export * from "./bestellID";
 export * from "./buchung";
 export * from "./invkorrWE";
 export * from "./getInvKorr";
+export * from "./rezepte";
+export * from "./neuesrezept";
+export * from "./upsertRezeptResponse";

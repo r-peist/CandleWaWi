@@ -1,0 +1,2 @@
+### GET request to trigger handlerGetRezept.ts
+GET http://localhost:3001/handlerGetRezept
