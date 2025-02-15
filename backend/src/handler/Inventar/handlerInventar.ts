@@ -20,9 +20,14 @@ export const handlerInventar = async (
         m.MatID,
         m.Name AS Materialname,
         m.SKU,
-        m.Active
+        m.Active,
+        ml.LagerID,
+        l.Name AS Lagername,
+        ml.Menge
       FROM material m
       JOIN materialkategorie mk ON m.MatKatID = mk.MatKatID
+      JOIN materiallager ml ON m.MatID = ml.MatID
+      JOIN lager l ON l.LagerID = ml.LagerID
       ORDER BY m.MatKatID  
     `);
 
@@ -43,14 +48,16 @@ export const handlerInventar = async (
         MatID: row.MatID,
         Materialname: row.Materialname,
         SKU: row.SKU,
-        Active: row.Active
+        Active: row.Active,
+        LagerID: row.LagerID,
+        Lagername: row.Lagername,
+        Menge: row.Menge
       });
 
       return acc;
     }, []);
     
     const inventarObject = { Inventar };
-    console.log("Inventar: ", inventarObject);
     const validatedData = validateData("inventarSchema", inventarObject);
 
     // HTTP-Post-Aufruf mit node-fetch

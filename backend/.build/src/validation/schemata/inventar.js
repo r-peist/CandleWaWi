@@ -8,6 +8,9 @@ const materialSchema = zod_1.z.object({
     // SKU darf null sein, daher verwenden wir nullable() – alternativ auch optional()
     SKU: zod_1.z.string().nullable(),
     Active: zod_1.z.string().min(1, { message: "Active ist erforderlich" }),
+    LagerID: zod_1.z.number().positive({ message: "LagerID muss eine positive Zahl sein" }), // Muss positiv sein
+    Lagername: zod_1.z.string().min(1, { message: "Lagername ist erforderlich" }), // Muss vorhanden sein
+    Menge: zod_1.z.number().nonnegative({ message: "Menge muss 0 oder größer sein" }) // Muss 0 oder positiv sein
 });
 const inventarItemSchema = zod_1.z.object({
     MatKatID: zod_1.z.number()
