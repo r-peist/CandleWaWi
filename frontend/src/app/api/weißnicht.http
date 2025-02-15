@@ -1,0 +1,24 @@
+POST http://localhost:3001/validateUpsertRezept
+Content-Type: application/json
+
+{
+  "Rezept": {
+    "Kerze":
+    {
+      "RezeptKerzeID": 1,
+      "Name": "a",
+      "MatID": 1,
+      "Name_Mat": "a",
+      "BehaelterID": 1,
+      "Behaelter_name": "a",
+      "DeckelID": 1,
+      "Deckel_name": "a",
+      "DochtID": 1,
+      "Docht_name": "a",
+      "WarnEttID": 1,
+      "WarnEtt_name": "a",
+      "ZPRezeptID": 1,
+      "ZP_name": "a"
+    }
+  }
+}

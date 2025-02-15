@@ -11,7 +11,7 @@ const fetchInventory = async () => {
             throw new Error("Fehler beim Abrufen des Inventars");
         }
         const inventar = await response.json();
-        return inventar; // Das Array von Inventar-Daten
+        return inventar; // Das Array aus der API
     } catch (error) {
         console.error("Fehler beim Laden des Inventars:", error);
         return [];
@@ -19,24 +19,36 @@ const fetchInventory = async () => {
 };
 
 const InventoryPage = () => {
-    const [inventory, setInventory] = useState([]);
+    const [inventory, setInventory] = useState([]); // Flache Liste
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [editingField, setEditingField] = useState(null);
     const [formData, setFormData] = useState({ quantity: "", comment: "" });
     const router = useRouter();
 
-    // Inventar laden
+    // Lade Inventardaten und transformiere sie in eine flache Liste
     useEffect(() => {
         const loadInventory = async () => {
             const data = await fetchInventory();
-            setInventory(data);
+            // data ist ein Array von Gruppen, z. B.:
+            // [ { MatKatID: 2, Kategorie: 'Wachs', Materialien: [ { ... }, ... ] }, ... ]
+            const flatInventory = data.reduce((acc, group) => {
+                if (Array.isArray(group.Materialien)) {
+                    const groupItems = group.Materialien.map((item) => ({
+                        ...item,
+                        MaterialKategorie: group.Kategorie, // Füge die übergeordnete Kategorie hinzu
+                    }));
+                    return acc.concat(groupItems);
+                }
+                return acc;
+            }, []);
+            setInventory(flatInventory);
         };
         loadInventory();
     }, []);
 
     const filteredInventory = inventory.filter((item) =>
-        item.Material.toLowerCase().includes(searchTerm.toLowerCase())
+        item.Materialname.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const closeModal = () => {
@@ -59,7 +71,11 @@ const InventoryPage = () => {
                 alert("Ein Kommentar ist erforderlich, wenn die Menge reduziert wird.");
                 return;
             }
-            console.log("Menge aktualisiert:", { Material: selectedMaterial.Material, Menge: newQuantity });
+            console.log("Menge aktualisiert:", {
+                Material: selectedMaterial.Materialname,
+                Menge: newQuantity,
+            });
+            // Hier könntest du auch einen API-Aufruf zum Aktualisieren durchführen
         }
         closeModal();
     };
@@ -94,7 +110,6 @@ const InventoryPage = () => {
                         <tr className="border-b bg-gray-200 text-gray-800">
                             <th className="p-4 text-left font-semibold">Material</th>
                             <th className="p-4 text-left font-semibold">Kategorie</th>
-                            <th className="p-4 text-left font-semibold">Material-Kategorie</th>
                             <th className="p-4 text-left font-semibold">Lager</th>
                             <th className="p-4 text-left font-semibold">Menge</th>
                             <th className="p-4 text-left font-semibold">Status</th>
@@ -108,25 +123,24 @@ const InventoryPage = () => {
                                     className="border-b hover:bg-gray-100 cursor-pointer transition duration-200"
                                     onClick={() => setSelectedMaterial(item)}
                                 >
-                                    <td className="p-4">{item.Material}</td>
-                                    <td className="p-4">{item.Kategorie}</td>
+                                    <td className="p-4">{item.Materialname}</td>
                                     <td className="p-4">{item.MaterialKategorie}</td>
-                                    <td className="p-4">{item.Lager}</td>
+                                    <td className="p-4">{item.Lagername}</td>
                                     <td className="p-4">{item.Menge}</td>
                                     <td className="p-4">
                       <span
                           className={`px-2 py-1 rounded text-white ${
-                              item.Status === "true" ? "bg-green-500" : "bg-red-500"
+                              item.Active === "true" ? "bg-green-500" : "bg-red-500"
                           }`}
                       >
-                        {item.Status === "true" ? "Aktiv" : "Inaktiv"}
+                        {item.Active === "true" ? "Aktiv" : "Inaktiv"}
                       </span>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td className="p-4 text-center text-gray-600" colSpan="6">
+                                <td className="p-4 text-center text-gray-600" colSpan="5">
                                     Kein Material gefunden.
                                 </td>
                             </tr>
@@ -152,25 +166,21 @@ const InventoryPage = () => {
                             <IoMdClose />
                         </button>
                         <h2 className="text-3xl font-semibold mb-6 text-gray-800">
-                            Details zu {selectedMaterial.Material}
+                            Details zu {selectedMaterial.Materialname}
                         </h2>
                         <table className="min-w-full">
                             <tbody>
                             <tr className="border-b">
                                 <td className="p-4 font-semibold">Material</td>
-                                <td className="p-4">{selectedMaterial.Material}</td>
+                                <td className="p-4">{selectedMaterial.Materialname}</td>
                             </tr>
                             <tr className="border-b">
                                 <td className="p-4 font-semibold">Kategorie</td>
-                                <td className="p-4">{selectedMaterial.Kategorie}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-4 font-semibold">Material-Kategorie</td>
                                 <td className="p-4">{selectedMaterial.MaterialKategorie}</td>
                             </tr>
                             <tr className="border-b">
                                 <td className="p-4 font-semibold">Lager</td>
-                                <td className="p-4">{selectedMaterial.Lager}</td>
+                                <td className="p-4">{selectedMaterial.Lagername}</td>
                             </tr>
                             <tr>
                                 <td className="p-4 font-semibold">Menge</td>
@@ -182,10 +192,7 @@ const InventoryPage = () => {
                                                 className="border rounded-lg px-2 py-1 w-24 text-gray-800 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                                                 value={formData.quantity}
                                                 onChange={(e) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        quantity: e.target.value,
-                                                    })
+                                                    setFormData({ ...formData, quantity: e.target.value })
                                                 }
                                             />
                                             {parseInt(formData.quantity, 10) < selectedMaterial.Menge && (
@@ -194,10 +201,7 @@ const InventoryPage = () => {
                                                     placeholder="Kommentar erforderlich..."
                                                     value={formData.comment}
                                                     onChange={(e) =>
-                                                        setFormData({
-                                                            ...formData,
-                                                            comment: e.target.value,
-                                                        })
+                                                        setFormData({ ...formData, comment: e.target.value })
                                                     }
                                                 />
                                             )}
@@ -218,13 +222,13 @@ const InventoryPage = () => {
                         {editingField && (
                             <div className="mt-6 flex justify-end gap-4">
                                 <button
-                                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow transition duration-200"
+                                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-200"
                                     onClick={closeModal}
                                 >
                                     Abbrechen
                                 </button>
                                 <button
-                                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow transition duration-200"
+                                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
                                     onClick={handleSave}
                                 >
                                     Speichern

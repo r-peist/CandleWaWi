@@ -1,4 +1,3 @@
-// /api/inventar.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -8,10 +7,7 @@ export async function GET(req: NextRequest) {
 
         const response = await fetch(backendApiUrl, {
             method: "GET",
-            headers: {
-                "Cache-Control": "no-store",
-            },
-            // Erzwingt, dass immer eine frische Antwort abgerufen wird
+            headers: { "Cache-Control": "no-store" },
             next: { revalidate: 0 },
         });
 
@@ -22,10 +18,11 @@ export async function GET(req: NextRequest) {
         const data = await response.json();
         console.log("Frontend: Daten erfolgreich erhalten:", data);
 
-        // Extrahiere das Inventar-Array aus dem verschachtelten Objekt
-        // Vorher: data?.response?.sendInventar?.inventar
-        // Neu: data?.response?.data?.Inventar
-        const inventar = data?.response?.data?.Inventar;
+        // Prüfe, ob das Inventar im erwarteten Pfad vorliegt
+        const inventar =
+            (data?.response?.data?.Inventar && Array.isArray(data.response.data.Inventar)
+                ? data.response.data.Inventar
+                : data?.data?.Inventar) || null;
 
         if (!inventar || !Array.isArray(inventar)) {
             throw new Error("Inventar-Daten fehlen oder haben das falsche Format");
