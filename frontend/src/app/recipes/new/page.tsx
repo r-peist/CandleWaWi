@@ -1,59 +1,88 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaSave, FaPlus, FaTrash } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
-// Dummy-Materialien (für die Zutaten-Auswahl)
-const dummyMaterials = [
-    { MatID: 1, Name: "Wachs_Soja_40.000g" },
-    { MatID: 2, Name: "Wachs_Soja_60.000g" },
-    { MatID: 3, Name: "Glas_Braun_180ml" },
-    { MatID: 4, Name: "Glas_Schwarz_300ml" },
-    { MatID: 5, Name: "Glas_Weiß_300ml" },
-    // Weitere Materialien können ergänzt werden
+// Dummy‑Liste der verfügbaren Materialien
+const materials = [
+    { id: 1, name: "Wachs_Soja_40.000g" },
+    { id: 2, name: "Wachs_Soja_60.000g" },
+    { id: 3, name: "Glas_Braun_180ml" },
+    { id: 4, name: "Holzdeckel_Braun" },
+    // ... weitere Materialien
 ];
 
 const NewRecipePage = () => {
     const router = useRouter();
-    const [recipeName, setRecipeName] = useState("");
-    const [description, setDescription] = useState("");
-    const [ingredients, setIngredients] = useState([{ MatID: "", Menge: "" }]);
+    const [formData, setFormData] = useState({
+        Name: "",
+        Beschreibung: "",
+        Releasedate: "",
+        Changedate: "",
+        Zutaten: []
+    });
+    // Ingredient-Zustand: statt direkter MatID-Eingabe gibt es nun ein Dropdown
+    const [ingredient, setIngredient] = useState({ MatID: "", Menge: "" });
+    const [error, setError] = useState("");
 
-    const handleAddIngredient = () => {
-        setIngredients([...ingredients, { MatID: "", Menge: "" }]);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleRemoveIngredient = (index) => {
-        setIngredients(ingredients.filter((_, i) => i !== index));
+    const handleIngredientChange = (e) => {
+        const { name, value } = e.target;
+        setIngredient((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleIngredientChange = (index, field, value) => {
-        const updatedIngredients = ingredients.map((ing, i) => {
-            if (i === index) {
-                return { ...ing, [field]: value };
-            }
-            return ing;
-        });
-        setIngredients(updatedIngredients);
+    const addIngredient = () => {
+        if (!ingredient.MatID || !ingredient.Menge) return;
+        setFormData((prev) => ({
+            ...prev,
+            Zutaten: [
+                ...prev.Zutaten,
+                {
+                    MatID: parseInt(ingredient.MatID, 10),
+                    Menge: parseInt(ingredient.Menge, 10)
+                }
+            ]
+        }));
+        setIngredient({ MatID: "", Menge: "" });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Zusammenstellen des Payloads für das neue Rezept:
+        // Aufbau des Payloads für das Backend (hier für den ZP-Bereich)
         const payload = {
-            Name: recipeName,
-            Beschreibung: description,
-            Erstellungsdatum: new Date().toISOString().split("T")[0],
-            Zutaten: ingredients, // Array mit { MatID, Menge }
+            Rezept: {
+                ZP: {
+                    Name: formData.Name,
+                    Beschreibung: formData.Beschreibung,
+                    Releasedate: new Date(formData.Releasedate).toISOString(),
+                    Changedate: new Date(formData.Changedate).toISOString(),
+                    Zutaten: formData.Zutaten
+                }
+            }
         };
-        console.log("New Recipe Payload:", payload);
-        // Hier erfolgt später der POST-Request an /api/recipes
-        router.push("/recipes");
+
+        try {
+            const res = await fetch("/api/rezept", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error(`Fehler: ${res.status}`);
+            const result = await res.json();
+            alert(result.Updated?.message || "Rezept erstellt!");
+            router.push("/recipes");
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
     return (
         <div className="min-h-screen bg-gray-100 p-8">
-            <header className="mb-8 flex justify-between items-center">
+            <header className="mb-8 flex items-center gap-4">
                 <button
                     onClick={() => router.push("/recipes")}
                     className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 flex items-center gap-2"
@@ -62,78 +91,106 @@ const NewRecipePage = () => {
                 </button>
                 <h1 className="text-3xl font-bold">Neues Rezept anlegen</h1>
             </header>
-            <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8">
+            {error && <div className="mb-4 text-red-500">{error}</div>}
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-lg max-w-lg mx-auto">
                 <div className="mb-4">
-                    <label className="block text-gray-700">Rezeptname</label>
+                    <label className="block mb-1 font-semibold">Name</label>
                     <input
                         type="text"
-                        value={recipeName}
-                        onChange={(e) => setRecipeName(e.target.value)}
-                        className="w-full px-4 py-2 border rounded"
+                        name="Name"
+                        value={formData.Name}
+                        onChange={handleInputChange}
+                        className="w-full border px-3 py-2 rounded"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700">Beschreibung</label>
+                    <label className="block mb-1 font-semibold">Beschreibung</label>
                     <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full px-4 py-2 border rounded"
+                        name="Beschreibung"
+                        value={formData.Beschreibung}
+                        onChange={handleInputChange}
+                        className="w-full border px-3 py-2 rounded"
+                        required
+                    ></textarea>
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1 font-semibold">Erstellt</label>
+                    <input
+                        type="date"
+                        name="Releasedate"
+                        value={formData.Releasedate}
+                        onChange={handleInputChange}
+                        className="w-full border px-3 py-2 rounded"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <h2 className="text-xl font-semibold mb-2">Zutaten</h2>
-                    {ingredients.map((ing, index) => (
-                        <div key={index} className="flex gap-4 items-center mb-2">
-                            <select
-                                value={ing.MatID}
-                                onChange={(e) =>
-                                    handleIngredientChange(index, "MatID", e.target.value)
-                                }
-                                className="px-4 py-2 border rounded"
-                                required
-                            >
-                                <option value="">-- Material wählen --</option>
-                                {dummyMaterials.map((mat) => (
-                                    <option key={mat.MatID} value={mat.MatID}>
-                                        {mat.Name}
-                                    </option>
-                                ))}
-                            </select>
-                            <input
-                                type="number"
-                                value={ing.Menge}
-                                onChange={(e) =>
-                                    handleIngredientChange(index, "Menge", e.target.value)
-                                }
-                                className="w-24 px-4 py-2 border rounded"
-                                placeholder="Menge"
-                                required
-                            />
-                            <button
-                                type="button"
-                                onClick={() => handleRemoveIngredient(index)}
-                                className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                            >
-                                <FaTrash />
-                            </button>
-                        </div>
-                    ))}
+                    <label className="block mb-1 font-semibold">Geändert</label>
+                    <input
+                        type="date"
+                        name="Changedate"
+                        value={formData.Changedate}
+                        onChange={handleInputChange}
+                        className="w-full border px-3 py-2 rounded"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1 font-semibold">Zutaten</label>
+                    <div className="flex gap-2 mb-2">
+                        {/* Dropdown statt direkter MatID-Eingabe */}
+                        <select
+                            name="MatID"
+                            value={ingredient.MatID}
+                            onChange={handleIngredientChange}
+                            className="border px-3 py-2 rounded w-1/2"
+                            required
+                        >
+                            <option value="">Material wählen</option>
+                            {materials.map((mat) => (
+                                <option key={mat.id} value={mat.id}>
+                                    {mat.name}
+                                </option>
+                            ))}
+                        </select>
+                        <input
+                            type="number"
+                            name="Menge"
+                            value={ingredient.Menge}
+                            onChange={handleIngredientChange}
+                            placeholder="Menge"
+                            className="border px-3 py-2 rounded w-1/2"
+                            required
+                        />
+                        <button type="button" onClick={addIngredient} className="px-3 py-2 bg-green-500 text-white rounded">
+                            +
+                        </button>
+                    </div>
+                    {formData.Zutaten.length > 0 && (
+                        <ul className="list-disc pl-5">
+                            {formData.Zutaten.map((zutat, index) => {
+                                // Lookup des Materialnamens anhand der MatID
+                                const material = materials.find((m) => m.id === zutat.MatID);
+                                return (
+                                    <li key={index}>
+                                        {material ? material.name : "Unbekannt"} – Menge: {zutat.Menge}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    )}
+                </div>
+                <div className="flex justify-end gap-4">
                     <button
                         type="button"
-                        onClick={handleAddIngredient}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-2"
+                        onClick={() => router.push("/recipes")}
+                        className="px-4 py-2 bg-gray-300 rounded"
                     >
-                        <FaPlus /> Zutat hinzufügen
+                        Abbrechen
                     </button>
-                </div>
-                <div className="flex justify-end">
-                    <button
-                        type="submit"
-                        className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-2"
-                    >
-                        <FaSave /> Rezept anlegen
+                    <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+                        Rezept anlegen
                     </button>
                 </div>
             </form>
