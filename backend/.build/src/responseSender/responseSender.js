@@ -39,7 +39,8 @@ const responseSender = async (event) => {
     try {
         // JSON-Daten aus dem Request-Body lesen
         const data = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-        console.log("Erhaltene Daten im responseSender: ", data);
+        console.log("Erhaltene Daten im responseSender: ");
+        console.dir(data, { depth: null, colors: true });
         return {
             statusCode: 200,
             body: JSON.stringify({

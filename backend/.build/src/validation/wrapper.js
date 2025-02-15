@@ -13,4 +13,5 @@ exports.validatedGetMatLief = (0, validate_1.validate)("bestellungSchema", handl
 exports.validatedGetBuchung = (0, validate_1.validate)("buchungSchema", handlerBuchung_1.handlerBuchung);
 exports.validateGetInvKorrWE = (0, validate_1.validate)("invkorrWESchema", handlerInvKorrWE_1.handlerInvKorrWE);
 exports.validateUpsertRezept = (0, validate_1.validate)("upsertRezeptSchema", handlerUpsertRezept_1.handlerUpsertRezept);
+//export const validateHerstellung = validate("herstellenSchema", handlerHerstellung);
 //# sourceMappingURL=wrapper.js.map

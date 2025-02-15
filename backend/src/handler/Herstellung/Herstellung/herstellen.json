@@ -1,10 +1,17 @@
 {
-    "Rezept": {
-        "Kerze": {
-            "RezeptKerzeID": 1,
+    "Rezept": [
+        {
+            "Name": "Kerze",
+            "RezeptID": 1,
             "BehaelterID": 1,
             "DeckelID": 1,
-            "Menge": 1
+            "Menge": 1,
+            "ZutatenZP": [
+                {
+                    "MatID": 1,
+                    "Menge": 2
+                }
+            ]
         }
-    }
+    ]
 }

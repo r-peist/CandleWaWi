@@ -8,13 +8,19 @@
           "MatID": 1,
           "Materialname": "Wachs_Soja_40.000g",
           "SKU": "WAX-001-NAT",
-          "Active": "true"
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 2
         },
         {
           "MatID": 2,
           "Materialname": "Wachs_Soja_60.000g",
           "SKU": "WAX-002-SOY",
-          "Active": "false"
+          "Active": "false",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 4
         }
       ]
     },
@@ -26,13 +32,19 @@
           "MatID": 8,
           "Materialname": "Docht_Baumwolle1",
           "SKU": "WCK-001-COTTON",
-          "Active": "true"
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 112
         },
         {
           "MatID": 9,
           "Materialname": "Docht_Holz1",
           "SKU": "WCK-002-WOOD",
-          "Active": "false"
+          "Active": "false",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 55
         }
       ]
     },
@@ -44,25 +56,151 @@
           "MatID": 3,
           "Materialname": "Glas_Braun_180ml",
           "SKU": "CON-001-GLASS-BROWN",
-          "Active": "true"
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 42
         },
         {
           "MatID": 4,
           "Materialname": "Glas_Schwarz_300ml",
           "SKU": "CON-002-GLASS-BLACK",
-          "Active": "true"
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 42
         },
         {
           "MatID": 5,
           "Materialname": "Glas_Weiß_300ml",
           "SKU": "CON-003-GLASS-WHITE",
-          "Active": "false"
+          "Active": "false",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 42
         },
         {
           "MatID": 10,
           "Materialname": "Glas_Diffusor_Braun",
           "SKU": "CON-004-GLASS-BROWN",
-          "Active": "true"
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 30
+        }
+      ]
+    },
+    {
+      "MatKatID": 5,
+      "Kategorie": "Gemisch",
+      "Materialien": [
+        {
+          "MatID": 14,
+          "Materialname": "Wasser",
+          "SKU": "LIQ-001-WAT",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 50
+        },
+        {
+          "MatID": 15,
+          "Materialname": "Alkohol",
+          "SKU": "LIQ-002-ALC",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 50
+        },
+        {
+          "MatID": 18,
+          "Materialname": "Gemisch_Test",
+          "SKU": "GEM-001-TEST",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 25
+        }
+      ]
+    },
+    {
+      "MatKatID": 8,
+      "Kategorie": "Öl",
+      "Materialien": [
+        {
+          "MatID": 12,
+          "Materialname": "Öl_1",
+          "SKU": "OIL-001-LAVENDER",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 15
+        },
+        {
+          "MatID": 13,
+          "Materialname": "Öl_2",
+          "SKU": "OIL-002-LAVENDER",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 15
+        }
+      ]
+    },
+    {
+      "MatKatID": 11,
+      "Kategorie": "Deckel",
+      "Materialien": [
+        {
+          "MatID": 6,
+          "Materialname": "Holzdeckel_Braun",
+          "SKU": "LID-001-WOOD-BROWN",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 42
+        },
+        {
+          "MatID": 7,
+          "Materialname": "Aludeckel_Schwarz",
+          "SKU": "LID-002-ALU-BLACK",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 42
+        },
+        {
+          "MatID": 11,
+          "Materialname": "Diffusor_Deckel",
+          "SKU": "LID-003-DIFF",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 20
+        }
+      ]
+    },
+    {
+      "MatKatID": 12,
+      "Kategorie": "WarnEtikett",
+      "Materialien": [
+        {
+          "MatID": 16,
+          "Materialname": "WarnungKerze",
+          "SKU": "WAR-001-CAN",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 30
+        },
+        {
+          "MatID": 17,
+          "Materialname": "WarnungDifSpray",
+          "SKU": "WAR-001-DIF",
+          "Active": "true",
+          "LagerID": 1,
+          "Lagername": "Burgstraße",
+          "Menge": 30
         }
       ]
     }
