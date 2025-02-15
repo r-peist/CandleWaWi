@@ -100,7 +100,8 @@ export const handlerInventar = async (
 
     const inventarObject = { Inventar };
     const validatedData = validateData("inventarSchema", inventarObject);
-
+    
+    console.log("Komplettes Inventar JSON nach Valid:", JSON.stringify(validatedData, null, 2));
     // HTTP-Post-Aufruf mit node-fetch
     const response = await fetch("http://localhost:3001/responseSender", {
       method: "POST",

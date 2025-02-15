@@ -128,6 +128,7 @@ const handlerInventar = async (event) => {
         console.log("Komplettes Inventar JSON:", JSON.stringify(Inventar, null, 2));
         const inventarObject = { Inventar };
         const validatedData = (0, validate_1.validateData)("inventarSchema", inventarObject);
+        console.log("Komplettes Inventar JSON nach Valid:", JSON.stringify(validatedData, null, 2));
         // HTTP-Post-Aufruf mit node-fetch
         const response = await (0, node_fetch_1.default)("http://localhost:3001/responseSender", {
             method: "POST",

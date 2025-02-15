@@ -12,4 +12,4 @@ export const validatedGetMatLief = validate("bestellungSchema", handlerBestellun
 export const validatedGetBuchung = validate("buchungSchema", handlerBuchung);
 export const validateGetInvKorrWE = validate("invkorrWESchema", handlerInvKorrWE);
 export const validateUpsertRezept = validate("upsertRezeptSchema", handlerUpsertRezept);
-//export const validateHerstellung = validate("herstellenSchema", handlerHerstellung);
+export const validateHerstellung = validate("herstellenSchema", handlerHerstellung);
