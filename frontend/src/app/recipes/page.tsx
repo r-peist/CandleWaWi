@@ -4,19 +4,6 @@ import { IoMdClose } from "react-icons/io";
 import { FaArrowLeft, FaPlus, FaEdit } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-// Hilfsfunktion: Konvertiert ISO 8601-Datum (z. B. "2024-11-26T23:00:00.000Z")
-// in das MySQL-kompatible Format "YYYY-MM-DD HH:MM:SS"
-const formatForMySQL = (dateString: string) => {
-    const date = new Date(dateString);
-    const YYYY = date.getFullYear();
-    const MM = ("0" + (date.getMonth() + 1)).slice(-2);
-    const DD = ("0" + date.getDate()).slice(-2);
-    const HH = ("0" + date.getHours()).slice(-2);
-    const mm = ("0" + date.getMinutes()).slice(-2);
-    const SS = ("0" + date.getSeconds()).slice(-2);
-    return `${YYYY}-${MM}-${DD} ${HH}:${mm}:${SS}`;
-};
-
 // Rezeptdaten abrufen
 const fetchRecipes = async () => {
     const res = await fetch("/api/rezept", { cache: "no-store" });
@@ -36,18 +23,32 @@ const fetchInventory = async () => {
     }
 };
 
+// Hilfsfunktion: Formatiere ISO-Datum in MySQL-kompatibles Format (YYYY-MM-DD HH:MM:SS)
+const formatForMySQL = (isoString: string): string => {
+    const date = new Date(isoString);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+    const ss = String(date.getSeconds()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+};
+
 const RecipeOverviewPage = () => {
     const router = useRouter();
 
-    // Zustände für Rezepte, Fehler, Modal und Inventardaten
+    // Zustände
     const [recipes, setRecipes] = useState({ Kerze: [], SprayDiff: [], ZP: [] });
     const [error, setError] = useState("");
+    // Hier nutzen wir die Checkboxen – wenn keine markiert sind, werden alle angezeigt
+    const [selectedCategories, setSelectedCategories] = useState(["Kerze", "SprayDiff", "ZP"]);
     const [showModal, setShowModal] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState({ recipe: null, type: "" });
     const [formData, setFormData] = useState<any>({});
     const [inventoryOptions, setInventoryOptions] = useState<any[]>([]);
 
-    // Hilfsfunktionen für Datum (UI‑Format, z. B. "26.11.2024") und für Input‑Felder (YYYY‑MM‑DD)
+    // Datumshilfen
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
@@ -74,11 +75,10 @@ const RecipeOverviewPage = () => {
         loadRecipes();
     }, []);
 
-    // Inventardaten laden und in eine flache Liste transformieren
+    // Inventardaten laden und flach ablegen
     useEffect(() => {
         async function loadInventory() {
             const data = await fetchInventory();
-            // data ist ein Array von Gruppen, z. B. { Kategorie: "Wachs", Materialien: [ {...}, ... ] }
             const flat = data.reduce((acc: any[], group: any) => {
                 if (Array.isArray(group.Materialien)) {
                     const items = group.Materialien.map((item: any) => ({
@@ -94,9 +94,7 @@ const RecipeOverviewPage = () => {
         loadInventory();
     }, []);
 
-    // Erstelle eine Lookup-Tabelle: Für jede Kategorie werden die Items anhand der jeweils relevanten ID abgelegt
-    // Für "Behältnis" nutzen wir item.BehaelterID, für "Deckel" item.DeckelID, für "Docht" item.DochtID,
-    // für "WarnEtikett" item.WarnEttID; sonst wird item.MatID verwendet.
+    // Lookup-Tabelle: Ordnet Inventardaten nach Kategorie und der jeweils korrekten ID
     const inventoryLookup = useMemo(() => {
         return inventoryOptions.reduce((acc: any, item: any) => {
             const cat = item.MaterialKategorie;
@@ -116,7 +114,7 @@ const RecipeOverviewPage = () => {
         }, {});
     }, [inventoryOptions]);
 
-    // Für das Modal: Dropdowns basierend auf Inventardaten
+    // Dropdown-Optionen im Modal
     const materialsOptions = inventoryOptions.filter((item) => item.MaterialKategorie === "Wachs");
     const behOptions = inventoryOptions
         .filter((item) => item.MaterialKategorie === "Behältnis")
@@ -146,7 +144,8 @@ const RecipeOverviewPage = () => {
             id: item.WarnEttID || item.MatID,
             Materialname: item.Warnettikettname || item.Materialname,
         }));
-    // Für Zwischenprodukte: Kombiniere Optionen aus Inventar (Gemisch, Öl) und Rezeptdaten (ZP)
+
+    // Für Zwischenprodukte: kombiniere Optionen aus Inventar (Gemisch, Öl) und Rezept-ZP
     const inventoryZPOptions = inventoryOptions
         .filter((item) => item.MaterialKategorie === "Gemisch" || item.MaterialKategorie === "Öl")
         .map((item) => ({ id: item.MatID, name: item.Materialname }));
@@ -167,7 +166,19 @@ const RecipeOverviewPage = () => {
         return Array.from(map.values());
     }, [recipes.SprayDiff]);
 
-    // Öffne das Bearbeitungs-Modal – setze die aktuellen Default‑Werte (Update‑Modus)
+    // Checkbox-Handler für Kategorienfilterung
+    const handleCategoryCheckboxChange = (e: any) => {
+        const { name, checked } = e.target;
+        setSelectedCategories((prev) => {
+            if (checked) return [...prev, name];
+            return prev.filter((cat) => cat !== name);
+        });
+    };
+
+    // Falls keine Checkbox ausgewählt sind, werden alle Kategorien angezeigt
+    const categoriesToShow = selectedCategories.length > 0 ? selectedCategories : ["Kerze", "SprayDiff", "ZP"];
+
+    // Öffne das Bearbeitungs-Modal und setze die aktuellen Default-Werte (Update‑Modus)
     const openModalForRecipe = (recipe: any, type: string) => {
         setSelectedRecipe({ recipe, type });
         if (type === "ZP") {
@@ -205,30 +216,30 @@ const RecipeOverviewPage = () => {
         setSelectedRecipe({ recipe: null, type: "" });
     };
 
-    const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleFormInputChange = (e: any) => {
         const { name, value } = e.target;
-        setFormData((prev: any) => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleZPItemChange = (index: number, field: string, value: string) => {
         const newItems = formData.ZPItems ? [...formData.ZPItems] : [];
         newItems[index] = { ...newItems[index], [field]: value };
-        setFormData((prev: any) => ({ ...prev, ZPItems: newItems }));
+        setFormData((prev) => ({ ...prev, ZPItems: newItems }));
     };
 
     const addZPItem = () => {
         const newItems = formData.ZPItems ? [...formData.ZPItems] : [];
-        newItems.push({ productId: "", quantity: "" });
-        setFormData((prev: any) => ({ ...prev, ZPItems: newItems }));
+        newItems.push({ MatID: "", quantity: "" });
+        setFormData((prev) => ({ ...prev, ZPItems: newItems }));
     };
 
     const removeZPItem = (index: number) => {
         const newItems = formData.ZPItems.filter((_: any, i: number) => i !== index);
-        setFormData((prev: any) => ({ ...prev, ZPItems: newItems }));
+        setFormData((prev) => ({ ...prev, ZPItems: newItems }));
     };
 
-    // Aufbau des Update-Payloads (nur Updates – INSERTs werden hier nicht behandelt)
-    const handleSubmit = async (e: React.FormEvent) => {
+    // Aufbau des Update-Payloads – ausschließlich Updates (keine Inserts!)
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         if (selectedRecipe.type === "ZP" && formData.ZPItems) {
             const sum = formData.ZPItems.reduce((acc: number, item: any) => acc + Number(item.quantity || 0), 0);
@@ -239,21 +250,30 @@ const RecipeOverviewPage = () => {
         }
         let payload = {};
         if (selectedRecipe.type === "ZP") {
+            // Für ZP: Das Changedate wird auf den aktuellen Zeitpunkt gesetzt.
+            // Jede Zutat wird so konvertiert, dass die Menge als Number übergeben wird.
+            let convertedZutaten = (formData.ZPItems || []).map((item: any) => ({
+                MatID: Number(item.MatID),
+                Menge: Number(item.quantity)
+            }));
+            if (convertedZutaten.length === 1) {
+                convertedZutaten[0].Menge = 100;
+            }
             payload = {
                 Rezept: {
                     ZP: {
                         ZPRezeptID: Number(formData.ZPRezeptID),
                         Name: formData.Name,
                         Beschreibung: formData.Beschreibung,
-                        // Ändere Changedate in ein MySQL‑kompatibles Format (sofern angegeben)
-                        Changedate: formData.Changedate ? formatForMySQL(formData.Changedate) : "",
-                        Zutaten: formData.ZPItems,
+                        Changedate: formatForMySQL(new Date().toISOString()),
+                        Zutaten: convertedZutaten,
                     },
                 },
             };
         } else if (selectedRecipe.type === "Kerze") {
-            // Lookup der korrekten Einträge – hier werden die richtigen IDs (z. B. BehälterID) verwendet
-            const selectedMaterial = materialsOptions.find((item) => Number(item.MatID) === Number(formData.MatID)) || {};
+            const selectedMaterial = materialsOptions.find(
+                (item) => Number(item.MatID) === Number(formData.MatID)
+            ) || {};
             const selectedBeh = behOptions.find((item) => Number(item.id) === Number(formData.BehaelterID)) || {};
             const selectedDeckel = deckelOptions.find((item) => Number(item.id) === Number(formData.DeckelID)) || {};
             const selectedDocht = dochtOptions.find((item) => Number(item.id) === Number(formData.DochtID)) || {};
@@ -280,6 +300,7 @@ const RecipeOverviewPage = () => {
                 },
             };
         } else if (selectedRecipe.type === "SprayDiff") {
+            // Hier bauen wir den Update-Payload exakt so auf wie im Beispiel für SprayDiff:
             const selectedBeh = behOptions.find((item) => Number(item.id) === Number(formData.BehaelterID)) || {};
             const selectedDeckel = deckelOptions.find((item) => Number(item.id) === Number(formData.DeckelID)) || {};
             const selectedWarn = warnEttOptions.find((item) => Number(item.id) === Number(formData.WarnEttID)) || {};
@@ -294,6 +315,7 @@ const RecipeOverviewPage = () => {
                         Behaelter_name: selectedBeh.Materialname || "N/A",
                         DeckelID: Number(formData.DeckelID),
                         Deckel_name: selectedDeckel.Materialname || "N/A",
+                        // Für SprayDiff soll WarnEttID und WarnEtt_name so übergeben werden wie im Schema:
                         WarnEttID: Number(formData.WarnEttID),
                         WarnEtt_name: selectedWarn.Materialname || "N/A",
                         ZPRezeptID1: Number(formData.ZPRezeptID1),
@@ -320,9 +342,131 @@ const RecipeOverviewPage = () => {
         }
     };
 
-    // Renderen – drei Tabellen gleichzeitig anzeigen
+    // Render-Funktionen für Tabellen
+    const renderTableHead = (cat: string) => {
+        if (cat === "Kerze") {
+            return (
+                <tr className="border-b bg-gray-200 text-gray-800">
+                    <th className="p-4 text-left font-semibold">Rezept-ID</th>
+                    <th className="p-4 text-left font-semibold">Name</th>
+                    <th className="p-4 text-left font-semibold">Material</th>
+                    <th className="p-4 text-left font-semibold">Behälter</th>
+                    <th className="p-4 text-left font-semibold">Docht</th>
+                </tr>
+            );
+        }
+        if (cat === "SprayDiff") {
+            return (
+                <tr className="border-b bg-gray-200 text-gray-800">
+                    <th className="p-4 text-left font-semibold">Rezept-ID</th>
+                    <th className="p-4 text-left font-semibold">Name</th>
+                    <th className="p-4 text-left font-semibold">Behälter</th>
+                    <th className="p-4 text-left font-semibold">Zwischenprodukt 1</th>
+                    <th className="p-4 text-left font-semibold">Zwischenprodukt 2</th>
+                </tr>
+            );
+        }
+        if (cat === "ZP") {
+            return (
+                <tr className="border-b bg-gray-200 text-gray-800">
+                    <th className="p-4 text-left font-semibold">Rezept-ID</th>
+                    <th className="p-4 text-left font-semibold">Name</th>
+                    <th className="p-4 text-left font-semibold">Beschreibung</th>
+                </tr>
+            );
+        }
+    };
+
+    const renderTableBody = (cat: string) => {
+        if (cat === "Kerze") {
+            return recipes.Kerze.map((r: any) => {
+                const invMat = inventoryLookup["Wachs"] && inventoryLookup["Wachs"][r.MatID];
+                const beh = inventoryLookup["Behältnis"] && inventoryLookup["Behältnis"][r.BehaelterID];
+                const docht = inventoryLookup["Docht"] && inventoryLookup["Docht"][r.DochtID];
+                return (
+                    <tr
+                        key={r.RezeptKerzeID}
+                        className="border-b hover:bg-gray-100 cursor-pointer"
+                        onClick={() => openModalForRecipe(r, "Kerze")}
+                    >
+                        <td className="p-4">{r.RezeptKerzeID}</td>
+                        <td className="p-4">{r.Name}</td>
+                        <td className="p-4">{invMat ? invMat.Materialname : r.Name_Mat}</td>
+                        <td className="p-4">{beh ? beh.Behaeltername : r.Behaelter_name}</td>
+                        <td className="p-4">{docht ? docht.Dochtname : r.Docht_name}</td>
+                    </tr>
+                );
+            });
+        }
+        if (cat === "SprayDiff") {
+            return uniqueSprayDiff.map((r: any) => (
+                <tr
+                    key={r.RezeptSprayDifID}
+                    className="border-b hover:bg-gray-100 cursor-pointer"
+                    onClick={() => openModalForRecipe(r, "SprayDiff")}
+                >
+                    <td className="p-4">{r.RezeptSprayDifID}</td>
+                    <td className="p-4">{r.Name}</td>
+                    <td className="p-4">{r.Behaelter_name}</td>
+                    <td className="p-4">{r.ZP_name1}</td>
+                    <td className="p-4">{r.ZP_name2}</td>
+                </tr>
+            ));
+        }
+        if (cat === "ZP") {
+            return recipes.ZP.map((r: any) => (
+                <tr
+                    key={r.ZPRezeptID}
+                    className="border-b hover:bg-gray-100 cursor-pointer"
+                    onClick={() => openModalForRecipe(r, "ZP")}
+                >
+                    <td className="p-4">{r.ZPRezeptID}</td>
+                    <td className="p-4">{r.Name}</td>
+                    <td className="p-4">{r.Beschreibung}</td>
+                </tr>
+            ));
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-8">
+            {/* Checkboxen für Kategorienfilter */}
+            <div className="mb-4">
+                <label className="block mb-1 font-semibold">Kategorien filtern</label>
+                <div className="flex gap-4">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="Kerze"
+                            checked={selectedCategories.includes("Kerze")}
+                            onChange={handleCategoryCheckboxChange}
+                        />{" "}
+                        Kerze
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="SprayDiff"
+                            checked={selectedCategories.includes("SprayDiff")}
+                            onChange={handleCategoryCheckboxChange}
+                        />{" "}
+                        SprayDiff
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="ZP"
+                            checked={selectedCategories.includes("ZP")}
+                            onChange={handleCategoryCheckboxChange}
+                        />{" "}
+                        Zwischenprodukt
+                    </label>
+                </div>
+                <p className="text-sm text-gray-600">
+                    Wenn keine Checkbox markiert ist, werden alle Kategorien angezeigt.
+                </p>
+            </div>
+
             <header className="mb-8 flex justify-between items-center">
                 <button
                     onClick={() => router.push("/production")}
@@ -339,102 +483,24 @@ const RecipeOverviewPage = () => {
                 </button>
             </header>
 
-            {/* Anzeigen der drei Tabellen */}
-            <section className="space-y-8">
-                {/* Tabelle Kerze */}
-                <div>
-                    <h2 className="text-2xl font-semibold mb-4">Kerze</h2>
-                    <table className="table-auto w-full bg-white shadow-lg rounded-lg mb-4">
-                        <thead>
-                        <tr className="border-b bg-gray-200 text-gray-800">
-                            <th className="p-4 text-left font-semibold">Rezept-ID</th>
-                            <th className="p-4 text-left font-semibold">Name</th>
-                            <th className="p-4 text-left font-semibold">Material</th>
-                            <th className="p-4 text-left font-semibold">Behälter</th>
-                            <th className="p-4 text-left font-semibold">Docht</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {recipes.Kerze.map((r: any) => {
-                            const invMat = inventoryLookup["Wachs"] && inventoryLookup["Wachs"][r.MatID];
-                            const beh = inventoryLookup["Behältnis"] && inventoryLookup["Behältnis"][r.BehaelterID];
-                            const docht = inventoryLookup["Docht"] && inventoryLookup["Docht"][r.DochtID];
-                            return (
-                                <tr
-                                    key={r.RezeptKerzeID}
-                                    className="border-b hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => openModalForRecipe(r, "Kerze")}
-                                >
-                                    <td className="p-4">{r.RezeptKerzeID}</td>
-                                    <td className="p-4">{r.Name}</td>
-                                    <td className="p-4">{invMat ? invMat.Materialname : r.Name_Mat}</td>
-                                    <td className="p-4">{beh ? beh.Behaeltername : r.Behaelter_name}</td>
-                                    <td className="p-4">{docht ? docht.Dochtname : r.Docht_name}</td>
-                                </tr>
-                            );
-                        })}
-                        </tbody>
-                    </table>
-                </div>
-                {/* Tabelle SprayDiff */}
-                <div>
-                    <h2 className="text-2xl font-semibold mb-4">SprayDiff (Diffusor/Raumspray)</h2>
-                    <table className="table-auto w-full bg-white shadow-lg rounded-lg mb-4">
-                        <thead>
-                        <tr className="border-b bg-gray-200 text-gray-800">
-                            <th className="p-4 text-left font-semibold">Rezept-ID</th>
-                            <th className="p-4 text-left font-semibold">Name</th>
-                            <th className="p-4 text-left font-semibold">Behälter</th>
-                            <th className="p-4 text-left font-semibold">Zwischenprodukt 1</th>
-                            <th className="p-4 text-left font-semibold">Zwischenprodukt 2</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {uniqueSprayDiff.map((r: any) => (
-                            <tr
-                                key={r.RezeptSprayDifID}
-                                className="border-b hover:bg-gray-100 cursor-pointer"
-                                onClick={() => openModalForRecipe(r, "SprayDiff")}
-                            >
-                                <td className="p-4">{r.RezeptSprayDifID}</td>
-                                <td className="p-4">{r.Name}</td>
-                                <td className="p-4">{r.Behaelter_name}</td>
-                                <td className="p-4">{r.ZP_name1}</td>
-                                <td className="p-4">{r.ZP_name2}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-                {/* Tabelle ZP */}
-                <div>
-                    <h2 className="text-2xl font-semibold mb-4">Zwischenprodukt</h2>
-                    <table className="table-auto w-full bg-white shadow-lg rounded-lg mb-4">
-                        <thead>
-                        <tr className="border-b bg-gray-200 text-gray-800">
-                            <th className="p-4 text-left font-semibold">Rezept-ID</th>
-                            <th className="p-4 text-left font-semibold">Name</th>
-                            <th className="p-4 text-left font-semibold">Beschreibung</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {recipes.ZP.map((r: any) => (
-                            <tr
-                                key={r.ZPRezeptID}
-                                className="border-b hover:bg-gray-100 cursor-pointer"
-                                onClick={() => openModalForRecipe(r, "ZP")}
-                            >
-                                <td className="p-4">{r.ZPRezeptID}</td>
-                                <td className="p-4">{r.Name}</td>
-                                <td className="p-4">{r.Beschreibung}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
+            <section>
+                {categoriesToShow.map((cat) => (
+                    <div key={cat} className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4">
+                            {cat === "Kerze"
+                                ? "Kerze"
+                                : cat === "SprayDiff"
+                                    ? "SprayDiff (Diffusor/Raumspray)"
+                                    : "Zwischenprodukt"}
+                        </h2>
+                        <table className="table-auto w-full bg-white shadow-lg rounded-lg mb-4">
+                            <thead>{renderTableHead(cat)}</thead>
+                            <tbody>{renderTableBody(cat)}</tbody>
+                        </table>
+                    </div>
+                ))}
             </section>
 
-            {/* Modal zum Bearbeiten */}
             {showModal && selectedRecipe.recipe && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -444,7 +510,9 @@ const RecipeOverviewPage = () => {
                         className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h2 className="text-xl font-bold mb-4">{selectedRecipe.type} bearbeiten</h2>
+                        <h2 className="text-xl font-bold mb-4">
+                            {selectedRecipe.type} bearbeiten
+                        </h2>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label className="block mb-1">Name</label>
@@ -499,7 +567,9 @@ const RecipeOverviewPage = () => {
                                                     <select
                                                         name={`ZPItems[${index}].productId`}
                                                         value={item.productId || ""}
-                                                        onChange={(e) => handleZPItemChange(index, "productId", e.target.value)}
+                                                        onChange={(e) =>
+                                                            handleZPItemChange(index, "productId", e.target.value)
+                                                        }
                                                         className="w-1/2 border px-3 py-2 rounded"
                                                         required
                                                     >
@@ -514,7 +584,9 @@ const RecipeOverviewPage = () => {
                                                         type="number"
                                                         name={`ZPItems[${index}].quantity`}
                                                         value={item.quantity || ""}
-                                                        onChange={(e) => handleZPItemChange(index, "quantity", e.target.value)}
+                                                        onChange={(e) =>
+                                                            handleZPItemChange(index, "quantity", e.target.value)
+                                                        }
                                                         placeholder="Verhältnis (%)"
                                                         className="w-1/2 border px-3 py-2 rounded"
                                                         required

@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/Handler/Herstellung/Neuentwicklung/handlerUpsertRezept.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/Handler/Herstellung/Neuentwicklung/handlerUpsertRezept.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/Handler/Herstellung/handlerGetRezept.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/Handler/Herstellung/handlerGetRezept.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/Handler/Inventar/handlerInventar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/Handler/Inventar/handlerInventar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/responseSender/responseSender.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/responseSender/responseSender.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/inventar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/inventar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/neuesrezept.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/neuesrezept.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/rezepte.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/rezepte.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/upsertRezeptResponse.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/validation/schemata/upsertRezeptResponse.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/.build/src/validation/wrapper.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.build/src/validation/wrapper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/handler/Herstellung/Neuentwicklung/JSON_mögliche_Eingaben/handlerUpsertRezept.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/handler/Herstellung/Neuentwicklung/JSON_mögliche_Eingaben/handlerUpsertRezept.txt" afterDir="false" />
-    </list>
+    <list default="true" id="3abfdb68-a344-4379-8687-f3b389d4aa85" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
