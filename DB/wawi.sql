@@ -89,14 +89,14 @@ CREATE TABLE IF NOT EXISTS `docht` (
   `DochtID` int(11) NOT NULL AUTO_INCREMENT,
   `MatID` int(11) NOT NULL,
   `Laenge` int(11) NOT NULL,
-  `Material` varchar(50) NOT NULL,
+  `Name` varchar(50) NOT NULL,
   PRIMARY KEY (`DochtID`),
   KEY `Docht_MatID` (`MatID`),
   CONSTRAINT `Docht_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Exportiere Daten aus Tabelle wawi.docht: ~2 rows (ungefähr)
-REPLACE INTO `docht` (`DochtID`, `MatID`, `Laenge`, `Material`) VALUES
+REPLACE INTO `docht` (`DochtID`, `MatID`, `Laenge`, `Name`) VALUES
 	(1, 8, 75, 'Baumwolle'),
 	(2, 9, 120, 'Holz');
 
