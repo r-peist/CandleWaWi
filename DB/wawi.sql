@@ -1,10 +1,3 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server-Version:               11.6.2-MariaDB - mariadb.org binary distribution
--- Server-Betriebssystem:        Win64
--- HeidiSQL Version:             12.8.0.6908
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
@@ -14,93 +7,50 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- Exportiere Datenbank-Struktur für wawi
 CREATE DATABASE IF NOT EXISTS `wawi` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci */;
 USE `wawi`;
 
--- Exportiere Struktur von Tabelle wawi.behaelter
-CREATE TABLE IF NOT EXISTS `behaelter` (
-  `BehaelterID` int(11) NOT NULL AUTO_INCREMENT,
-  `MatID` int(11) NOT NULL,
-  `Name` varchar(50) NOT NULL DEFAULT '',
-  `Farbe` varchar(50) NOT NULL DEFAULT '',
-  `Hoehe` int(11) NOT NULL,
-  `Breite` int(11) NOT NULL,
-  `Fuellmenge` int(11) NOT NULL,
-  PRIMARY KEY (`BehaelterID`),
-  UNIQUE KEY `Name` (`Name`),
-  KEY `Behaelter_MatID` (`MatID`),
-  CONSTRAINT `Behaelter_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+CREATE TABLE IF NOT EXISTS `kategorie` (
+  `KatID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`KatID`),
+  UNIQUE KEY `KatID` (`KatID`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.behaelter: ~4 rows (ungefähr)
-REPLACE INTO `behaelter` (`BehaelterID`, `MatID`, `Name`, `Farbe`, `Hoehe`, `Breite`, `Fuellmenge`) VALUES
-	(1, 3, 'Glas1', 'Braun', 75, 25, 180),
-	(2, 4, 'Glas2', 'Schwarz', 100, 35, 300),
-	(3, 5, 'Glas3', 'Weiß', 100, 35, 300),
-	(4, 10, 'Glas4', 'Braun', 200, 25, 100);
-
--- Exportiere Struktur von Tabelle wawi.bestellung
-CREATE TABLE IF NOT EXISTS `bestellung` (
-  `BestellID` int(11) NOT NULL AUTO_INCREMENT,
-  `LiefID` int(11) NOT NULL,
-  `LagerID` int(11) NOT NULL,
-  `Bestelldatum` date NOT NULL,
-  `status` enum('offen','pruefung','abgeschlossen') NOT NULL DEFAULT 'offen',
-  `Benutzer` varchar(50) NOT NULL,
-  PRIMARY KEY (`BestellID`),
-  KEY `Bestellung_LiefID` (`LiefID`),
-  KEY `Bestellung_LagerID` (`LagerID`),
-  CONSTRAINT `Bestellung_LagerID` FOREIGN KEY (`LagerID`) REFERENCES `lager` (`LagerID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Bestellung_LiefID` FOREIGN KEY (`LiefID`) REFERENCES `lieferant` (`LiefID`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE IF NOT EXISTS `materialkategorie` (
+  `MatKatID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  `Einheit` varchar(3) NOT NULL,
+  PRIMARY KEY (`MatKatID`),
+  UNIQUE KEY `Name` (`Name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.bestellung: ~6 rows (ungefähr)
-REPLACE INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`, `status`, `Benutzer`) VALUES
-	(1, 1, 1, '2024-02-12', 'pruefung', 'default'),
-	(2, 1, 1, '2024-04-22', 'offen', 'default'),
-	(3, 1, 1, '2024-09-11', 'abgeschlossen', 'default'),
-	(4, 3, 1, '2024-12-02', 'offen', 'default'),
-	(5, 1, 1, '2025-02-10', 'offen', 'default'),
-	(13, 1, 1, '2011-11-11', 'offen', 'default');
-
--- Exportiere Struktur von Tabelle wawi.deckel
-CREATE TABLE IF NOT EXISTS `deckel` (
-  `DeckelID` int(11) NOT NULL AUTO_INCREMENT,
-  `MatID` int(11) NOT NULL,
-  `Name` varchar(50) NOT NULL DEFAULT '',
-  `Farbe` varchar(50) NOT NULL DEFAULT '',
-  `Material` varchar(50) NOT NULL DEFAULT '',
-  PRIMARY KEY (`DeckelID`),
-  UNIQUE KEY `Name` (`Name`),
-  KEY `Deckel_MatID` (`MatID`),
-  CONSTRAINT `Deckel_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE IF NOT EXISTS `lieferant` (
+  `LiefID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`LiefID`),
+  UNIQUE KEY `Name` (`Name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.deckel: ~3 rows (ungefähr)
-REPLACE INTO `deckel` (`DeckelID`, `MatID`, `Name`, `Farbe`, `Material`) VALUES
-	(1, 6, 'Holzdeckel', 'Braun', 'Holz'),
-	(2, 7, 'Aludeckel', 'Schwarz', 'Alu'),
-	(3, 11, 'DiffusorDeckel', 'Schwarz', 'Plastik');
+CREATE TABLE IF NOT EXISTS `lager` (
+  `LagerID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL DEFAULT '',
+  `Anschrift` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`LagerID`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Struktur von Tabelle wawi.docht
-CREATE TABLE IF NOT EXISTS `docht` (
-  `DochtID` int(11) NOT NULL AUTO_INCREMENT,
-  `MatID` int(11) NOT NULL,
-  `Laenge` int(11) NOT NULL,
-  `Name` varchar(50) NOT NULL,
-  PRIMARY KEY (`DochtID`),
-  KEY `Docht_MatID` (`MatID`),
-  CONSTRAINT `Docht_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+CREATE TABLE IF NOT EXISTS `zwischenproduktrezept` (
+  `ZPRezeptID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) NOT NULL DEFAULT '',
+  `Beschreibung` varchar(250) NOT NULL DEFAULT '',
+  `Erstellungsdatum` date NOT NULL,
+  `Änderungsdatum` date DEFAULT NULL,
+  PRIMARY KEY (`ZPRezeptID`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.docht: ~2 rows (ungefähr)
-REPLACE INTO `docht` (`DochtID`, `MatID`, `Laenge`, `Name`) VALUES
-	(1, 8, 75, 'Baumwolle'),
-	(2, 9, 120, 'Holz');
-
--- Exportiere Struktur von Tabelle wawi.inventarkorrektur
 CREATE TABLE IF NOT EXISTS `inventarkorrektur` (
   `InvKorrID` int(11) NOT NULL AUTO_INCREMENT,
   `Kommentar` varchar(250) NOT NULL,
@@ -111,81 +61,6 @@ CREATE TABLE IF NOT EXISTS `inventarkorrektur` (
   PRIMARY KEY (`InvKorrID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.inventarkorrektur: ~0 rows (ungefähr)
-
--- Exportiere Struktur von Tabelle wawi.invkorr_bestellung
-CREATE TABLE IF NOT EXISTS `invkorr_material` (
-  `InvKorrMatID` int(11) NOT NULL,
-  `MatID` int(11) NOT NULL,
-  `Menge` int(11) NOT NULL,
-  PRIMARY KEY (`InvKorrMatID`),
-  KEY `BestellID_MatID` (`MatID`),
-  CONSTRAINT `BestellID_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `InvKorrMatID_InvKorrID` FOREIGN KEY (`InvKorrMatID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.invkorr_bestellung: ~0 rows (ungefähr)
-
--- Exportiere Struktur von Tabelle wawi.invkorr_wareneingang
-CREATE TABLE IF NOT EXISTS `invkorr_wareneingang` (
-  `InvKorrWEID` int(11) NOT NULL,
-  `BestellID` int(11) NOT NULL,
-  PRIMARY KEY (`InvKorrWEID`),
-  KEY `BestellID_InvKorrWE` (`BestellID`),
-  CONSTRAINT `BestellID_InvKorrWE` FOREIGN KEY (`BestellID`) REFERENCES `bestellung` (`BestellID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `InvKorrWEID_InvKorrID` FOREIGN KEY (`InvKorrWEID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.invkorr_wareneingang: ~0 rows (ungefähr)
-
--- Exportiere Struktur von Tabelle wawi.kategorie
-CREATE TABLE IF NOT EXISTS `kategorie` (
-  `KatID` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL,
-  PRIMARY KEY (`KatID`),
-  UNIQUE KEY `KatID` (`KatID`),
-  UNIQUE KEY `Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.kategorie: ~6 rows (ungefähr)
-REPLACE INTO `kategorie` (`KatID`, `Name`) VALUES
-	(1, 'Endprodukt'),
-	(4, 'Rohmaterial'),
-	(6, 'Verpackungsmat'),
-	(5, 'Zubehör'),
-	(2, 'zugekauftesEndprod'),
-	(3, 'Zwischenprodukt');
-
--- Exportiere Struktur von Tabelle wawi.lager
-CREATE TABLE IF NOT EXISTS `lager` (
-  `LagerID` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL DEFAULT '',
-  `Anschrift` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`LagerID`),
-  UNIQUE KEY `Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.lager: ~3 rows (ungefähr)
-REPLACE INTO `lager` (`LagerID`, `Name`, `Anschrift`) VALUES
-	(1, 'Burgstraße', 'Burgstraße 8 Werni'),
-	(2, 'Keller', 'Bei Chris'),
-	(3, 'Messe', 'Messe');
-
--- Exportiere Struktur von Tabelle wawi.lieferant
-CREATE TABLE IF NOT EXISTS `lieferant` (
-  `LiefID` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL,
-  PRIMARY KEY (`LiefID`),
-  UNIQUE KEY `Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.lieferant: ~3 rows (ungefähr)
-REPLACE INTO `lieferant` (`LiefID`, `Name`) VALUES
-	(1, 'Amazon'),
-	(2, 'Destrebution'),
-	(3, 'ExternerLadeneinkauf');
-
--- Exportiere Struktur von Tabelle wawi.material
 CREATE TABLE IF NOT EXISTS `material` (
   `MatID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) NOT NULL DEFAULT '',
@@ -202,27 +77,56 @@ CREATE TABLE IF NOT EXISTS `material` (
   CONSTRAINT `Mat_MatKatID` FOREIGN KEY (`MatKatID`) REFERENCES `materialkategorie` (`MatKatID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.material: ~17 rows (ungefähr)
-REPLACE INTO `material` (`MatID`, `Name`, `KatID`, `MatKatID`, `SKU`, `Active`) VALUES
-	(1, 'Wachs_Soja_40.000g', 4, 2, 'WAX-001-NAT', 'true'),
-	(2, 'Wachs_Soja_60.000g', 4, 2, 'WAX-002-SOY', 'false'),
-	(3, 'Glas_Braun_180ml', 4, 4, 'CON-001-GLASS-BROWN', 'true'),
-	(4, 'Glas_Schwarz_300ml', 4, 4, 'CON-002-GLASS-BLACK', 'true'),
-	(5, 'Glas_Weiß_300ml', 4, 4, 'CON-003-GLASS-WHITE', 'false'),
-	(6, 'Holzdeckel_Braun', 4, 11, 'LID-001-WOOD-BROWN', 'true'),
-	(7, 'Aludeckel_Schwarz', 4, 11, 'LID-002-ALU-BLACK', 'true'),
-	(8, 'Docht_Baumwolle1', 4, 3, 'WCK-001-COTTON', 'true'),
-	(9, 'Docht_Holz1', 4, 3, 'WCK-002-WOOD', 'false'),
-	(10, 'Glas_Diffusor_Braun', 4, 4, 'CON-004-GLASS-BROWN', 'true'),
-	(11, 'Diffusor_Deckel', 4, 11, 'LID-003-DIFF', 'true'),
-	(12, 'Öl_1', 4, 8, 'OIL-001-LAVENDER', 'true'),
-	(13, 'Öl_2', 4, 8, 'OIL-002-LAVENDER', 'true'),
-	(14, 'Wasser', 4, 5, 'LIQ-001-WAT', 'true'),
-	(15, 'Alkohol', 4, 5, 'LIQ-002-ALC', 'true'),
-	(16, 'WarnungKerze', 4, 12, 'WAR-001-CAN', 'true'),
-	(17, 'WarnungDifSpray', 4, 12, 'WAR-001-DIF', 'true');
+CREATE TABLE IF NOT EXISTS `behaelter` (
+  `BehaelterID` int(11) NOT NULL AUTO_INCREMENT,
+  `MatID` int(11) NOT NULL,
+  `Name` varchar(50) NOT NULL DEFAULT '',
+  `Farbe` varchar(50) NOT NULL DEFAULT '',
+  `Hoehe` int(11) NOT NULL,
+  `Breite` int(11) NOT NULL,
+  `Fuellmenge` int(11) NOT NULL,
+  PRIMARY KEY (`BehaelterID`),
+  UNIQUE KEY `Name` (`Name`),
+  KEY `Behaelter_MatID` (`MatID`),
+  CONSTRAINT `Behaelter_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Struktur von Tabelle wawi.materialbestellung
+CREATE TABLE IF NOT EXISTS `deckel` (
+  `DeckelID` int(11) NOT NULL AUTO_INCREMENT,
+  `MatID` int(11) NOT NULL,
+  `Name` varchar(50) NOT NULL DEFAULT '',
+  `Farbe` varchar(50) NOT NULL DEFAULT '',
+  `Material` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`DeckelID`),
+  UNIQUE KEY `Name` (`Name`),
+  KEY `Deckel_MatID` (`MatID`),
+  CONSTRAINT `Deckel_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `docht` (
+  `DochtID` int(11) NOT NULL AUTO_INCREMENT,
+  `MatID` int(11) NOT NULL,
+  `Laenge` int(11) NOT NULL,
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`DochtID`),
+  KEY `Docht_MatID` (`MatID`),
+  CONSTRAINT `Docht_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `bestellung` (
+  `BestellID` int(11) NOT NULL AUTO_INCREMENT,
+  `LiefID` int(11) NOT NULL,
+  `LagerID` int(11) NOT NULL,
+  `Bestelldatum` date NOT NULL,
+  `status` enum('offen','pruefung','abgeschlossen') NOT NULL DEFAULT 'offen',
+  `Benutzer` varchar(50) NOT NULL,
+  PRIMARY KEY (`BestellID`),
+  KEY `Bestellung_LiefID` (`LiefID`),
+  KEY `Bestellung_LagerID` (`LagerID`),
+  CONSTRAINT `Bestellung_LagerID` FOREIGN KEY (`LagerID`) REFERENCES `lager` (`LagerID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `Bestellung_LiefID` FOREIGN KEY (`LiefID`) REFERENCES `lieferant` (`LiefID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 CREATE TABLE IF NOT EXISTS `materialbestellung` (
   `MatBestID` int(11) NOT NULL AUTO_INCREMENT,
   `BestellID` int(11) NOT NULL,
@@ -235,44 +139,6 @@ CREATE TABLE IF NOT EXISTS `materialbestellung` (
   CONSTRAINT `MatBestell_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.materialbestellung: ~8 rows (ungefähr)
-REPLACE INTO `materialbestellung` (`MatBestID`, `BestellID`, `MatID`, `Menge`) VALUES
-	(1, 1, 1, 3),
-	(2, 1, 3, 42),
-	(3, 1, 6, 42),
-	(4, 5, 1, 1),
-	(5, 2, 8, 3),
-	(6, 3, 8, 6),
-	(7, 4, 5, 1),
-	(19, 13, 1, 20),
-	(20, 13, 2, 20);
-
--- Exportiere Struktur von Tabelle wawi.materialkategorie
-CREATE TABLE IF NOT EXISTS `materialkategorie` (
-  `MatKatID` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL,
-  `Einheit` varchar(3) NOT NULL,
-  PRIMARY KEY (`MatKatID`),
-  UNIQUE KEY `Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.materialkategorie: ~13 rows (ungefähr)
-REPLACE INTO `materialkategorie` (`MatKatID`, `Name`, `Einheit`) VALUES
-	(1, 'Endprodukt', 'stk'),
-	(2, 'Wachs', 'g'),
-	(3, 'Docht', 'stk'),
-	(4, 'Behältnis', 'stk'),
-	(5, 'Gemisch', 'ml'),
-	(6, 'Karton', 'stk'),
-	(7, 'Tüte', 'stk'),
-	(8, 'Öl', 'ml'),
-	(9, 'Etiketten', 'stk'),
-	(10, 'Geschenkboxen', 'stk'),
-	(11, 'Deckel', 'stk'),
-	(12, 'WarnEtikett', 'stk'),
-	(13, 'Sonstiges', 'stk');
-
--- Exportiere Struktur von Tabelle wawi.materiallager
 CREATE TABLE IF NOT EXISTS `materiallager` (
   `MatLagerID` int(11) NOT NULL AUTO_INCREMENT,
   `MatID` int(11) NOT NULL,
@@ -283,21 +149,8 @@ CREATE TABLE IF NOT EXISTS `materiallager` (
   KEY `MatLager_LagerID` (`LagerID`),
   CONSTRAINT `MatLager_LagerID` FOREIGN KEY (`LagerID`) REFERENCES `lager` (`LagerID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `MatLager_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.materiallager: ~9 rows (ungefähr)
-REPLACE INTO `materiallager` (`MatLagerID`, `MatID`, `LagerID`, `Menge`) VALUES
-	(1, 1, 1, 2),
-	(2, 2, 1, 4),
-	(3, 3, 1, 42),
-	(4, 4, 1, 42),
-	(5, 5, 1, 42),
-	(6, 6, 1, 42),
-	(7, 7, 1, 42),
-	(8, 8, 1, 112),
-	(9, 9, 1, 55);
-
--- Exportiere Struktur von Tabelle wawi.materiallieferant
 CREATE TABLE IF NOT EXISTS `materiallieferant` (
   `MatLiefID` int(11) NOT NULL AUTO_INCREMENT,
   `MatID` int(11) NOT NULL,
@@ -308,18 +161,22 @@ CREATE TABLE IF NOT EXISTS `materiallieferant` (
   KEY `MatLief_LiefID` (`LiefID`),
   CONSTRAINT `MatLief_LiefID` FOREIGN KEY (`LiefID`) REFERENCES `lieferant` (`LiefID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `MatLief_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.materiallieferant: ~6 rows (ungefähr)
-REPLACE INTO `materiallieferant` (`MatLiefID`, `MatID`, `LiefID`, `Link`) VALUES
-	(1, 1, 1, 'https://www.amazon.de/'),
-	(2, 2, 1, 'https://www.amazon.de/'),
-	(3, 3, 2, 'https://marketplacedistribution.com/'),
-	(4, 4, 2, 'https://marketplacedistribution.com/'),
-	(5, 5, 2, 'https://marketplacedistribution.com/'),
-	(6, 6, 2, 'https://marketplacedistribution.com/');
+CREATE TABLE IF NOT EXISTS `warnettikett` (
+  `WarnEttID` int(11) NOT NULL AUTO_INCREMENT,
+  `MatID` int(11) NOT NULL,
+  `Name` varchar(50) NOT NULL,
+  `Farbe` varchar(50) NOT NULL,
+  `Hoehe` int(11) NOT NULL,
+  `Breite` int(11) NOT NULL,
+  `Material` varchar(50) NOT NULL,
+  PRIMARY KEY (`WarnEttID`),
+  UNIQUE KEY `Name` (`Name`),
+  KEY `WarnEtt_MatID` (`MatID`),
+  CONSTRAINT `WarnEtt_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Struktur von Tabelle wawi.rezeptkerze
 CREATE TABLE IF NOT EXISTS `rezeptkerze` (
   `RezeptKerzeID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) NOT NULL DEFAULT '',
@@ -343,17 +200,8 @@ CREATE TABLE IF NOT EXISTS `rezeptkerze` (
   CONSTRAINT `RezeptKerze_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `RezeptKerze_WarnEttID` FOREIGN KEY (`WarnEttID`) REFERENCES `warnettikett` (`WarnEttID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `RezeptKerze_ZPRezeptID` FOREIGN KEY (`ZPRezeptID`) REFERENCES `zwischenproduktrezept` (`ZPRezeptID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.rezeptkerze: ~5 rows (ungefähr)
-REPLACE INTO `rezeptkerze` (`RezeptKerzeID`, `Name`, `MatID`, `BehaelterID`, `DeckelID`, `DochtID`, `ZPRezeptID`, `WarnEttID`) VALUES
-	(1, 'Kaffee', 1, 1, 2, 1, 2, 1),
-	(2, 'Lavendel', 1, 1, 2, 1, 2, 1),
-	(3, 'Vanille', 1, 1, 2, 1, 2, 1),
-	(4, 'Lebkuchen', 1, 1, 2, 1, 2, 1),
-	(5, 'Rhabarber Zimt Zauber', 1, 2, 1, 2, 2, 1);
-
--- Exportiere Struktur von Tabelle wawi.rezeptspraydif
 CREATE TABLE IF NOT EXISTS `rezeptspraydif` (
   `RezeptSprayDifID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) NOT NULL,
@@ -374,16 +222,8 @@ CREATE TABLE IF NOT EXISTS `rezeptspraydif` (
   CONSTRAINT `RezeptSprayDif_WarnEttID` FOREIGN KEY (`WarnEttID`) REFERENCES `warnettikett` (`WarnEttID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `RezeptSprayDif_ZPRezept1` FOREIGN KEY (`ZPRezeptID1`) REFERENCES `zwischenproduktrezept` (`ZPRezeptID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `RezeptSprayDif_ZPRezept2` FOREIGN KEY (`ZPRezeptID2`) REFERENCES `zwischenproduktrezept` (`ZPRezeptID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.rezeptspraydif: ~4 rows (ungefähr)
-REPLACE INTO `rezeptspraydif` (`RezeptSprayDifID`, `Name`, `BehaelterID`, `DeckelID`, `ZPRezeptID1`, `ZPRezeptID2`, `WarnEttID`) VALUES
-	(1, 'Kaffee', 4, 3, 1, 3, 2),
-	(2, 'Lavendel', 4, 3, 1, 3, 2),
-	(3, 'Vanille', 4, 3, 1, 3, 2),
-	(4, 'Lebkuchen', 4, 3, 1, 3, 2);
-
--- Exportiere Struktur von Tabelle wawi.rezeptzutaten
 CREATE TABLE IF NOT EXISTS `rezeptzutaten` (
   `RezeptZutatenID` int(11) NOT NULL AUTO_INCREMENT,
   `ZPRezeptID` int(11) NOT NULL,
@@ -394,54 +234,27 @@ CREATE TABLE IF NOT EXISTS `rezeptzutaten` (
   KEY `RezeptZutaten_MatID` (`MatID`),
   CONSTRAINT `RezeptZutaten_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `RezeptZutaten_ZPRezeptID` FOREIGN KEY (`ZPRezeptID`) REFERENCES `zwischenproduktrezept` (`ZPRezeptID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.rezeptzutaten: ~5 rows (ungefähr)
-REPLACE INTO `rezeptzutaten` (`RezeptZutatenID`, `ZPRezeptID`, `MatID`, `Menge`) VALUES
-	(1, 1, 12, 40),
-	(2, 1, 13, 60),
-	(3, 2, 12, 100),
-	(4, 3, 14, 80),
-	(5, 3, 15, 20);
-
--- Exportiere Struktur von Tabelle wawi.warnettikett
-CREATE TABLE IF NOT EXISTS `warnettikett` (
-  `WarnEttID` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `invkorr_material` (
+  `InvKorrMatID` int(11) NOT NULL,
   `MatID` int(11) NOT NULL,
-  `Name` varchar(50) NOT NULL,
-  `Farbe` varchar(50) NOT NULL,
-  `Hoehe` int(11) NOT NULL,
-  `Breite` int(11) NOT NULL,
-  `Material` varchar(50) NOT NULL,
-  PRIMARY KEY (`WarnEttID`),
-  UNIQUE KEY `Name` (`Name`),
-  KEY `WarnEtt_MatID` (`MatID`),
-  CONSTRAINT `WarnEtt_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+  `Menge` int(11) NOT NULL,
+  PRIMARY KEY (`InvKorrMatID`),
+  KEY `BestellID_MatID` (`MatID`),
+  CONSTRAINT `BestellID_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `InvKorrMatID_InvKorrID` FOREIGN KEY (`InvKorrMatID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Daten aus Tabelle wawi.warnettikett: ~2 rows (ungefähr)
-REPLACE INTO `warnettikett` (`WarnEttID`, `MatID`, `Name`, `Farbe`, `Hoehe`, `Breite`, `Material`) VALUES
-	(1, 16, 'WarnungKerze', 'weiß', 10, 20, 'Folie'),
-	(2, 17, 'WarnungDifSpray', 'weiß', 20, 30, 'Folie');
+CREATE TABLE IF NOT EXISTS `invkorr_wareneingang` (
+  `InvKorrWEID` int(11) NOT NULL,
+  `BestellID` int(11) NOT NULL,
+  PRIMARY KEY (`InvKorrWEID`),
+  KEY `BestellID_InvKorrWE` (`BestellID`),
+  CONSTRAINT `BestellID_InvKorrWE` FOREIGN KEY (`BestellID`) REFERENCES `bestellung` (`BestellID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `InvKorrWEID_InvKorrID` FOREIGN KEY (`InvKorrWEID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Exportiere Struktur von Tabelle wawi.zwischenproduktrezept
-CREATE TABLE IF NOT EXISTS `zwischenproduktrezept` (
-  `ZPRezeptID` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL DEFAULT '',
-  `Beschreibung` varchar(250) NOT NULL DEFAULT '',
-  `Erstellungsdatum` date NOT NULL,
-  `Änderungsdatum` date DEFAULT NULL,
-  PRIMARY KEY (`ZPRezeptID`),
-  UNIQUE KEY `Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Exportiere Daten aus Tabelle wawi.zwischenproduktrezept: ~3 rows (ungefähr)
-REPLACE INTO `zwischenproduktrezept` (`ZPRezeptID`, `Name`, `Beschreibung`, `Erstellungsdatum`, `Änderungsdatum`) VALUES
-	(1, 'Duftmische1', 'Joar is ne Mische ne', '2024-11-27', '2024-11-27'),
-	(2, 'NurÖl1', 'junge junge ganz schön viel Öl', '1990-08-27', '2024-11-27'),
-	(3, 'Mische1DifSpray', 'Mischmasch wischwasch', '1999-09-11', '2024-12-28');
-
--- Exportiere Struktur von Trigger wawi.ratioLiquids
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `ratioLiquids` AFTER INSERT ON `rezeptzutaten` FOR EACH ROW 
@@ -453,6 +266,171 @@ BEGIN
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+INSERT INTO kategorie (KatID, Name) VALUES
+  (1, 'Endprodukt'),
+  (4, 'Rohmaterial'),
+  (6, 'Verpackungsmat'),
+  (5, 'Zubehör'),
+  (2, 'zugekauftesEndprod'),
+  (3, 'Zwischenprodukt');
+
+INSERT INTO materialkategorie (MatKatID, Name, Einheit) VALUES
+  (1, 'Endprodukt', 'stk'),
+  (2, 'Wachs', 'g'),
+  (3, 'Docht', 'stk'),
+  (4, 'Behältnis', 'stk'),
+  (5, 'Gemisch', 'ml'),
+  (6, 'Karton', 'stk'),
+  (7, 'Tüte', 'stk'),
+  (8, 'Öl', 'ml'),
+  (9, 'Etiketten', 'stk'),
+  (10, 'Geschenkboxen', 'stk'),
+  (11, 'Deckel', 'stk'),
+  (12, 'WarnEtikett', 'stk'),
+  (13, 'Sonstiges', 'stk');
+
+INSERT INTO lieferant (LiefID, Name) VALUES
+  (1, 'Amazon'),
+  (2, 'Destrebution'),
+  (3, 'ExternerLadeneinkauf');
+
+INSERT INTO lager (LagerID, Name, Anschrift) VALUES
+  (1, 'Burgstraße', 'Burgstraße 8 Werni'),
+  (2, 'Keller', 'Bei Chris'),
+  (3, 'Messe', 'Messe');
+
+INSERT INTO zwischenproduktrezept (ZPRezeptID, Name, Beschreibung, Erstellungsdatum, Änderungsdatum) VALUES
+  (1, 'Duftmische1', 'Joar is ne Mische ne', '2024-11-27', '2024-11-27'),
+  (2, 'NurÖl1', 'junge junge ganz schön viel Öl', '1990-08-27', '2024-11-27'),
+  (3, 'Mische1DifSpray', 'Mischmasch wischwasch', '1999-09-11', '2024-12-28');
+
+INSERT INTO inventarkorrektur (InvKorrID, Kommentar, Datum, Typ, Benutzer, Status)
+VALUES (1, 'Test Inventur Korrektur', '2025-02-15', 'Inventur', 'testuser', 'offen');
+
+INSERT INTO material (MatID, Name, KatID, MatKatID, SKU, Active) VALUES
+  (1, 'Wachs_Soja_40.000g', 4, 2, 'WAX-001-NAT', 'true'),
+  (2, 'Wachs_Soja_60.000g', 4, 2, 'WAX-002-SOY', 'false'),
+  (3, 'Glas_Braun_180ml', 4, 4, 'CON-001-GLASS-BROWN', 'true'),
+  (4, 'Glas_Schwarz_300ml', 4, 4, 'CON-002-GLASS-BLACK', 'true'),
+  (5, 'Glas_Weiß_300ml', 4, 4, 'CON-003-GLASS-WHITE', 'false'),
+  (6, 'Holzdeckel_Braun', 4, 11, 'LID-001-WOOD-BROWN', 'true'),
+  (7, 'Aludeckel_Schwarz', 4, 11, 'LID-002-ALU-BLACK', 'true'),
+  (8, 'Docht_Baumwolle1', 4, 3, 'WCK-001-COTTON', 'true'),
+  (9, 'Docht_Holz1', 4, 3, 'WCK-002-WOOD', 'false'),
+  (10, 'Glas_Diffusor_Braun', 4, 4, 'CON-004-GLASS-BROWN', 'true'),
+  (11, 'Diffusor_Deckel', 4, 11, 'LID-003-DIFF', 'true'),
+  (12, 'Öl_1', 4, 8, 'OIL-001-LAVENDER', 'true'),
+  (13, 'Öl_2', 4, 8, 'OIL-002-LAVENDER', 'true'),
+  (14, 'Wasser', 4, 5, 'LIQ-001-WAT', 'true'),
+  (15, 'Alkohol', 4, 5, 'LIQ-002-ALC', 'true'),
+  (16, 'WarnungKerze', 4, 12, 'WAR-001-CAN', 'true'),
+  (17, 'WarnungDifSpray', 4, 12, 'WAR-001-DIF', 'true'),
+  (18, 'Gemisch_Test', 4, 5, 'GEM-001-TEST', 'true');
+
+INSERT INTO behaelter (BehaelterID, MatID, Name, Farbe, Hoehe, Breite, Fuellmenge) VALUES
+  (1, 3, 'Glas1', 'Braun', 75, 25, 180),
+  (2, 4, 'Glas2', 'Schwarz', 100, 35, 300),
+  (3, 5, 'Glas3', 'Weiß', 100, 35, 300),
+  (4, 10, 'Glas4', 'Braun', 200, 25, 100);
+
+INSERT INTO deckel (DeckelID, MatID, Name, Farbe, Material) VALUES
+  (1, 6, 'Holzdeckel', 'Braun', 'Holz'),
+  (2, 7, 'Aludeckel', 'Schwarz', 'Alu'),
+  (3, 11, 'DiffusorDeckel', 'Schwarz', 'Plastik');
+
+INSERT INTO docht (DochtID, MatID, Laenge, Name) VALUES
+  (1, 8, 75, 'Baumwolle'),
+  (2, 9, 120, 'Holz');
+
+INSERT INTO bestellung (BestellID, LiefID, LagerID, Bestelldatum, status, Benutzer) VALUES
+  (1, 1, 1, '2024-02-12', 'pruefung', 'default'),
+  (2, 1, 1, '2024-04-22', 'offen', 'default'),
+  (3, 1, 1, '2024-09-11', 'abgeschlossen', 'default'),
+  (4, 3, 1, '2024-12-02', 'offen', 'default'),
+  (5, 1, 1, '2025-02-10', 'offen', 'default'),
+  (13, 1, 1, '2011-11-11', 'offen', 'default');
+
+INSERT INTO materialbestellung (MatBestID, BestellID, MatID, Menge) VALUES
+  (1, 1, 1, 3),
+  (2, 1, 3, 42),
+  (3, 1, 6, 42),
+  (4, 5, 1, 1),
+  (5, 2, 8, 3),
+  (6, 3, 8, 6),
+  (7, 4, 5, 1),
+  (19, 13, 1, 20),
+  (20, 13, 2, 20);
+
+INSERT INTO materiallager (MatLagerID, MatID, LagerID, Menge) VALUES
+  (1, 1, 1, 2),
+  (2, 2, 1, 4),
+  (3, 3, 1, 42),
+  (4, 4, 1, 42),
+  (5, 5, 1, 42),
+  (6, 6, 1, 42),
+  (7, 7, 1, 42),
+  (8, 8, 1, 112),
+  (9, 9, 1, 55),
+  (10, 10, 1, 30),
+  (11, 11, 1, 20),
+  (12, 12, 1, 15),
+  (13, 13, 1, 15),
+  (14, 14, 1, 50),
+  (15, 15, 1, 50),
+  (16, 16, 1, 30),
+  (17, 17, 1, 30),
+  (18, 18, 1, 25);
+
+INSERT INTO materiallieferant (MatLiefID, MatID, LiefID, Link) VALUES
+  (1, 1, 1, 'https://www.amazon.de/'),
+  (2, 2, 1, 'https://www.amazon.de/'),
+  (3, 3, 2, 'https://marketplacedistribution.com/'),
+  (4, 4, 2, 'https://marketplacedistribution.com/'),
+  (5, 5, 2, 'https://marketplacedistribution.com/'),
+  (6, 6, 2, 'https://marketplacedistribution.com/'),
+  (7, 7, 2, 'https://supplier.example.com/Mat7'),
+  (8, 8, 1, 'https://supplier.example.com/Mat8'),
+  (9, 9, 1, 'https://supplier.example.com/Mat9'),
+  (10, 10, 2, 'https://supplier.example.com/Mat10'),
+  (11, 11, 2, 'https://supplier.example.com/Mat11'),
+  (12, 12, 1, 'https://supplier.example.com/Mat12'),
+  (13, 13, 1, 'https://supplier.example.com/Mat13'),
+  (14, 14, 3, 'https://supplier.example.com/Mat14'),
+  (15, 15, 3, 'https://supplier.example.com/Mat15'),
+  (16, 16, 2, 'https://supplier.example.com/Mat16'),
+  (17, 17, 2, 'https://supplier.example.com/Mat17'),
+  (18, 18, 2, 'https://supplier.example.com/Mat18');
+
+INSERT INTO warnettikett (WarnEttID, MatID, Name, Farbe, Hoehe, Breite, Material) VALUES
+  (1, 16, 'WarnungKerze', 'weiß', 10, 20, 'Folie'),
+  (2, 17, 'WarnungDifSpray', 'weiß', 20, 30, 'Folie');
+
+INSERT INTO rezeptkerze (RezeptKerzeID, Name, MatID, BehaelterID, DeckelID, DochtID, ZPRezeptID, WarnEttID) VALUES
+  (1, 'Kaffee', 1, 1, 2, 1, 2, 1),
+  (2, 'Lavendel', 1, 1, 2, 1, 2, 1),
+  (3, 'Vanille', 1, 1, 2, 1, 2, 1),
+  (4, 'Lebkuchen', 1, 1, 2, 1, 2, 1),
+  (5, 'Rhabarber Zimt Zauber', 1, 2, 1, 2, 2, 1);
+
+INSERT INTO rezeptspraydif (RezeptSprayDifID, Name, BehaelterID, DeckelID, ZPRezeptID1, ZPRezeptID2, WarnEttID) VALUES
+  (1, 'Kaffee', 4, 3, 1, 3, 2),
+  (2, 'Lavendel', 4, 3, 1, 3, 2),
+  (3, 'Vanille', 4, 3, 1, 3, 2),
+  (4, 'Lebkuchen', 4, 3, 1, 3, 2);
+
+INSERT INTO rezeptzutaten (RezeptZutatenID, ZPRezeptID, MatID, Menge) VALUES
+  (1, 1, 12, 40),
+  (2, 1, 13, 60),
+  (3, 2, 12, 100),
+  (4, 3, 14, 80),
+  (5, 3, 15, 20);
+
+INSERT INTO invkorr_material (InvKorrMatID, MatID, Menge) VALUES
+  (1, 1, 10);
+
+INSERT INTO invkorr_wareneingang (InvKorrWEID, BestellID) VALUES
+  (1, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
