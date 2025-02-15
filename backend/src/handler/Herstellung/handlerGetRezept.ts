@@ -1,9 +1,9 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { closePool, getConnection } from "../../../db/dbclient"; // Importiere den DB-Wrapper
+import { closePool, getConnection } from "../../db/dbclient"; // Importiere den DB-Wrapper
 import fetch from "node-fetch"; // Für HTTP Aufruf
-import * as Errors from "../../../error/errors";
-import { validateData } from "../../../validation/validate";
-import { RezeptKerze, RezeptSprayDiff, RezeptZP, Zutaten } from "../../../interfaces";
+import * as Errors from "../../error/errors";
+import { validateData } from "../../validation/validate";
+import { RezeptKerze, RezeptSprayDiff, RezeptZP, Zutaten } from "../../interfaces";
 
 export const handlerGetRezept = async (
   event: APIGatewayEvent

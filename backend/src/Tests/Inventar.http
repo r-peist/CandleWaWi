@@ -1,2 +1,2 @@
-### POST request to send getBestellung
-POST http://localhost:3001/handlerInventar
+### GET request to send getBestellung
+GET http://localhost:3001/handlerInventar

@@ -43,91 +43,42 @@ const validate_1 = require("../../validation/validate");
 const Errors = __importStar(require("../../error/errors"));
 const handlerInventar = async (event) => {
     let connection;
-    const inventar = [];
     try {
-        // Verbindung zur Datenbank herstellen
         connection = await (0, dbclient_1.getConnection)();
-        // SQL-Abfrage, um MatID, LagerID und Menge aus der Tabelle `materiallager` zu lesen
-        const query = `
-        SELECT MatID, LagerID, Menge
-        FROM materiallager
-    `;
-        const [rows] = await connection.execute(query);
-        // Zwischenspeichern der Daten
-        const materialLager = rows.map((row) => ({
-            MatID: row.MatID,
-            LagerID: row.LagerID,
-            Menge: row.Menge,
-        }));
-        for (let i = 0; i < materialLager.length; i++) {
-            const { MatID, LagerID, Menge } = materialLager[i];
-            // Abfrage für material Tabelle
-            const queryMat = `
-            SELECT KatID, MatKatID, Active, Name
-            FROM material
-            WHERE MatID=?
-        `;
-            const [matrows] = await connection.execute(queryMat, [MatID]);
-            // Zwischenspeichern der Daten
-            const material = matrows.map((row) => ({
-                KatID: row.KatID,
-                MatKatID: row.MatKatID,
-                Active: row.Active,
-                Name: row.Name
-            }));
-            const materialname = material[0].Name;
-            const active = material[0].Active;
-            let status;
-            if (active) {
-                status = "Aktiv";
+        const [rows] = await connection.query(`
+      SELECT
+        m.MatKatID,
+        mk.Name AS Kategorie,
+        m.MatID,
+        m.Name AS Materialname,
+        m.SKU,
+        m.Active
+      FROM material m
+      JOIN materialkategorie mk ON m.MatKatID = mk.MatKatID
+      ORDER BY m.MatKatID  
+    `);
+        // 🔥 JSON strukturieren (Gruppieren nach MatKatID)
+        const Inventar = rows.reduce((acc, row) => {
+            let kategorie = acc.find((k) => k.MatKatID === row.MatKatID);
+            if (!kategorie) {
+                kategorie = {
+                    MatKatID: row.MatKatID,
+                    Kategorie: row.Kategorie,
+                    Materialien: []
+                };
+                acc.push(kategorie);
             }
-            else {
-                status = "Inaktiv";
-            }
-            //Abfrage für Kategorie
-            const queryKat = `
-            SELECT Name
-            FROM kategorie
-            WHERE KatID=?
-        `;
-            const [katrows] = await connection.execute(queryKat, [material[0].KatID]);
-            const kategorie = katrows.map((row) => ({
-                Name: row.Name
-            }));
-            const kategoriename = kategorie[0].Name;
-            //Abfrage für Material Kategorie
-            const queryMatKat = `
-            SELECT Name
-            FROM materialkategorie
-            WHERE MatKatID=?
-        `;
-            const [matkatrows] = await connection.execute(queryMatKat, [material[0].MatKatID]);
-            const materialkategorie = matkatrows.map((row) => ({
-                Name: row.Name
-            }));
-            const materialkategoriename = materialkategorie[0].Name;
-            //Abfrage Lagername
-            const queryLager = `
-            SELECT Name
-            FROM lager
-            WHERE LagerID=?
-        `;
-            const [lagerrows] = await connection.execute(queryLager, [materialLager[i].LagerID]);
-            const lager = lagerrows.map((row) => ({
-                Name: row.Name
-            }));
-            const lagername = lager[0].Name;
-            inventar.push({
-                Material: materialname,
-                Kategorie: kategoriename,
-                MaterialKategorie: materialkategoriename,
-                Lager: lagername,
-                Menge: materialLager[i].Menge,
-                Status: active
+            kategorie.Materialien.push({
+                MatID: row.MatID,
+                Materialname: row.Materialname,
+                SKU: row.SKU,
+                Active: row.Active
             });
-        }
-        const inventarObject = { Inventar: inventar };
-        const validatedData = (0, validate_1.validateData)("inventorySchema", inventarObject);
+            return acc;
+        }, []);
+        const inventarObject = { Inventar };
+        console.log("Inventar: ", inventarObject);
+        const validatedData = (0, validate_1.validateData)("inventarSchema", inventarObject);
         // HTTP-Post-Aufruf mit node-fetch
         const response = await (0, node_fetch_1.default)("http://localhost:3001/responseSender", {
             method: "POST",

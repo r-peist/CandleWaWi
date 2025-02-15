@@ -74,7 +74,7 @@ functions:
 
   #Herstellung
   handlergetRezept:
-    handler: src/handler/Herstellung/Neuentwicklung/handlerGetRezept.handlerGetRezept
+    handler: src/handler/Herstellung/handlerGetRezept.handlerGetRezept
     events:
       - http:
           path: handlerGetRezept

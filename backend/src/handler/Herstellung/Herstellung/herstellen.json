@@ -1,0 +1,10 @@
+{
+    "Rezept": {
+        "Kerze": {
+            "RezeptKerzeID": 1,
+            "BehaelterID": 1,
+            "DeckelID": 1,
+            "Menge": 1
+        }
+    }
+}

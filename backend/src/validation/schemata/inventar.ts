@@ -1,16 +1,21 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-// Definition des Schemas für ein einzelnes Inventarobjekt
-const schemaInventar = z.object({
-  Material: z.string(),
-  Kategorie: z.string(),
-  MaterialKategorie: z.string(),
-  Lager: z.string(),
-  Menge: z.number().nonnegative(),
-  Status: z.string(),
+const materialSchema = z.object({
+  MatID: z.number(),
+  Materialname: z.string().min(1, { message: "Materialname ist erforderlich" }),
+  // SKU darf null sein, daher verwenden wir nullable() – alternativ auch optional()
+  SKU: z.string().nullable(),
+  Active: z.string().min(1, { message: "Active ist erforderlich" }),
 });
 
-// Definition des Schemas für das gesamte Inventar
-export const inventorySchema = z.object({
-    Inventar: z.array(schemaInventar),
-  });
+const inventarItemSchema = z.object({
+  MatKatID: z.number()
+    .min(1, { message: "MatKatID muss mindestens 1 sein" })
+    .max(13, { message: "MatKatID darf maximal 13 sein" }),
+  Kategorie: z.string().min(1, { message: "Kategorie ist erforderlich" }),
+  Materialien: z.array(materialSchema),
+});
+
+export const inventarSchema = z.object({
+  Inventar: z.array(inventarItemSchema),
+});

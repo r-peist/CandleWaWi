@@ -1,77 +1,70 @@
 {
-    "Inventar": [
-      {
-        "Material": "Wachs_Soja_40.000g",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Wachs",
-        "Lager": "Burgstraße",
-        "Menge": 2,
-        "Status": "true"
-      },
-      {
-        "Material": "Wachs_Soja_60.000g",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Wachs",
-        "Lager": "Burgstraße",
-        "Menge": 4,
-        "Status": "false"
-      },
-      {
-        "Material": "Glas_Braun_180ml",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Behältnis",
-        "Lager": "Burgstraße",
-        "Menge": 42,
-        "Status": "true"
-      },
-      {
-        "Material": "Glas_Schwarz_300ml",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Behältnis",
-        "Lager": "Burgstraße",
-        "Menge": 42,
-        "Status": "true"
-      },
-      {
-        "Material": "Glas_Weiß_300ml",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Behältnis",
-        "Lager": "Burgstraße",
-        "Menge": 42,
-        "Status": "false"
-      },
-      {
-        "Material": "Holzdeckel_Braun",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Deckel",
-        "Lager": "Burgstraße",
-        "Menge": 42,
-        "Status": "true"
-      },
-      {
-        "Material": "Aludeckel_Schwarz",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Deckel",
-        "Lager": "Burgstraße",
-        "Menge": 42,
-        "Status": "true"
-      },
-      {
-        "Material": "Docht_Baumwolle1",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Docht",
-        "Lager": "Burgstraße",
-        "Menge": 112,
-        "Status": "true"
-      },
-      {
-        "Material": "Docht_Holz1",
-        "Kategorie": "Rohmaterial",
-        "MaterialKategorie": "Docht",
-        "Lager": "Burgstraße",
-        "Menge": 55,
-        "Status": "false"
-      }
-    ]
-  }
-  
+  "Inventar": [
+    {
+      "MatKatID": 2,
+      "Kategorie": "Wachs",
+      "Materialien": [
+        {
+          "MatID": 1,
+          "Materialname": "Wachs_Soja_40.000g",
+          "SKU": "WAX-001-NAT",
+          "Active": "true"
+        },
+        {
+          "MatID": 2,
+          "Materialname": "Wachs_Soja_60.000g",
+          "SKU": "WAX-002-SOY",
+          "Active": "false"
+        }
+      ]
+    },
+    {
+      "MatKatID": 3,
+      "Kategorie": "Docht",
+      "Materialien": [
+        {
+          "MatID": 8,
+          "Materialname": "Docht_Baumwolle1",
+          "SKU": "WCK-001-COTTON",
+          "Active": "true"
+        },
+        {
+          "MatID": 9,
+          "Materialname": "Docht_Holz1",
+          "SKU": "WCK-002-WOOD",
+          "Active": "false"
+        }
+      ]
+    },
+    {
+      "MatKatID": 4,
+      "Kategorie": "Behältnis",
+      "Materialien": [
+        {
+          "MatID": 3,
+          "Materialname": "Glas_Braun_180ml",
+          "SKU": "CON-001-GLASS-BROWN",
+          "Active": "true"
+        },
+        {
+          "MatID": 4,
+          "Materialname": "Glas_Schwarz_300ml",
+          "SKU": "CON-002-GLASS-BLACK",
+          "Active": "true"
+        },
+        {
+          "MatID": 5,
+          "Materialname": "Glas_Weiß_300ml",
+          "SKU": "CON-003-GLASS-WHITE",
+          "Active": "false"
+        },
+        {
+          "MatID": 10,
+          "Materialname": "Glas_Diffusor_Braun",
+          "SKU": "CON-004-GLASS-BROWN",
+          "Active": "true"
+        }
+      ]
+    }
+  ]
+}
