@@ -48,6 +48,13 @@ functions:
           path: validateUpsertRezept
           method: post
 
+  validateHerstellung:
+    handler: src/validation/wrapper.handlerHerstellung
+    events:
+      - http:
+          path: validateHerstellung
+          method: post
+
   #Bestellung 
   handlerGetLieferanten:
     handler: src/handler/Einkauf/handlerGetLieferanten.getLieferanten

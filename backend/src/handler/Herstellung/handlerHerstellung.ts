@@ -8,13 +8,54 @@ import mysql from "mysql2/promise";
 import { error } from "console";
 
 export const handlerHerstellung = async (
-  event: ValidatedEvent
+  event: ValidatedEvent<{Rezept: { Name: string, RezeptID: number, BehaelterID: number, DeckelID: number, 
+    MatID: number, Menge: number, Materialien: [] }}>
 ): Promise<APIGatewayProxyResult> => {
   let connection;
+  const {Rezept: { Name, RezeptID, BehaelterID, DeckelID, MatID, Menge, Materialien = [] }} = event.validatedBody;
+  let mats: any [] = [];
+  
 
   try {
     connection = await getConnection();
     await connection.beginTransaction();
+
+    if (Name === "Kerze") {
+      const [matrows]: any = await connection.query(`
+        SELECT
+          b.MatID AS BehaelterMatID,
+          d.MatID AS DeckelMatID
+        FROM material m
+        JOIN behaelter b ON m.MatID = b.MatID
+        JOIN deckel d ON m.MatID = d.MatID
+        WHERE b.MatID = ? OR d.MatID = ?
+      `, [BehaelterID, DeckelID]);
+
+      const { BehaelterMatID, DeckelMatID } = matrows[0];
+      mats.push({MatID: MatID, Menge: Menge}, 
+                {MatID: BehaelterMatID, Menge: Menge}, 
+                {MatID: DeckelMatID, Menge: Menge},
+                ...Materialien
+              );
+
+      for (const rows of mats) {
+        const
+      }
+      const [update]: any = await connection.query(`
+        UPDATE materiallager
+        SET Menge = Menge - COALESCE (?, bestand)
+        WHERE MatID = ?
+      `);
+    } else if (Name === "SprayDiff") {
+      const [rows]: any = await connection.query(`
+      
+      `);
+    } else if (Name === "ZP") {
+      const [rows]: any = await connection.query(`
+      
+      `);
+    }
+
 
 
     const validatedData = ""; 
