@@ -1,223 +1,243 @@
 "use client";
 import { useState, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Importiere useRouter
+// import { fetchOpenOrders, updateInventory, submitComment, updateOrderStatus } from "../api"; // Importiere API-Funktionen
 
-export default function Income() {
-    const [openOrders, setOpenOrders] = useState([]);
-    const [selectedOrder, setSelectedOrder] = useState(null);
-    const [comment, setComment] = useState("");
-    const [showBookModal, setShowBookModal] = useState(false);
-    const [orderForBooking, setOrderForBooking] = useState(null);
-    const [showFaultyModal, setShowFaultyModal] = useState(false);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+// Dummy-API-Funktionen (hier mit Status-Feld)
+const fetchOpenOrders = async () => {
+    try {
+        // Session über API abrufen
+        const response = await fetch("/api/auth/session");
+        if (!response.ok) throw new Error("Session konnte nicht geladen werden.");
 
-    // Funktion zum Laden der offenen Bestellungen
-    const loadOpenOrders = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch("/api/income", {
-                cache: "no-store",
-                next: { revalidate: 0, dynamic: "force-dynamic" },
-            });
-
-            if (!res.ok) {
-                throw new Error(`Fehler: ${res.status}`);
-            }
-
-            const result = await res.json();
-
-            if (!result.offen || !result.pruefung) {
-                throw new Error("Leere oder ungültige Antwort vom Backend!");
-            }
-
-            // Falls das Backend keine Daten liefert, soll es stoppen:
-            if (result.offen.length === 0 && result.pruefung.length === 0) {
-                throw new Error("Keine offenen Bestellungen gefunden!");
-            }
-
-            setOpenOrders([
-                ...result.offen.map((order) => ({
-                    orderId: order.BestellID,
-                    status: "open",
-                    items: order.Materialien.map((mat) => ({
-                        MatID: mat.MatID,
-                        Material: mat.Name,
-                        Menge: mat.Menge,
-                    })),
-                })),
-                ...result.pruefung.map((order) => ({
-                    orderId: order.BestellID,
-                    status: "in_pruefung",
-                    items: order.Materialien.map((mat) => ({
-                        MatID: mat.MatID,
-                        Material: mat.Name,
-                        Menge: mat.Menge,
-                    })),
-                })),
-            ]);
-        } catch (err: any) {
-            console.error("Fehler beim Laden der Bestellungen:", err);
-            setError(err.message);
-        } finally {
-            setLoading(false);
+        const sessionData = await response.json();
+        if (!sessionData.user) {
+            throw new Error("Kein Benutzer angemeldet.");
         }
-    };
+
+        console.log("Aktueller Benutzer:", sessionData.user.email);
+
+        return [
+            {
+                orderId: 1,
+                status: "in_pruefung",
+                items: [{ MatID: 1, Material: "Material A", Menge: 10 }],
+            },
+            {
+                orderId: 2,
+                status: "open",
+                items: [{ MatID: 2, Material: "Material B", Menge: 5 }],
+            },
+            {
+                orderId: 3,
+                status: "open",
+                items: [{ MatID: 3, Material: "Material C", Menge: 8 }],
+            },
+        ];
+    } catch (error) {
+        console.error("Fehler beim Abrufen der Session:", error);
+        return [];
+    }
+};
+
+
+const updateInventory = async (orderId) => {
+    console.log("Lagerbestand aktualisiert für Bestellung:", orderId);
+    return { success: true };
+};
+
+const submitComment = async (orderId, comment) => {
+    console.log("Kommentar abgeschickt:", { orderId, comment });
+    return { success: true };
+};
+
+const updateOrderStatus = async (orderId, status) => {
+    console.log("Bestellungsstatus aktualisiert:", { orderId, status });
+    return { success: true };
+};
+
+const WorkflowPage = () => {
+    const [step, setStep] = useState(1); // 1: Übersicht, 2: Korrektur
+    const [openOrders, setOpenOrders] = useState([]); // Alle Bestellungen
+    const [selectedOrder, setSelectedOrder] = useState(null); // Bestellung, die korrigiert werden soll
+    const [comment, setComment] = useState(""); // Kommentar für Korrektur
+    const [adjustedItems, setAdjustedItems] = useState([]); // Angepasste Artikel (neue Mengen)
+    const router = useRouter();
 
     useEffect(() => {
         loadOpenOrders();
     }, []);
 
-    // Damit auch bei "Back"-Navigation immer neu geladen wird:
-    useEffect(() => {
-        const handlePageShow = (event: any) => {
-            if (event.persisted) {
-                loadOpenOrders();
-            }
-        };
+    const loadOpenOrders = async () => {
+        const orders = await fetchOpenOrders();
+        setOpenOrders(orders);
+    };
 
-        window.addEventListener("pageshow", handlePageShow);
-        return () => {
-            window.removeEventListener("pageshow", handlePageShow);
-        };
-    }, []);
-
-    // Aufteilung in bearbeitbare Bestellungen und solche in Prüfung
-    const actionableOrders = openOrders.filter(
-        (order) => order.status !== "in_pruefung"
-    );
+    // Unterteile die Bestellungen in zwei Gruppen:
     const infoOrders = openOrders.filter(
         (order) => order.status === "in_pruefung"
     );
+    const actionableOrders = openOrders.filter(
+        (order) => order.status !== "in_pruefung"
+    );
 
-    // Buchung initiieren
-    const handleBookOrder = (order) => {
-        setOrderForBooking(order);
-        setShowBookModal(true);
-    };
-
-    const confirmBookOrder = async () => {
-        if (orderForBooking) {
-            try {
-                const response = await fetch("/api/bookorder", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ orderId: orderForBooking.orderId }),
-                });
-                const result = await response.json();
-
-                if (result.Status?.success) {
-                    alert(`Bestellung ${orderForBooking.orderId} wurde gebucht!`);
-                    setShowBookModal(false);
-                    setOrderForBooking(null);
-                    await loadOpenOrders();
-                } else {
-                    alert("Fehler beim Buchen der Bestellung.");
-                }
-            } catch (error) {
-                console.error("Fehler beim Buchen:", error);
+    // Aktion: Bestellung buchen
+    const handleBookOrder = async (order) => {
+        if (window.confirm("Bist du dir sicher, dass du die Bestellung buchen willst?")) {
+            const response = await updateOrderStatus(order.orderId, "closed");
+            if (response.success) {
+                alert(`Bestellung ${order.orderId} wurde gebucht!`);
+                await loadOpenOrders();
+            } else {
                 alert("Fehler beim Buchen der Bestellung.");
             }
         }
     };
 
-    // Fehlerhaft-Meldung initiieren
-    const handleMarkFaulty = (order) => {
-        setSelectedOrder(order);
-        setShowFaultyModal(true);
+    // Aktion: Fehlerhaft – Bestellung als fehlerhaft markieren und Korrektur starten
+    const handleMarkFaulty = async (order) => {
+        if (window.confirm("Bist du dir sicher, dass du die Bestellung als fehlerhaft markieren willst?")) {
+            const response = await updateOrderStatus(order.orderId, "in_pruefung");
+            if (response.success) {
+                setSelectedOrder(order);
+                setAdjustedItems(
+                    order.items.map((item) => ({
+                        ...item,
+                        adjustedQuantity: item.Menge,
+                    }))
+                );
+                setStep(2);
+            } else {
+                alert("Fehler beim Markieren der Bestellung als fehlerhaft.");
+            }
+        }
     };
 
-    const confirmFaultyOrder = async () => {
+    // In Schritt 2: Menge anpassen
+    const handleAdjustQuantity = (matId, newQuantity) => {
+        setAdjustedItems((prevItems) =>
+            prevItems.map((item) =>
+                item.MatID === matId
+                    ? { ...item, adjustedQuantity: Math.max(0, newQuantity) }
+                    : item
+            )
+        );
+    };
+
+    // In Schritt 2: Korrektur abschließen
+    const handleNextStep = async () => {
         if (!comment) {
-            alert("Bitte geben Sie einen Kommentar zur Fehlerhaft-Meldung ein.");
+            alert("Bitte geben Sie einen Kommentar zur Korrektur ein.");
             return;
         }
-        try {
-            const response = await fetch("/api/faultyorder", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    orderId: selectedOrder.orderId,
-                    comment: comment,
-                }),
-            });
-            const result = await response.json();
-
-            if (result.Status?.success) {
-                alert("Bestellung wurde als fehlerhaft markiert und in Prüfung gesetzt.");
-                setShowFaultyModal(false);
-                setSelectedOrder(null);
-                setComment("");
-                await loadOpenOrders();
-            } else {
-                alert("Fehler beim Senden der Fehlermeldung.");
-            }
-        } catch (error) {
-            console.error("Fehler beim Senden der Fehlermeldung:", error);
-            alert("Fehler beim Senden der Fehlermeldung.");
+        const commentResponse = await submitComment(selectedOrder.orderId, comment);
+        if (!commentResponse.success) {
+            alert("Fehler beim Speichern des Kommentars.");
+            return;
         }
-    };
-
-    const cancelFaultyOrder = () => {
-        setShowFaultyModal(false);
+        const inventoryResponse = await updateInventory(selectedOrder.orderId);
+        if (!inventoryResponse.success) {
+            alert("Fehler beim Aktualisieren des Lagerbestands.");
+            return;
+        }
+        const orderResponse = await updateOrderStatus(selectedOrder.orderId, "closed");
+        if (!orderResponse.success) {
+            alert("Fehler beim Abschließen der Bestellung.");
+            return;
+        }
+        alert("Bestellung erfolgreich abgeschlossen und Lagerbestand aktualisiert!");
+        setStep(1);
         setSelectedOrder(null);
         setComment("");
+        setAdjustedItems([]);
+        await loadOpenOrders();
+    };
+
+    const handleCancel = () => {
+        setStep(1);
+        setSelectedOrder(null);
+        setComment("");
+        setAdjustedItems([]);
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 p-8">
-            <header className="mb-10 flex justify-between items-center">
+        <div className="min-h-screen bg-gray-100 p-8">
+            <header className="mb-8 flex justify-between items-center">
                 <button
-                    className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 transition duration-300"
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 shadow flex items-center space-x-2"
                     onClick={() => router.push("/")}
                 >
-                    <IoMdArrowBack size={20} className="text-gray-700" />
-                    <span className="text-gray-700">Zurück</span>
+                    <IoMdArrowBack size={16} />
+                    <span>Zurück</span>
                 </button>
-                <h1 className="text-4xl font-bold text-gray-800 text-center flex-grow">
+                <h1 className="text-3xl font-bold text-center flex-grow text-gray-800">
                     Wareneingang
                 </h1>
             </header>
 
             <div className="max-w-3xl mx-auto space-y-8">
-                {error && <div className="text-red-600 text-center">{error}</div>}
-                {loading && <div className="text-center text-gray-600">Lade Daten…</div>}
+                {/* Bereich: Inventarkorrektur (nur Info) */}
+                {infoOrders.length > 0 && (
+                    <div className="bg-gray-200 p-4 rounded-lg">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                            Inventarkorrektur (nur Info)
+                        </h2>
+                        <ul className="space-y-4">
+                            {infoOrders.map((order) => (
+                                <li
+                                    key={order.orderId}
+                                    className="p-4 bg-gray-100 rounded-lg shadow-md"
+                                >
+                                    <p className="font-semibold">
+                                        Bestell-ID: {order.orderId} (Status: {order.status})
+                                    </p>
+                                    <ul className="mt-2">
+                                        {order.items.map((item) => (
+                                            <li key={item.MatID} className="text-sm">
+                                                {item.Material} - {item.Menge} Stück
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
-                {/* Offene Bestellungen */}
+                {/* Bereich: Offene Bestellungen */}
                 {actionableOrders.length > 0 && (
-                    <div className="bg-white p-6 rounded-xl shadow-lg">
-                        <h2 className="text-2xl font-semibold mb-6 text-center">
+                    <div className="bg-white p-4 rounded-lg shadow">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
                             Offene Bestellungen
                         </h2>
-                        <ul className="space-y-6">
+                        <ul className="space-y-4">
                             {actionableOrders.map((order) => (
                                 <li
                                     key={order.orderId}
-                                    className="p-6 bg-gray-50 rounded-xl shadow hover:shadow-xl transition duration-300 flex flex-col gap-4"
+                                    className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col gap-2"
                                 >
                                     <div>
-                                        <p className="font-semibold text-lg">
-                                            Bestell-ID: {order.orderId}
+                                        <p className="font-semibold">
+                                            Bestell-ID: {order.orderId} (Status: {order.status})
                                         </p>
-                                        <ul className="mt-2 text-sm text-gray-700">
+                                        <ul className="mt-1 text-sm text-gray-700">
                                             {order.items.map((item) => (
                                                 <li key={item.MatID}>
-                                                    {item.Material} – {item.Menge} Stück
+                                                    {item.Material} - {item.Menge} Stück
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
                                     <div className="flex justify-end gap-4">
                                         <button
-                                            className="px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition duration-300"
+                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                                             onClick={() => handleBookOrder(order)}
                                         >
                                             Bestellung buchen
                                         </button>
                                         <button
-                                            className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-300"
+                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                                             onClick={() => handleMarkFaulty(order)}
                                         >
                                             Fehlerhaft
@@ -229,110 +249,63 @@ export default function Income() {
                     </div>
                 )}
 
-                {/* Bestellungen in Prüfung (Info – ausgegraut) */}
-                {infoOrders.length > 0 && (
-                    <div className="bg-gray-200 p-6 rounded-xl">
-                        <h2 className="text-2xl font-semibold mb-6 text-center">
-                            Bestellungen in Prüfung
+                {/* Schritt 2: Inventarkorrektur */}
+                {step === 2 && selectedOrder && (
+                    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+                        <h2 className="text-2xl font-semibold mb-4 text-center">
+                            Inventarkorrektur für Bestellung {selectedOrder.orderId}
                         </h2>
-                        <ul className="space-y-6">
-                            {infoOrders.map((order) => (
+                        <ul className="divide-y divide-gray-300">
+                            {adjustedItems.map((item) => (
                                 <li
-                                    key={order.orderId}
-                                    className="p-6 bg-gray-100 rounded-xl shadow-md opacity-60"
+                                    key={item.MatID}
+                                    className="flex justify-between items-center py-4"
                                 >
-                                    <p className="font-semibold text-lg">
-                                        Bestell-ID: {order.orderId}
-                                    </p>
-                                    <ul className="mt-3 text-sm text-gray-700">
-                                        {order.items.map((item) => (
-                                            <li key={item.MatID}>
-                                                {item.Material} – {item.Menge} Stück
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <div>
+                                        <p className="font-semibold">{item.Material}</p>
+                                        <p className="text-sm text-gray-600">
+                                            Ursprünglich: {item.Menge} Stück
+                                        </p>
+                                    </div>
+                                    <input
+                                        type="number"
+                                        className="w-24 border rounded px-2 py-1"
+                                        value={item.adjustedQuantity}
+                                        onChange={(e) =>
+                                            handleAdjustQuantity(
+                                                item.MatID,
+                                                parseInt(e.target.value, 10)
+                                            )
+                                        }
+                                    />
                                 </li>
                             ))}
                         </ul>
-                    </div>
-                )}
-
-                {/* Modal für Buchungsbestätigung */}
-                {showBookModal && orderForBooking && (
-                    <div
-                        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                        onClick={() => setShowBookModal(false)}
-                    >
-                        <div
-                            className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <h2 className="text-2xl font-semibold mb-4 text-center">
-                                Bestätigung
-                            </h2>
-                            <p className="mb-6 text-center">
-                                Bist du sicher, dass du die Bestellung{" "}
-                                {orderForBooking.orderId} buchen möchtest?
-                            </p>
-                            <div className="flex justify-end gap-4">
-                                <button
-                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded transition duration-300"
-                                    onClick={() => setShowBookModal(false)}
-                                >
-                                    Abbrechen
-                                </button>
-                                <button
-                                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition duration-300"
-                                    onClick={confirmBookOrder}
-                                >
-                                    Buchen
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Modal für Fehlerhaft-Meldung */}
-                {showFaultyModal && selectedOrder && (
-                    <div
-                        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                        onClick={cancelFaultyOrder}
-                    >
-                        <div
-                            className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <h2 className="text-2xl font-semibold mb-4 text-center">
-                                Fehlermeldung senden
-                            </h2>
-                            <p className="mb-6 text-center">
-                                Bitte geben Sie einen Kommentar ein, um die Bestellung{" "}
-                                {selectedOrder.orderId} als fehlerhaft zu melden.
-                            </p>
-                            <textarea
-                                className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Kommentar..."
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                            />
-                            <div className="flex justify-end gap-4">
-                                <button
-                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded transition duration-300"
-                                    onClick={cancelFaultyOrder}
-                                >
-                                    Abbrechen
-                                </button>
-                                <button
-                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition duration-300"
-                                    onClick={confirmFaultyOrder}
-                                >
-                                    Fehlermeldung senden
-                                </button>
-                            </div>
+                        <textarea
+                            className="w-full mt-4 px-4 py-2 border rounded-lg"
+                            placeholder="Kommentar für Korrektur..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                        />
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+                                onClick={handleCancel}
+                            >
+                                Abbrechen
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                                onClick={handleNextStep}
+                            >
+                                Abschluss
+                            </button>
                         </div>
                     </div>
                 )}
             </div>
         </div>
     );
-}
+};
+
+export default WorkflowPage;

@@ -1,9 +1,7 @@
 ### POST request to send lieferantId
-POST http://localhost:3001/validatedGetLieferantFE
+POST http://localhost:3001/getLieferantenFE
 Content-Type: application/json
 
 {
-  "Lieferant": {
-    "LiefID": 1
-  }
+  "LiefID": 1
 }

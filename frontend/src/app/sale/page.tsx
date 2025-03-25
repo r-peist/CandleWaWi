@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 
+// Omars Änderungen
+import { useUser } from '@auth0/nextjs-auth0/client';
+// Omars Änderungen
+
 // Dummy API-Funktionen
 const fetchLocalInventory = async () => {
     return [
@@ -46,6 +50,18 @@ const WorkflowPage = () => {
     const [selectedOrder, setSelectedOrder] = useState(null); // Gewählte Bestellung
     const router = useRouter();
 
+    // Omars Änderungen
+    const { user, isLoading } = useUser();
+
+    // Authentifizierung überprüfen
+    useEffect(() => {
+        if (!isLoading && !user) {
+            redirect('/');
+        }
+    }, [isLoading, user ]);
+    // Omars Änderungen
+
+
     useEffect(() => {
         if (mode === "laden") {
             loadLocalInventory();
@@ -73,6 +89,16 @@ const WorkflowPage = () => {
     const handleProductOut = (product) => {
         alert(`${product.name} wurde erfolgreich ausgebucht.`);
     };
+
+ // OMAR Verhindere das Rendern, während die Authentifizierung geprüft wird**
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Lädt...</div>;
+    }
+
+    if (!user) {
+        return null; // Zeige nichts, falls die Weiterleitung aktiv ist
+    }
+    // OMAR Verhindere das Rendern, während die Authentifizierung geprüft wird**
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center p-8">
@@ -197,3 +223,10 @@ const WorkflowPage = () => {
 };
 
 export default WorkflowPage;
+
+// Omars Änderungen
+function redirect(url: string) {
+    const router = useRouter();
+    router.push(url);
+}
+

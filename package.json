@@ -1,5 +1,17 @@
 {
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "@auth0/nextjs-auth0": "^4.1.0",
+    "node-fetch": "^3.3.2",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@types/auth0": "^3.3.10",
+    "@types/react": "^19.0.12"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   }
 }

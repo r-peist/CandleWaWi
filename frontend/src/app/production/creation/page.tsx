@@ -4,7 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaSave } from "react-icons/fa";
 
+// Omars Änderungen
+import { useUser } from '@auth0/nextjs-auth0/client';
+import  { useEffect } from 'react';
+
+
 const HerstellungProduktPage = () => {
+
+    // Omars Änderungen
+    const { user, isLoading } = useUser();
+    // Omars Änderungen Ende
+
     const router = useRouter();
     const [selectedRecipe, setSelectedRecipe] = useState("");
     const [materialAvailable, setMaterialAvailable] = useState("");
@@ -30,6 +40,13 @@ const HerstellungProduktPage = () => {
             );
         }
         setProcessCompleted(true);
+
+        //OMAR Authentifizierung überprüfen
+    useEffect(() => {
+        if (!isLoading && !user) {
+            redirect('/');
+        }
+    }, [isLoading, user ])
     };
 
     return (
@@ -112,3 +129,7 @@ const HerstellungProduktPage = () => {
 };
 
 export default HerstellungProduktPage;
+const redirect = (url: string) => {
+    window.location.href = url;
+};
+
