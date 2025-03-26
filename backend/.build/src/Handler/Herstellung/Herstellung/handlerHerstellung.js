@@ -37,36 +37,55 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlerHerstellung = void 0;
-const dbclient_1 = require("../../db/dbclient"); // Importiere den DB-Wrapper
+const dbclient_1 = require("../../../db/dbclient"); // Importiere den DB-Wrapper
 const node_fetch_1 = __importDefault(require("node-fetch")); // Für HTTP Aufruf
-const Errors = __importStar(require("../../error/errors"));
+const Errors = __importStar(require("../../../error/errors"));
 const handlerHerstellung = async (event) => {
     let connection;
-    const { Rezept: { Name, RezeptID, BehaelterID, DeckelID, MatID, Menge, Materialien = [] } } = event.validatedBody;
+    const { Rezept: { Name, RezeptID, BehaelterID, DeckelID, MatID, Menge, Materialien = [{ MatID, Menge }] } } = event.validatedBody;
     let mats = [];
     try {
         connection = await (0, dbclient_1.getConnection)();
         await connection.beginTransaction();
+        //MatIDs Deckel Behälter zwischenspeichern
         if (Name === "Kerze") {
-            const [matrows] = await connection.query(`
+            console.log("Innerhalb if-Klause Kerze");
+            const [behaelterrows] = await connection.query(`
         SELECT
-          b.MatID AS BehaelterMatID,
-          d.MatID AS DeckelMatID
-        FROM material m
-        JOIN behaelter b ON m.MatID = b.MatID
-        JOIN deckel d ON m.MatID = d.MatID
-        WHERE b.MatID = ? OR d.MatID = ?
-      `, [BehaelterID, DeckelID]);
-            const { BehaelterMatID, DeckelMatID } = matrows[0];
-            mats.push({ MatID: MatID, Menge: Menge }, { MatID: BehaelterMatID, Menge: Menge }, { MatID: DeckelMatID, Menge: Menge }, ...Materialien);
-            for (const rows of mats) {
-                const ;
+          MatID AS BehaelterMatID
+        FROM behaelter
+        WHERE BehaelterID = ?
+      `, [BehaelterID]);
+            const [deckelrows] = await connection.query(`
+        SELECT
+          MatID AS DeckelMatID
+        FROM deckel
+        WHERE DeckelID = ?
+      `, [DeckelID]);
+            console.log("MatIDs ausgelesen");
+            //Einzelne Objekte mit MatID + Menge in ein Array zum aktualisieren der DB Bestände
+            //const { BehaelterMatID, DeckelMatID } = matrows;
+            mats.push({ MatID: MatID, Menge: Menge }, { MatID: parseInt(behaelterrows[0].BehaelterMatID), Menge: Menge }, { MatID: parseInt(deckelrows[0].DeckelMatID), Menge: Menge });
+            console.log("Andere MatIDs: ", behaelterrows[0], " und ", deckelrows[0]);
+            for (const matrows of Materialien) {
+                mats.push(matrows);
+                console.log("Mats Array: ", mats);
             }
-            const [update] = await connection.query(`
-        UPDATE materiallager
-        SET Menge = Menge - COALESCE (?, bestand)
-        WHERE MatID = ?
-      `);
+            for (const rows of mats) {
+                console.log("innerhalb for schleife mit: ", rows.Menge, " und ", rows.MatID);
+                //COALESCE macht NULL-Prüfung | (?, 0) weil, wenn null ist bei (?) der neue Wert auch null
+                const [updatekerze] = await connection.query(`
+          UPDATE materiallager
+          SET Menge = Menge - COALESCE (?, 0)
+          WHERE MatID = ?
+        `, [rows.Menge, rows.MatID]);
+                const [resultkerze] = await connection.query(`
+          SELECT Menge
+          FROM materiallager
+          WHERE MatID = ?
+        `, [rows.MatID]);
+                console.log("Aktualisierte Menge für ", rows.MatID, ": ", resultkerze.Menge);
+            }
         }
         else if (Name === "SprayDiff") {
             const [rows] = await connection.query(`

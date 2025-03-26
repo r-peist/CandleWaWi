@@ -1,11 +1,14 @@
+### POST request to validateHerstellung
+POST http://localhost:3001/validateHerstellung
+
 {
     "Rezept": {
         "Name": "Kerze",
         "RezeptID": 1,
         "BehaelterID": 1,
         "DeckelID": 1,
-        "MatID": 2,
-        "Menge": 2,
+        "MatID": 1,
+        "Menge": 1,
         "Materialien": [
             {
                 "MatID": 1,
@@ -13,4 +16,4 @@
             }
         ]
     }
-} 
+}  
