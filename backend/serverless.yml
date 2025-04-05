@@ -6,9 +6,13 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: eu-central-1 # Optional: AWS-Region
-  environment: # Optional: Umgebungsvariablen
-    NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
-    RESPONSE_LIEFERANTEN: ${self:custom.jsonImports.jsonLieferanten}
+  environment:
+      DB_HOST: database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com
+      DB_USER: admin
+      DB_PASSWORD: Awshsgm24!
+      DB_NAME: wawi
+      NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
+      RESPONSE_LIEFERANTEN: ${self:custom.jsonImports.jsonLieferanten}
 
 functions:
 

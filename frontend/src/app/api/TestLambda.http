@@ -1,0 +1,12 @@
+POST https://testuser.auth.eu-central-1.amazoncognito.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&
+client_id=121pvvvspbtlq30jkb4l97ps9p&
+username=testuser1&
+password=Test123!&
+scope=openid
+
+### 🔒 API-Aufruf mit Token (ersetze <ACCESS_TOKEN> unten)
+GET https://989gdw48z6.execute-api.eu-central-1.amazonaws.com/dev/getLieferanten
+Authorization: Bearer <ACCESS_TOKEN>
