@@ -44,7 +44,7 @@ export const handlerMatLief = async (
     //console.log("Validierte Daten in handler: ", validatedData);
 
     // HTTP-Post-Aufruf mit node-fetch
-    const response = await fetch("http://localhost:3001/responseSender", {
+    const response = await fetch("https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/responseSender", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

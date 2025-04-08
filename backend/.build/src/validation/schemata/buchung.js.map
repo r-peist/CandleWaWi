@@ -1,1 +1,0 @@
-{"version":3,"file":"buchung.js","sourceRoot":"","sources":["../../../../src/validation/schemata/buchung.ts"],"names":[],"mappings":";;;AAAA,6BAAwB;AAEX,QAAA,aAAa,GAAG,OAAC,CAAC,MAAM,CAAC;IACpC,OAAO,EAAE,OAAC,CAAC,MAAM,CAAC;QAChB,SAAS,EAAE,OAAC,CAAC,MAAM,EAAE;KACtB,CAAC;CACH,CAAC,CAAC"}

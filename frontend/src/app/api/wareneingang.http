@@ -1,4 +1,14 @@
 ### GET request to example server
-GET http://localhost:3001/handlerWareneingang
+GET https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/getLieferanten
+
 
 ###
+GET https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerGetInvKorr
+
+
+### Lokale Inventarkorrektur-Route testen
+GET http://localhost:3000/api/inventarkorrektur
+
+
+### Lokale -Route testen
+GET http://localhost:3000/api/suppliers

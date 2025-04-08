@@ -48,7 +48,7 @@ export const handlerBestellung = async (
     console.log("Bestellobjekt: ", BestellID);
     const validatedData = validateData("bestellIDSchema", BestellID);
 
-    const response = await fetch("http://localhost:3001/responseSender", {
+    const response = await fetch("https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/responseSender", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

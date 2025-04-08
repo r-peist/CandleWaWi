@@ -1,20 +1,20 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as Errors from "../error/errors";
+import lieferanten from "../responseSender/JSONs/handlergetLieferanten.json";
 
 export const responseSender = async (
-  event: APIGatewayEvent
+    event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
-    // JSON-Daten aus dem Request-Body lesen
     const data = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-    console.log("Erhaltene Daten im responseSender: ");
-    console.dir(data, { depth: null, colors: true });
+    console.log("Lieferanten:", lieferanten);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: "Daten erfolgreich ans FE gesendet",
-        data, // Die empfangenen Daten werden direkt zurückgegeben
+        data,
+        lieferanten,
       }),
     };
   } catch (error) {

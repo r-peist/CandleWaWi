@@ -1,0 +1,2900 @@
+{
+  "service": {
+    "service": "my-serverless-app",
+    "serviceObject": {
+      "name": "my-serverless-app"
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs18.x",
+      "region": "eu-central-1",
+      "environment": {
+        "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+        "DB_USER": "admin",
+        "DB_PASSWORD": "Gm24AWS!_Super",
+        "DB_NAME": "wawi",
+        "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+      },
+      "vpc": {
+        "securityGroupIds": [
+          "sg-090ca89d61fc510f1",
+          "sg-0135e962f5f7a2fb6"
+        ],
+        "subnetIds": [
+          "subnet-0b71c93fd4ba744c2",
+          "subnet-02a70fa3169daa5ba",
+          "subnet-0e970cf64b3378be3"
+        ]
+      },
+      "stage": "dev",
+      "versionFunctions": true,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ValidatedGetLieferantFELogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-validatedGetLieferantFE"
+            }
+          },
+          "ValidatedGetMatLiefLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-validatedGetMatLief"
+            }
+          },
+          "ValidatedBuchungLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-validatedBuchung"
+            }
+          },
+          "ValidatedInvKorrWELogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-validatedInvKorrWE"
+            }
+          },
+          "ValidateUpsertRezeptLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-validateUpsertRezept"
+            }
+          },
+          "ValidateHerstellungLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-validateHerstellung"
+            }
+          },
+          "HandlerGetLieferantenLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-handlerGetLieferanten"
+            }
+          },
+          "HandlerInventarLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-handlerInventar"
+            }
+          },
+          "HandlerWareneingangLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-handlerWareneingang"
+            }
+          },
+          "HandlergetRezeptLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-handlergetRezept"
+            }
+          },
+          "HandlerHerstellungLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-handlerHerstellung"
+            }
+          },
+          "HandlerGetInvKorrLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-handlerGetInvKorr"
+            }
+          },
+          "ResponseSenderLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-serverless-app-dev-responseSender"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "my-serverless-app",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup",
+                          "logs:TagResource"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/my-serverless-app-dev*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/my-serverless-app-dev*:*:*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "my-serverless-app",
+                    "dev",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              },
+              "ManagedPolicyArns": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          "ValidatedGetLieferantFELambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedGetLieferantFE.zip"
+              },
+              "Handler": "src/validation/wrapper.validatedGetLieferantFE",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-validatedGetLieferantFE",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ValidatedGetLieferantFELogGroup"
+            ]
+          },
+          "ValidatedGetMatLiefLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedGetMatLief.zip"
+              },
+              "Handler": "src/validation/wrapper.validatedGetMatLief",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-validatedGetMatLief",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ValidatedGetMatLiefLogGroup"
+            ]
+          },
+          "ValidatedBuchungLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedBuchung.zip"
+              },
+              "Handler": "src/validation/wrapper.validatedGetBuchung",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-validatedBuchung",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ValidatedBuchungLogGroup"
+            ]
+          },
+          "ValidatedInvKorrWELambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedInvKorrWE.zip"
+              },
+              "Handler": "src/validation/wrapper.validateGetInvKorrWE",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-validatedInvKorrWE",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ValidatedInvKorrWELogGroup"
+            ]
+          },
+          "ValidateUpsertRezeptLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validateUpsertRezept.zip"
+              },
+              "Handler": "src/validation/wrapper.validateUpsertRezept",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-validateUpsertRezept",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ValidateUpsertRezeptLogGroup"
+            ]
+          },
+          "ValidateHerstellungLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validateHerstellung.zip"
+              },
+              "Handler": "src/validation/wrapper.validateHerstellung",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-validateHerstellung",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ValidateHerstellungLogGroup"
+            ]
+          },
+          "HandlerGetLieferantenLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerGetLieferanten.zip"
+              },
+              "Handler": "src/handler/Einkauf/handlerGetLieferanten.getLieferanten",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-handlerGetLieferanten",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlerGetLieferantenLogGroup"
+            ]
+          },
+          "HandlerInventarLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerInventar.zip"
+              },
+              "Handler": "src/handler/Inventar/handlerInventar.handlerInventar",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-handlerInventar",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlerInventarLogGroup"
+            ]
+          },
+          "HandlerWareneingangLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerWareneingang.zip"
+              },
+              "Handler": "src/handler/Wareneingang/handlerWareneingang.handlerWareneingang",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-handlerWareneingang",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlerWareneingangLogGroup"
+            ]
+          },
+          "HandlergetRezeptLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlergetRezept.zip"
+              },
+              "Handler": "src/handler/Herstellung/handlerGetRezept.handlerGetRezept",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-handlergetRezept",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlergetRezeptLogGroup"
+            ]
+          },
+          "HandlerHerstellungLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerHerstellung.zip"
+              },
+              "Handler": "src/handler/Herstellung/Herstellung/handlerHerstellung.handlerHerstellung",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-handlerHerstellung",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlerHerstellungLogGroup"
+            ]
+          },
+          "HandlerGetInvKorrLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerGetInvKorr.zip"
+              },
+              "Handler": "src/handler/Inventarkorrektur/handlerGetInvKorr.handlerGetInvKorr",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-handlerGetInvKorr",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlerGetInvKorrLogGroup"
+            ]
+          },
+          "ResponseSenderLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/responseSender.zip"
+              },
+              "Handler": "src/responseSender/responseSender.responseSender",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "my-serverless-app-dev-responseSender",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "DB_HOST": "database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com",
+                  "DB_USER": "admin",
+                  "DB_PASSWORD": "Gm24AWS!_Super",
+                  "DB_NAME": "wawi",
+                  "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
+              }
+            },
+            "DependsOn": [
+              "ResponseSenderLogGroup"
+            ]
+          },
+          "ValidatedGetMatLiefLambdaVersionuXhpM7Nd9CHuN6e1KCrz2Vm78e9sFmqCwLfXWglD8": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ValidatedGetMatLiefLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ValidatedGetLieferantFELambdaVersionWJClSsIOvUMXuC9AWfb8tURDgLVhg7rxxob0xK2DDak": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ValidatedGetLieferantFELambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ValidatedBuchungLambdaVersionnrB2OpWKKtI3cja1xqZ3BlVVs4SSkGPnxE7lZGqEgls": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ValidatedBuchungLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ValidateUpsertRezeptLambdaVersionxpbce6JL2pN54pfGyfSloyMHe6l60xvx7h2orHGSTI": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ValidateUpsertRezeptLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "HandlerInventarLambdaVersion9djlykV1IzJWtlu4n7BIUUAPWQLfy1ywqMOnSl0A": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlerInventarLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ValidatedInvKorrWELambdaVersionF3oYS8qacbqYwNofLoBefekLnxmP9Rq5ZgMSTIgHY": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ValidatedInvKorrWELambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ValidateHerstellungLambdaVersion3Q6IWLivMjVTEVJ94ghTbZkqeJgBmgoCwP6lrlE19g": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ValidateHerstellungLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "HandlerGetLieferantenLambdaVersionKLA3oU9Di2kKltTfdnVGNGkfaGBg7zi995WySKcP1rc": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlerGetLieferantenLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ResponseSenderLambdaVersionaBOxiR3eGpFsDO4Zj5zumRv9CdFmFPBABjscbLEfc": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ResponseSenderLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "HandlerHerstellungLambdaVersionEt3ajW8bkOzGKSpZDEgemKEsRQWa6cH7ZAtFHYnfE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlerHerstellungLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "HandlerGetInvKorrLambdaVersionA50ua7cbYqYhqhQISw353qb5nHWcKk3FLyoEuNcUA": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlerGetInvKorrLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "HandlerWareneingangLambdaVersionginUMvc4ClGYOhnMiRKjbmMVlTPuicdJ96LUZmhE04": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlerWareneingangLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "HandlergetRezeptLambdaVersionhiVe4cGm6chbImg7Yr1GQZptCys1wbIibh5JJCXDFbA": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlergetRezeptLambdaFunction"
+              },
+              "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+            }
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "dev-my-serverless-app",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
+                ]
+              },
+              "Policy": ""
+            }
+          },
+          "ApiGatewayResourceValidatedgetlieferantfe": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "validatedGetLieferantFE",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceValidatedgetmatlief": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "validatedGetMatLief",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceValidatedbuchung": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "validatedBuchung",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceValidatedinvkorrwe": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "validatedInvKorrWE",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceValidateupsertrezept": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "validateUpsertRezept",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceValidateherstellung": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "validateHerstellung",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceGetlieferanten": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "getLieferanten",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceHandlerinventar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "handlerInventar",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceHandlerwareneingang": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "handlerWareneingang",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceHandlergetrezept": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "handlerGetRezept",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceHandlerherstellung": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "handlerHerstellung",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceHandlergetinvkorr": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "handlerGetInvKorr",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceResponsesender": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "responseSender",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodValidatedgetlieferantfePost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceValidatedgetlieferantfe"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ValidatedGetLieferantFELambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ValidatedGetLieferantFELambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodValidatedgetmatliefPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceValidatedgetmatlief"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ValidatedGetMatLiefLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ValidatedGetMatLiefLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodValidatedbuchungPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceValidatedbuchung"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ValidatedBuchungLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ValidatedBuchungLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodValidatedinvkorrwePost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceValidatedinvkorrwe"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ValidatedInvKorrWELambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ValidatedInvKorrWELambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodValidateupsertrezeptPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceValidateupsertrezept"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ValidateUpsertRezeptLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ValidateUpsertRezeptLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodValidateherstellungPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceValidateherstellung"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ValidateHerstellungLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ValidateHerstellungLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodGetlieferantenGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceGetlieferanten"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "HandlerGetLieferantenLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "HandlerGetLieferantenLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodHandlerinventarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceHandlerinventar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "HandlerInventarLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "HandlerInventarLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodHandlerwareneingangGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceHandlerwareneingang"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "HandlerWareneingangLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "HandlerWareneingangLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodHandlergetrezeptGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceHandlergetrezept"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "HandlergetRezeptLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "HandlergetRezeptLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodHandlerherstellungPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceHandlerherstellung"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "HandlerHerstellungLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "HandlerHerstellungLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodHandlergetinvkorrGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceHandlergetinvkorr"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "HandlerGetInvKorrLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "HandlerGetInvKorrLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodResponsesenderPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceResponsesender"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ResponseSenderLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ResponseSenderLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1744137354931": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodValidatedgetlieferantfePost",
+              "ApiGatewayMethodValidatedgetmatliefPost",
+              "ApiGatewayMethodValidatedbuchungPost",
+              "ApiGatewayMethodValidatedinvkorrwePost",
+              "ApiGatewayMethodValidateupsertrezeptPost",
+              "ApiGatewayMethodValidateherstellungPost",
+              "ApiGatewayMethodGetlieferantenGet",
+              "ApiGatewayMethodHandlerinventarGet",
+              "ApiGatewayMethodHandlerwareneingangGet",
+              "ApiGatewayMethodHandlergetrezeptGet",
+              "ApiGatewayMethodHandlerherstellungPost",
+              "ApiGatewayMethodHandlergetinvkorrGet",
+              "ApiGatewayMethodResponsesenderPost"
+            ]
+          },
+          "ValidatedGetLieferantFELambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ValidatedGetLieferantFELambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ValidatedGetMatLiefLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ValidatedGetMatLiefLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ValidatedBuchungLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ValidatedBuchungLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ValidatedInvKorrWELambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ValidatedInvKorrWELambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ValidateUpsertRezeptLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ValidateUpsertRezeptLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ValidateHerstellungLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ValidateHerstellungLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlerGetLieferantenLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlerGetLieferantenLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlerInventarLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlerInventarLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlerWareneingangLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlerWareneingangLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlergetRezeptLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlergetRezeptLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlerHerstellungLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlerHerstellungLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlerGetInvKorrLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlerGetInvKorrLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ResponseSenderLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ResponseSenderLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ServerlessDeploymentBucketName"
+            }
+          },
+          "ValidatedGetMatLiefLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ValidatedGetMatLiefLambdaVersionuXhpM7Nd9CHuN6e1KCrz2Vm78e9sFmqCwLfXWglD8"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ValidatedGetMatLiefLambdaFunctionQualifiedArn"
+            }
+          },
+          "ValidatedGetLieferantFELambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ValidatedGetLieferantFELambdaVersionWJClSsIOvUMXuC9AWfb8tURDgLVhg7rxxob0xK2DDak"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ValidatedGetLieferantFELambdaFunctionQualifiedArn"
+            }
+          },
+          "ValidatedBuchungLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ValidatedBuchungLambdaVersionnrB2OpWKKtI3cja1xqZ3BlVVs4SSkGPnxE7lZGqEgls"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ValidatedBuchungLambdaFunctionQualifiedArn"
+            }
+          },
+          "ValidateUpsertRezeptLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ValidateUpsertRezeptLambdaVersionxpbce6JL2pN54pfGyfSloyMHe6l60xvx7h2orHGSTI"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ValidateUpsertRezeptLambdaFunctionQualifiedArn"
+            }
+          },
+          "HandlerInventarLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlerInventarLambdaVersion9djlykV1IzJWtlu4n7BIUUAPWQLfy1ywqMOnSl0A"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-HandlerInventarLambdaFunctionQualifiedArn"
+            }
+          },
+          "ValidatedInvKorrWELambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ValidatedInvKorrWELambdaVersionF3oYS8qacbqYwNofLoBefekLnxmP9Rq5ZgMSTIgHY"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ValidatedInvKorrWELambdaFunctionQualifiedArn"
+            }
+          },
+          "ValidateHerstellungLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ValidateHerstellungLambdaVersion3Q6IWLivMjVTEVJ94ghTbZkqeJgBmgoCwP6lrlE19g"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ValidateHerstellungLambdaFunctionQualifiedArn"
+            }
+          },
+          "HandlerGetLieferantenLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlerGetLieferantenLambdaVersionKLA3oU9Di2kKltTfdnVGNGkfaGBg7zi995WySKcP1rc"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-HandlerGetLieferantenLambdaFunctionQualifiedArn"
+            }
+          },
+          "ResponseSenderLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ResponseSenderLambdaVersionaBOxiR3eGpFsDO4Zj5zumRv9CdFmFPBABjscbLEfc"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ResponseSenderLambdaFunctionQualifiedArn"
+            }
+          },
+          "HandlerHerstellungLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlerHerstellungLambdaVersionEt3ajW8bkOzGKSpZDEgemKEsRQWa6cH7ZAtFHYnfE"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-HandlerHerstellungLambdaFunctionQualifiedArn"
+            }
+          },
+          "HandlerGetInvKorrLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlerGetInvKorrLambdaVersionA50ua7cbYqYhqhQISw353qb5nHWcKk3FLyoEuNcUA"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-HandlerGetInvKorrLambdaFunctionQualifiedArn"
+            }
+          },
+          "HandlerWareneingangLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlerWareneingangLambdaVersionginUMvc4ClGYOhnMiRKjbmMVlTPuicdJ96LUZmhE04"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-HandlerWareneingangLambdaFunctionQualifiedArn"
+            }
+          },
+          "HandlergetRezeptLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlergetRezeptLambdaVersionhiVe4cGm6chbImg7Yr1GQZptCys1wbIibh5JJCXDFbA"
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-HandlergetRezeptLambdaFunctionQualifiedArn"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            },
+            "Export": {
+              "Name": "sls-my-serverless-app-dev-ServiceEndpoint"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      }
+    },
+    "custom": {
+      "serverless-offline": {
+        "log": true,
+        "httpPort": 3001,
+        "noPrependStageInUrl": true
+      },
+      "jsonImports": {
+        "basePath": "./src/responseSender/JSONs",
+        "jsonLieferanten": {
+          "Lieferanten": [
+            {
+              "LiefID": 1,
+              "Name": "Amazon"
+            },
+            {
+              "LiefID": 2,
+              "Name": "Destrebution"
+            },
+            {
+              "LiefID": 3,
+              "Name": "ExternerLadeneinkauf"
+            }
+          ]
+        }
+      }
+    },
+    "plugins": [
+      "serverless-plugin-typescript",
+      "serverless-offline"
+    ],
+    "pluginsData": {},
+    "functions": {
+      "validatedGetLieferantFE": {
+        "handler": "src/validation/wrapper.validatedGetLieferantFE",
+        "events": [
+          {
+            "http": {
+              "path": "validatedGetLieferantFE",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-validatedGetLieferantFE",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\validatedGetLieferantFE.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ValidatedGetLieferantFELambdaVersionWJClSsIOvUMXuC9AWfb8tURDgLVhg7rxxob0xK2DDak"
+      },
+      "validatedGetMatLief": {
+        "handler": "src/validation/wrapper.validatedGetMatLief",
+        "events": [
+          {
+            "http": {
+              "path": "validatedGetMatLief",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-validatedGetMatLief",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\validatedGetMatLief.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ValidatedGetMatLiefLambdaVersionuXhpM7Nd9CHuN6e1KCrz2Vm78e9sFmqCwLfXWglD8"
+      },
+      "validatedBuchung": {
+        "handler": "src/validation/wrapper.validatedGetBuchung",
+        "events": [
+          {
+            "http": {
+              "path": "validatedBuchung",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-validatedBuchung",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\validatedBuchung.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ValidatedBuchungLambdaVersionnrB2OpWKKtI3cja1xqZ3BlVVs4SSkGPnxE7lZGqEgls"
+      },
+      "validatedInvKorrWE": {
+        "handler": "src/validation/wrapper.validateGetInvKorrWE",
+        "events": [
+          {
+            "http": {
+              "path": "validatedInvKorrWE",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-validatedInvKorrWE",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\validatedInvKorrWE.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ValidatedInvKorrWELambdaVersionF3oYS8qacbqYwNofLoBefekLnxmP9Rq5ZgMSTIgHY"
+      },
+      "validateUpsertRezept": {
+        "handler": "src/validation/wrapper.validateUpsertRezept",
+        "events": [
+          {
+            "http": {
+              "path": "validateUpsertRezept",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-validateUpsertRezept",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\validateUpsertRezept.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ValidateUpsertRezeptLambdaVersionxpbce6JL2pN54pfGyfSloyMHe6l60xvx7h2orHGSTI"
+      },
+      "validateHerstellung": {
+        "handler": "src/validation/wrapper.validateHerstellung",
+        "events": [
+          {
+            "http": {
+              "path": "validateHerstellung",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-validateHerstellung",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\validateHerstellung.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ValidateHerstellungLambdaVersion3Q6IWLivMjVTEVJ94ghTbZkqeJgBmgoCwP6lrlE19g"
+      },
+      "handlerGetLieferanten": {
+        "handler": "src/handler/Einkauf/handlerGetLieferanten.getLieferanten",
+        "events": [
+          {
+            "http": {
+              "path": "getLieferanten",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-handlerGetLieferanten",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\handlerGetLieferanten.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "HandlerGetLieferantenLambdaVersionKLA3oU9Di2kKltTfdnVGNGkfaGBg7zi995WySKcP1rc"
+      },
+      "handlerInventar": {
+        "handler": "src/handler/Inventar/handlerInventar.handlerInventar",
+        "events": [
+          {
+            "http": {
+              "path": "handlerInventar",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-handlerInventar",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\handlerInventar.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "HandlerInventarLambdaVersion9djlykV1IzJWtlu4n7BIUUAPWQLfy1ywqMOnSl0A"
+      },
+      "handlerWareneingang": {
+        "handler": "src/handler/Wareneingang/handlerWareneingang.handlerWareneingang",
+        "events": [
+          {
+            "http": {
+              "path": "handlerWareneingang",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-handlerWareneingang",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\handlerWareneingang.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "HandlerWareneingangLambdaVersionginUMvc4ClGYOhnMiRKjbmMVlTPuicdJ96LUZmhE04"
+      },
+      "handlergetRezept": {
+        "handler": "src/handler/Herstellung/handlerGetRezept.handlerGetRezept",
+        "events": [
+          {
+            "http": {
+              "path": "handlerGetRezept",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-handlergetRezept",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\handlergetRezept.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "HandlergetRezeptLambdaVersionhiVe4cGm6chbImg7Yr1GQZptCys1wbIibh5JJCXDFbA"
+      },
+      "handlerHerstellung": {
+        "handler": "src/handler/Herstellung/Herstellung/handlerHerstellung.handlerHerstellung",
+        "events": [
+          {
+            "http": {
+              "path": "handlerHerstellung",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-handlerHerstellung",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\handlerHerstellung.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "HandlerHerstellungLambdaVersionEt3ajW8bkOzGKSpZDEgemKEsRQWa6cH7ZAtFHYnfE"
+      },
+      "handlerGetInvKorr": {
+        "handler": "src/handler/Inventarkorrektur/handlerGetInvKorr.handlerGetInvKorr",
+        "events": [
+          {
+            "http": {
+              "path": "handlerGetInvKorr",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-handlerGetInvKorr",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\handlerGetInvKorr.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "HandlerGetInvKorrLambdaVersionA50ua7cbYqYhqhQISw353qb5nHWcKk3FLyoEuNcUA"
+      },
+      "responseSender": {
+        "handler": "src/responseSender/responseSender.responseSender",
+        "events": [
+          {
+            "http": {
+              "path": "responseSender",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-serverless-app-dev-responseSender",
+        "package": {
+          "exclude": [
+            "node_modules/serverless-plugin-typescript"
+          ],
+          "include": [],
+          "patterns": [],
+          "artifact": "G:\\GitHub\\CandleWaWi\\backend\\.serverless\\responseSender.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "ResponseSenderLambdaVersionaBOxiR3eGpFsDO4Zj5zumRv9CdFmFPBABjscbLEfc"
+      }
+    },
+    "configValidationMode": "warn",
+    "serviceFilename": "serverless.yml",
+    "initialServerlessConfig": {
+      "service": "my-serverless-app",
+      "frameworkVersion": "3",
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "custom": {
+        "$ref": "$[\"service\"][\"custom\"]"
+      },
+      "package": {
+        "individually": true,
+        "artifactsS3KeyDirname": "serverless/my-serverless-app/dev/code-artifacts",
+        "artifactDirectoryName": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z"
+      }
+    },
+    "layers": {},
+    "isDashboardMonitoringPreconfigured": false
+  },
+  "package": {
+    "individually": true,
+    "artifactDirectoryName": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z",
+    "artifact": ""
+  }
+}

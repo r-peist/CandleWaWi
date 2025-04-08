@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/getLieferanten";
+        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/getLieferanten";
 
         const response = await fetch(backendApiUrl, {
             method: "GET",
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         const data = await response.json();
         // Extrahiere zuerst data.response.data.Lieferanten, ansonsten versuche data.response.Lieferanten oder data.Lieferanten
         const lieferanten =
-            data.response?.data?.Lieferanten ?? data.response?.Lieferanten ?? data.Lieferanten ?? [];
+            data?.data?.Lieferanten ?? data?.Lieferanten ?? [];
 
         return NextResponse.json(
             { Lieferanten: lieferanten },

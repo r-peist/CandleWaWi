@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try {
         // Hole die Daten vom Backend (hier wird der Endpunkt handlerGetInvKorr angesprochen)
-        const res = await fetch("http://localhost:3001/handlerGetInvKorr");
+        const res = await fetch("https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerGetInvKorr");
         if (!res.ok) {
             throw new Error("Fehler beim Abrufen der Inventarkorrektur-Daten");
         }

@@ -5,18 +5,25 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
-  region: eu-central-1 # Optional: AWS-Region
+  region: eu-central-1
   environment:
-      DB_HOST: 
-      DB_USER: 
-      DB_PASSWORD: 
-      DB_NAME: 
-      NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
-      RESPONSE_LIEFERANTEN: ${self:custom.jsonImports.jsonLieferanten}
+    DB_HOST: database-1.czm0kq64ypq1.eu-central-1.rds.amazonaws.com
+    DB_USER: admin
+    DB_PASSWORD: Gm24AWS!_Super
+    DB_NAME: wawi
+    NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
+  vpc:
+    securityGroupIds:
+      - sg-090ca89d61fc510f1  # Lambda3306
+      - sg-0135e962f5f7a2fb6  # rds-lambda-1
+    subnetIds:
+      - subnet-0b71c93fd4ba744c2
+      - subnet-02a70fa3169daa5ba
+      - subnet-0e970cf64b3378be3
 
 functions:
 
-  #Eingangs-Wrapper
+  # Validated Wrapper
   validatedGetLieferantFE:
     handler: src/validation/wrapper.validatedGetLieferantFE
     events:
@@ -59,7 +66,7 @@ functions:
           path: validateHerstellung
           method: post
 
-  #Bestellung 
+  # Direkt-Handler
   handlerGetLieferanten:
     handler: src/handler/Einkauf/handlerGetLieferanten.getLieferanten
     events:
@@ -67,7 +74,6 @@ functions:
           path: getLieferanten
           method: get
 
-  #Inventarabfrage
   handlerInventar:
     handler: src/handler/Inventar/handlerInventar.handlerInventar
     events:
@@ -75,7 +81,6 @@ functions:
           path: handlerInventar
           method: get
 
-  #Wareneingang
   handlerWareneingang:
     handler: src/handler/Wareneingang/handlerWareneingang.handlerWareneingang
     events:
@@ -83,7 +88,6 @@ functions:
           path: handlerWareneingang
           method: get
 
-  #Herstellung
   handlergetRezept:
     handler: src/handler/Herstellung/handlerGetRezept.handlerGetRezept
     events:
@@ -98,7 +102,6 @@ functions:
           path: handlerHerstellung
           method: post
 
-  #Inventarkorrektur
   handlerGetInvKorr:
     handler: src/handler/Inventarkorrektur/handlerGetInvKorr.handlerGetInvKorr
     events:
@@ -106,7 +109,6 @@ functions:
           path: handlerGetInvKorr
           method: get
 
-  #Sender
   responseSender:
     handler: src/responseSender/responseSender.responseSender
     events:
@@ -114,19 +116,15 @@ functions:
           path: responseSender
           method: post
 
-
-  #Material des Lieferanten und Lieferant übergeben und
-  #Mat, Lief und Link aus DB holen und zurücksenden
-
 plugins:
-  - serverless-offline
   - serverless-plugin-typescript
+  - serverless-offline
 
 custom:
   serverless-offline:
     log: true
-    httpPort: 3001 # Der lokale Server läuft auf Port 3001
-    noPrependStageInUrl: true # Kein Prefix für Umgebungen (z. B. dev)
+    httpPort: 3001
+    noPrependStageInUrl: true
 
   jsonImports:
     basePath: ./src/responseSender/JSONs
@@ -134,4 +132,4 @@ custom:
 
 
 package:
-  individually: true # Optional: Nur genutzte Dateien und Dependencies in das Deployment-Paket aufnehmen
+  individually: true
