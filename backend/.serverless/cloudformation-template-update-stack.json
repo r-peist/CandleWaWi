@@ -248,7 +248,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedGetLieferantFE.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/validatedGetLieferantFE.zip"
         },
         "Handler": "src/validation/wrapper.validatedGetLieferantFE",
         "Runtime": "nodejs18.x",
@@ -293,7 +293,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedGetMatLief.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/validatedGetMatLief.zip"
         },
         "Handler": "src/validation/wrapper.validatedGetMatLief",
         "Runtime": "nodejs18.x",
@@ -338,7 +338,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedBuchung.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/validatedBuchung.zip"
         },
         "Handler": "src/validation/wrapper.validatedGetBuchung",
         "Runtime": "nodejs18.x",
@@ -383,7 +383,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validatedInvKorrWE.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/validatedInvKorrWE.zip"
         },
         "Handler": "src/validation/wrapper.validateGetInvKorrWE",
         "Runtime": "nodejs18.x",
@@ -428,7 +428,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validateUpsertRezept.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/validateUpsertRezept.zip"
         },
         "Handler": "src/validation/wrapper.validateUpsertRezept",
         "Runtime": "nodejs18.x",
@@ -473,7 +473,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/validateHerstellung.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/validateHerstellung.zip"
         },
         "Handler": "src/validation/wrapper.validateHerstellung",
         "Runtime": "nodejs18.x",
@@ -518,7 +518,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerGetLieferanten.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/handlerGetLieferanten.zip"
         },
         "Handler": "src/handler/Einkauf/handlerGetLieferanten.getLieferanten",
         "Runtime": "nodejs18.x",
@@ -563,7 +563,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerInventar.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/handlerInventar.zip"
         },
         "Handler": "src/handler/Inventar/handlerInventar.handlerInventar",
         "Runtime": "nodejs18.x",
@@ -608,7 +608,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerWareneingang.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/handlerWareneingang.zip"
         },
         "Handler": "src/handler/Wareneingang/handlerWareneingang.handlerWareneingang",
         "Runtime": "nodejs18.x",
@@ -653,7 +653,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlergetRezept.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/handlergetRezept.zip"
         },
         "Handler": "src/handler/Herstellung/handlerGetRezept.handlerGetRezept",
         "Runtime": "nodejs18.x",
@@ -698,7 +698,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerHerstellung.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/handlerHerstellung.zip"
         },
         "Handler": "src/handler/Herstellung/Herstellung/handlerHerstellung.handlerHerstellung",
         "Runtime": "nodejs18.x",
@@ -743,7 +743,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/handlerGetInvKorr.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/handlerGetInvKorr.zip"
         },
         "Handler": "src/handler/Inventarkorrektur/handlerGetInvKorr.handlerGetInvKorr",
         "Runtime": "nodejs18.x",
@@ -788,7 +788,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/my-serverless-app/dev/1744137559034-2025-04-08T18:39:19.034Z/responseSender.zip"
+          "S3Key": "serverless/my-serverless-app/dev/1744142033945-2025-04-08T19:53:53.945Z/responseSender.zip"
         },
         "Handler": "src/responseSender/responseSender.responseSender",
         "Runtime": "nodejs18.x",
@@ -826,134 +826,134 @@
         "ResponseSenderLogGroup"
       ]
     },
-    "ValidatedGetMatLiefLambdaVersionuXhpM7Nd9CHuN6e1KCrz2Vm78e9sFmqCwLfXWglD8": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ValidatedGetMatLiefLambdaFunction"
-        },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
-      }
-    },
-    "ValidatedGetLieferantFELambdaVersionWJClSsIOvUMXuC9AWfb8tURDgLVhg7rxxob0xK2DDak": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ValidatedGetLieferantFELambdaFunction"
-        },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
-      }
-    },
-    "ValidatedBuchungLambdaVersionnrB2OpWKKtI3cja1xqZ3BlVVs4SSkGPnxE7lZGqEgls": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ValidatedBuchungLambdaFunction"
-        },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
-      }
-    },
-    "ValidateUpsertRezeptLambdaVersionxpbce6JL2pN54pfGyfSloyMHe6l60xvx7h2orHGSTI": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ValidateUpsertRezeptLambdaFunction"
-        },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
-      }
-    },
-    "HandlerInventarLambdaVersion9djlykV1IzJWtlu4n7BIUUAPWQLfy1ywqMOnSl0A": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "HandlerInventarLambdaFunction"
-        },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
-      }
-    },
-    "ValidatedInvKorrWELambdaVersionF3oYS8qacbqYwNofLoBefekLnxmP9Rq5ZgMSTIgHY": {
+    "ValidatedInvKorrWELambdaVersionleJnitAcgD5RvptHUweHiOxsbIynPcphMBKLc7rWk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ValidatedInvKorrWELambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
-    "ValidateHerstellungLambdaVersion3Q6IWLivMjVTEVJ94ghTbZkqeJgBmgoCwP6lrlE19g": {
+    "ValidatedGetLieferantFELambdaVersionwykKEWM1yXYBLUG40knqAPL3zGAEifukwhJkvz50": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ValidatedGetLieferantFELambdaFunction"
+        },
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
+      }
+    },
+    "ValidatedBuchungLambdaVersioniTwn6jVYx4YpkMRlYlu7FmNsNbMxXX9FqRtiZWh71g": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ValidatedBuchungLambdaFunction"
+        },
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
+      }
+    },
+    "ValidatedGetMatLiefLambdaVersionAvZgZdpJXofB2VOPM1QpbCkZMYesuZMo94UnRjIsPs": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ValidatedGetMatLiefLambdaFunction"
+        },
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
+      }
+    },
+    "ValidateHerstellungLambdaVersionsU84LMKMjWiRIl2SWGmnkzs20WDoR65MgAsepfdqJv8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ValidateHerstellungLambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
-    "HandlerGetLieferantenLambdaVersionKLA3oU9Di2kKltTfdnVGNGkfaGBg7zi995WySKcP1rc": {
+    "HandlerGetLieferantenLambdaVersionYxysvxoN4BexWFFwP6OrjLKP62Anfd9Y3FIoreBsi1Q": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HandlerGetLieferantenLambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
-    "ResponseSenderLambdaVersionaBOxiR3eGpFsDO4Zj5zumRv9CdFmFPBABjscbLEfc": {
+    "HandlerInventarLambdaVersionxSJO9qii1bLczSOrAxZyIC7d8i3rlPhymFT0hwWsA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "ResponseSenderLambdaFunction"
+          "Ref": "HandlerInventarLambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
-    "HandlerHerstellungLambdaVersionEt3ajW8bkOzGKSpZDEgemKEsRQWa6cH7ZAtFHYnfE": {
+    "ValidateUpsertRezeptLambdaVersionrBxcOtGwG7a5QhalhlN3thTX69t1CjyP40Gzm8c8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "HandlerHerstellungLambdaFunction"
+          "Ref": "ValidateUpsertRezeptLambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
-    "HandlerGetInvKorrLambdaVersionA50ua7cbYqYhqhQISw353qb5nHWcKk3FLyoEuNcUA": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "HandlerGetInvKorrLambdaFunction"
-        },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
-      }
-    },
-    "HandlerWareneingangLambdaVersionginUMvc4ClGYOhnMiRKjbmMVlTPuicdJ96LUZmhE04": {
+    "HandlerWareneingangLambdaVersion0nEfNkLnMGxfALehvrNjQIYnEdZ97y0aGsWNsXnPk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HandlerWareneingangLambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
-    "HandlergetRezeptLambdaVersionhiVe4cGm6chbImg7Yr1GQZptCys1wbIibh5JJCXDFbA": {
+    "HandlerHerstellungLambdaVersion66HiX6YBVgraauZ2yix96U9DzYmUn1V6YeV9Q01wY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "HandlerHerstellungLambdaFunction"
+        },
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
+      }
+    },
+    "HandlergetRezeptLambdaVersionzFCnU3NhESGgE4STPqHaP4ANc7r7rU9FS65hl085vo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HandlergetRezeptLambdaFunction"
         },
-        "CodeSha256": "FfQWxgzVY+bngKSAxRY5nw0ceXYGT8e58lJVyHO36yo="
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
+      }
+    },
+    "ResponseSenderLambdaVersionmyqki4ZnlzG9SFfuKHmJrO5oClOASlVgHkMmycSc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ResponseSenderLambdaFunction"
+        },
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
+      }
+    },
+    "HandlerGetInvKorrLambdaVersionCgYfIZOzc6NCGefEswYsjzbHu4Q2R8hN4mtDHNBoRrY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "HandlerGetInvKorrLambdaFunction"
+        },
+        "CodeSha256": "3dmMFRYV3YCPOK/GYkBI7Sg7HwPV6W6+v0DFiOx2LdU="
       }
     },
     "ApiGatewayRestApi": {
@@ -1761,7 +1761,7 @@
         "ResponseSenderLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1744137354931": {
+    "ApiGatewayDeployment1744141858163": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -2276,19 +2276,19 @@
         "Name": "sls-my-serverless-app-dev-ServerlessDeploymentBucketName"
       }
     },
-    "ValidatedGetMatLiefLambdaFunctionQualifiedArn": {
+    "ValidatedInvKorrWELambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ValidatedGetMatLiefLambdaVersionuXhpM7Nd9CHuN6e1KCrz2Vm78e9sFmqCwLfXWglD8"
+        "Ref": "ValidatedInvKorrWELambdaVersionleJnitAcgD5RvptHUweHiOxsbIynPcphMBKLc7rWk"
       },
       "Export": {
-        "Name": "sls-my-serverless-app-dev-ValidatedGetMatLiefLambdaFunctionQualifiedArn"
+        "Name": "sls-my-serverless-app-dev-ValidatedInvKorrWELambdaFunctionQualifiedArn"
       }
     },
     "ValidatedGetLieferantFELambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ValidatedGetLieferantFELambdaVersionWJClSsIOvUMXuC9AWfb8tURDgLVhg7rxxob0xK2DDak"
+        "Ref": "ValidatedGetLieferantFELambdaVersionwykKEWM1yXYBLUG40knqAPL3zGAEifukwhJkvz50"
       },
       "Export": {
         "Name": "sls-my-serverless-app-dev-ValidatedGetLieferantFELambdaFunctionQualifiedArn"
@@ -2297,43 +2297,25 @@
     "ValidatedBuchungLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ValidatedBuchungLambdaVersionnrB2OpWKKtI3cja1xqZ3BlVVs4SSkGPnxE7lZGqEgls"
+        "Ref": "ValidatedBuchungLambdaVersioniTwn6jVYx4YpkMRlYlu7FmNsNbMxXX9FqRtiZWh71g"
       },
       "Export": {
         "Name": "sls-my-serverless-app-dev-ValidatedBuchungLambdaFunctionQualifiedArn"
       }
     },
-    "ValidateUpsertRezeptLambdaFunctionQualifiedArn": {
+    "ValidatedGetMatLiefLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ValidateUpsertRezeptLambdaVersionxpbce6JL2pN54pfGyfSloyMHe6l60xvx7h2orHGSTI"
+        "Ref": "ValidatedGetMatLiefLambdaVersionAvZgZdpJXofB2VOPM1QpbCkZMYesuZMo94UnRjIsPs"
       },
       "Export": {
-        "Name": "sls-my-serverless-app-dev-ValidateUpsertRezeptLambdaFunctionQualifiedArn"
-      }
-    },
-    "HandlerInventarLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "HandlerInventarLambdaVersion9djlykV1IzJWtlu4n7BIUUAPWQLfy1ywqMOnSl0A"
-      },
-      "Export": {
-        "Name": "sls-my-serverless-app-dev-HandlerInventarLambdaFunctionQualifiedArn"
-      }
-    },
-    "ValidatedInvKorrWELambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "ValidatedInvKorrWELambdaVersionF3oYS8qacbqYwNofLoBefekLnxmP9Rq5ZgMSTIgHY"
-      },
-      "Export": {
-        "Name": "sls-my-serverless-app-dev-ValidatedInvKorrWELambdaFunctionQualifiedArn"
+        "Name": "sls-my-serverless-app-dev-ValidatedGetMatLiefLambdaFunctionQualifiedArn"
       }
     },
     "ValidateHerstellungLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ValidateHerstellungLambdaVersion3Q6IWLivMjVTEVJ94ghTbZkqeJgBmgoCwP6lrlE19g"
+        "Ref": "ValidateHerstellungLambdaVersionsU84LMKMjWiRIl2SWGmnkzs20WDoR65MgAsepfdqJv8"
       },
       "Export": {
         "Name": "sls-my-serverless-app-dev-ValidateHerstellungLambdaFunctionQualifiedArn"
@@ -2342,55 +2324,73 @@
     "HandlerGetLieferantenLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HandlerGetLieferantenLambdaVersionKLA3oU9Di2kKltTfdnVGNGkfaGBg7zi995WySKcP1rc"
+        "Ref": "HandlerGetLieferantenLambdaVersionYxysvxoN4BexWFFwP6OrjLKP62Anfd9Y3FIoreBsi1Q"
       },
       "Export": {
         "Name": "sls-my-serverless-app-dev-HandlerGetLieferantenLambdaFunctionQualifiedArn"
       }
     },
-    "ResponseSenderLambdaFunctionQualifiedArn": {
+    "HandlerInventarLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ResponseSenderLambdaVersionaBOxiR3eGpFsDO4Zj5zumRv9CdFmFPBABjscbLEfc"
+        "Ref": "HandlerInventarLambdaVersionxSJO9qii1bLczSOrAxZyIC7d8i3rlPhymFT0hwWsA"
       },
       "Export": {
-        "Name": "sls-my-serverless-app-dev-ResponseSenderLambdaFunctionQualifiedArn"
+        "Name": "sls-my-serverless-app-dev-HandlerInventarLambdaFunctionQualifiedArn"
       }
     },
-    "HandlerHerstellungLambdaFunctionQualifiedArn": {
+    "ValidateUpsertRezeptLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HandlerHerstellungLambdaVersionEt3ajW8bkOzGKSpZDEgemKEsRQWa6cH7ZAtFHYnfE"
+        "Ref": "ValidateUpsertRezeptLambdaVersionrBxcOtGwG7a5QhalhlN3thTX69t1CjyP40Gzm8c8"
       },
       "Export": {
-        "Name": "sls-my-serverless-app-dev-HandlerHerstellungLambdaFunctionQualifiedArn"
-      }
-    },
-    "HandlerGetInvKorrLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "HandlerGetInvKorrLambdaVersionA50ua7cbYqYhqhQISw353qb5nHWcKk3FLyoEuNcUA"
-      },
-      "Export": {
-        "Name": "sls-my-serverless-app-dev-HandlerGetInvKorrLambdaFunctionQualifiedArn"
+        "Name": "sls-my-serverless-app-dev-ValidateUpsertRezeptLambdaFunctionQualifiedArn"
       }
     },
     "HandlerWareneingangLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HandlerWareneingangLambdaVersionginUMvc4ClGYOhnMiRKjbmMVlTPuicdJ96LUZmhE04"
+        "Ref": "HandlerWareneingangLambdaVersion0nEfNkLnMGxfALehvrNjQIYnEdZ97y0aGsWNsXnPk"
       },
       "Export": {
         "Name": "sls-my-serverless-app-dev-HandlerWareneingangLambdaFunctionQualifiedArn"
       }
     },
+    "HandlerHerstellungLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "HandlerHerstellungLambdaVersion66HiX6YBVgraauZ2yix96U9DzYmUn1V6YeV9Q01wY"
+      },
+      "Export": {
+        "Name": "sls-my-serverless-app-dev-HandlerHerstellungLambdaFunctionQualifiedArn"
+      }
+    },
     "HandlergetRezeptLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HandlergetRezeptLambdaVersionhiVe4cGm6chbImg7Yr1GQZptCys1wbIibh5JJCXDFbA"
+        "Ref": "HandlergetRezeptLambdaVersionzFCnU3NhESGgE4STPqHaP4ANc7r7rU9FS65hl085vo"
       },
       "Export": {
         "Name": "sls-my-serverless-app-dev-HandlergetRezeptLambdaFunctionQualifiedArn"
+      }
+    },
+    "ResponseSenderLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ResponseSenderLambdaVersionmyqki4ZnlzG9SFfuKHmJrO5oClOASlVgHkMmycSc"
+      },
+      "Export": {
+        "Name": "sls-my-serverless-app-dev-ResponseSenderLambdaFunctionQualifiedArn"
+      }
+    },
+    "HandlerGetInvKorrLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "HandlerGetInvKorrLambdaVersionCgYfIZOzc6NCGefEswYsjzbHu4Q2R8hN4mtDHNBoRrY"
+      },
+      "Export": {
+        "Name": "sls-my-serverless-app-dev-HandlerGetInvKorrLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {

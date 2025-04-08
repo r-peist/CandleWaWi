@@ -3,6 +3,7 @@ import { closePool, getConnection } from "../../../db/dbclient";
 import * as Errors from "../../../error/errors";
 import { validateData } from "../../../validation/validate";
 import { ValidatedEvent } from "../../../interfaces";
+import {herstellenSchema} from "../../../validation/schemata";
 
 export const handlerHerstellung = async (
     event: ValidatedEvent<{
@@ -71,7 +72,7 @@ export const handlerHerstellung = async (
       },
     };
 
-    const validated = validateData("herstellungSchema", resultData);
+    const validated = validateData("herstellenSchema", resultData);
 
     return {
       statusCode: 200,

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/handlerGetRezept"; // Backend‑Endpoint
+        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerGetRezept"; // Backend‑Endpoint
         const response = await fetch(backendApiUrl, {
             method: "GET",
             headers: { "Cache-Control": "no-store" },

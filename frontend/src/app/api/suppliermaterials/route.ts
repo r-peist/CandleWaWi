@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     try {
         // Verwende den korrekten Backend-Endpoint, der valide Daten liefert:
-        const backendApiUrl = "http://localhost:3001/validatedGetLieferantFE";
+        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/validatedGetLieferantFE";
 
         // Lese den Request-Body
         const requestBody = await req.json();
