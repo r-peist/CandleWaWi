@@ -1,24 +1,21 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { closePool, getConnection } from "../../db/dbclient"; // Importiere den DB-Wrapper
-import fetch from "node-fetch"; // Für HTTP Aufruf
+import { closePool, getConnection } from "../../db/dbclient";
 import * as Errors from "../../error/errors";
 import { InvKorrMats, InvKorrBest, MaterialInvKorr } from "../../interfaces";
 import { validateData } from "../../validation/validate";
-import { json } from "stream/consumers";
 
 export const handlerGetInvKorr = async (
-  event: APIGatewayEvent
+    event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   let connection;
 
   try {
     let invKorrMatsArr: InvKorrMats[] = [];
     let invKorrBestArr: InvKorrBest[] = [];
-    let material: MaterialInvKorr[] = [];
-        
-    // Verbindung zur Datenbank herstellen
+
     connection = await getConnection();
 
+    // Materialien ohne Bestellungen
     const [korrMatrows]: any = await connection.query(`
       SELECT 
           im.MatID,
@@ -35,11 +32,9 @@ export const handlerGetInvKorr = async (
       WHERE ik.Typ = 'Material';
     `);
 
-    for (const korrMats of korrMatrows) {
-      const { MatID, Name, Menge, neue_Menge, Kommentar, Datum, Benutzer } = korrMats;
-      invKorrMatsArr.push(korrMats);
-    }
+    invKorrMatsArr = korrMatrows;
 
+    // Materialien mit Bezug zu Bestellungen
     const [korrBestrows]: any = await connection.query(`
       SELECT 
         b.BestellID,
@@ -65,52 +60,37 @@ export const handlerGetInvKorr = async (
         JOIN material m ON mb.MatID = m.MatID
         JOIN materiallager ml ON mb.MatID = ml.MatID
         WHERE mb.BestellID = ?;
-        `, [BestellID]
-      );
+      `, [BestellID]);
 
-      for (const mats of materialrows) {
-        const { MatID, Name, Menge, neue_Menge } = mats;
-        material.push(mats);
-      }
       invKorrBestArr.push({
-        BestellID: BestellID, 
-        Kommentar: Kommentar, 
-        Datum: Datum,
-        Benutzer: Benutzer,
-        Material: material
+        BestellID,
+        Kommentar,
+        Datum,
+        Benutzer,
+        Material: materialrows,
       });
     }
-    
-    const inventarkorrektur = {Inventarkorrektur: { InvKorrMats: invKorrMatsArr, InvKorrBest: invKorrBestArr }};
+
+    const inventarkorrektur = {
+      Inventarkorrektur: {
+        InvKorrMats: invKorrMatsArr,
+        InvKorrBest: invKorrBestArr,
+      },
+    };
+
     const validatedData = validateData("getInvKorrSchema", inventarkorrektur);
 
-    // HTTP-Post-Aufruf mit node-fetch
-    const response = await fetch("https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/responseSender", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(validatedData),
-    });
-
-    const responseBody = await response.json();
-
-    // Erfolgreiche Antwort mit Abfrageergebnissen
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
+        message: "Inventarkorrektur erfolgreich geladen.",
         data: validatedData,
-        response: responseBody,
       }),
     };
   } catch (error) {
-    return Errors.handleError(error, "handlerGetLieferanten");
+    return Errors.handleError(error, "handlerGetInvKorr");
   } finally {
-    // Verbindung freigeben
-    if (connection) {
-      connection.release();
-    }
+    if (connection) connection.release();
     await closePool();
   }
 };

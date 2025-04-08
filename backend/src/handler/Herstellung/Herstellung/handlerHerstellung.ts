@@ -1,122 +1,90 @@
-import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { closePool, getConnection } from "../../../db/dbclient"; // Importiere den DB-Wrapper
-import fetch from "node-fetch"; // Für HTTP Aufruf
+import { APIGatewayProxyResult } from "aws-lambda";
+import { closePool, getConnection } from "../../../db/dbclient";
 import * as Errors from "../../../error/errors";
 import { validateData } from "../../../validation/validate";
-import { RezeptKerze, RezeptSprayDiff, RezeptZP, ValidatedEvent, Zutaten } from "../../../interfaces";
-import mysql from "mysql2/promise";
-import { error } from "console";
+import { ValidatedEvent } from "../../../interfaces";
 
 export const handlerHerstellung = async (
-  event: ValidatedEvent<{Rezept: { Name: string, RezeptID: number, BehaelterID: number, DeckelID: number, 
-    MatID: number, Menge: number, Materialien: [] }}>
+    event: ValidatedEvent<{
+      Rezept: {
+        Name: string;
+        RezeptID: number;
+        BehaelterID: number;
+        DeckelID: number;
+        MatID: number;
+        Menge: number;
+        Materialien: [];
+      };
+    }>
 ): Promise<APIGatewayProxyResult> => {
   let connection;
-  const {Rezept: { Name, RezeptID, BehaelterID, DeckelID, MatID, Menge, Materialien = [{MatID, Menge}] }} = event.validatedBody;
-  let mats: any [] = [];
-  
+  const {
+    Rezept: { Name, RezeptID, BehaelterID, DeckelID, MatID, Menge, Materialien = [] },
+  } = event.validatedBody;
+  let mats: any[] = [];
 
   try {
     connection = await getConnection();
     await connection.beginTransaction();
 
-    //MatIDs Deckel Behälter zwischenspeichern
     if (Name === "Kerze") {
-      console.log("Innerhalb if-Klause Kerze");
-      const [behaelterrows]: any = await connection.query(`
-        SELECT
-          MatID AS BehaelterMatID
-        FROM behaelter
-        WHERE BehaelterID = ?
-      `, [BehaelterID]);
+      const [behaelterrows]: any = await connection.query(
+          `SELECT MatID AS BehaelterMatID FROM behaelter WHERE BehaelterID = ?`,
+          [BehaelterID]
+      );
 
-      const [deckelrows]: any = await connection.query(`
-        SELECT
-          MatID AS DeckelMatID
-        FROM deckel
-        WHERE DeckelID = ?
-      `, [DeckelID]);
+      const [deckelrows]: any = await connection.query(
+          `SELECT MatID AS DeckelMatID FROM deckel WHERE DeckelID = ?`,
+          [DeckelID]
+      );
 
-      console.log("MatIDs ausgelesen");
-      //Einzelne Objekte mit MatID + Menge in ein Array zum aktualisieren der DB Bestände
-      //const { BehaelterMatID, DeckelMatID } = matrows;
-      mats.push({MatID: MatID, Menge: Menge}, 
-                {MatID: parseInt(behaelterrows[0].BehaelterMatID), Menge: Menge}, 
-                {MatID: parseInt(deckelrows[0].DeckelMatID), Menge: Menge}
-              );
+      // Base mats
+      mats.push(
+          { MatID, Menge },
+          { MatID: parseInt(behaelterrows[0].BehaelterMatID), Menge },
+          { MatID: parseInt(deckelrows[0].DeckelMatID), Menge }
+      );
 
-      console.log("Andere MatIDs: ", behaelterrows[0], " und ", deckelrows[0])
-
-      for (const matrows of Materialien) {
-        mats.push(matrows);
-        console.log("Mats Array: ", mats);
+      for (const m of Materialien) {
+        mats.push(m);
       }
 
-      for (const rows of mats) {
-        console.log("innerhalb for schleife mit: ", rows.Menge, " und ", rows.MatID);
-        //COALESCE macht NULL-Prüfung | (?, 0) weil, wenn null ist bei (?) der neue Wert auch null
-        const [updatekerze]: any = await connection.query(`
-          UPDATE materiallager
-          SET Menge = Menge - COALESCE (?, 0)
-          WHERE MatID = ?
-        `, [rows.Menge, rows.MatID]);
-
-        const [resultkerze]: any = await connection.query(`
-          SELECT Menge
-          FROM materiallager
-          WHERE MatID = ?
-        `, [rows.MatID]);
-
-        console.log("Aktualisierte Menge für ", rows.MatID, ": ", resultkerze.Menge);
+      for (const row of mats) {
+        await connection.query(
+            `UPDATE materiallager SET Menge = Menge - COALESCE(?, 0) WHERE MatID = ?`,
+            [row.Menge, row.MatID]
+        );
       }
-      
     } else if (Name === "SprayDiff") {
-      const [rows]: any = await connection.query(`
-      
-      `);
+      // Logik für SprayDiff hier rein, wenn gebraucht
     } else if (Name === "ZP") {
-      const [rows]: any = await connection.query(`
-      
-      `);
+      // Logik für ZP hier rein, wenn gebraucht
     }
 
+    await connection.commit();
 
+    const resultData = {
+      Herstellung: {
+        success: true,
+        message: `Herstellung für Rezept "${Name}" erfolgreich verarbeitet.`,
+        verwendeteMaterialien: mats,
+      },
+    };
 
-    const validatedData = ""; 
-    //validateData("updatedSchema", updated);
-    
-        // HTTP-Post-Aufruf mit node-fetch
-        const response = await fetch("https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/responseSender", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(validatedData),
-        });
-    
-        const responseBody = await response.json();
-    
-        // Erfolgreiche Antwort mit Abfrageergebnissen
-        return {
-          statusCode: 200,
-          body: JSON.stringify({
-            message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
-            data: validatedData,
-            response: responseBody,
-          }),
-        };
-      } catch (error) {
-        // Rollback der Transaktion bei Fehler
-        if (connection) {
-            await connection.rollback();
-            //Innerer try() um weiter oben rollback abzufangen und dann das responseObjekt mit Fehlermeldung auszustatten.
-          }
-        return Errors.handleError(error, "handlerUpsertRezept");
-      } finally {
-        // Verbindung freigeben
-        if (connection) {
-          connection.release();
-        }
-        await closePool();
-      }
+    const validated = validateData("herstellungSchema", resultData);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "Herstellung erfolgreich abgeschlossen",
+        data: validated,
+      }),
+    };
+  } catch (error) {
+    if (connection) await connection.rollback();
+    return Errors.handleError(error, "handlerHerstellung");
+  } finally {
+    if (connection) connection.release();
+    await closePool();
+  }
 };

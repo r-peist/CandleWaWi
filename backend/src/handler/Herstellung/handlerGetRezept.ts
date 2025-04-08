@@ -1,22 +1,19 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { closePool, getConnection } from "../../db/dbclient"; // Importiere den DB-Wrapper
-import fetch from "node-fetch"; // Für HTTP Aufruf
+import { closePool, getConnection } from "../../db/dbclient";
 import * as Errors from "../../error/errors";
 import { validateData } from "../../validation/validate";
 import { RezeptKerze, RezeptSprayDiff, RezeptZP, Zutaten } from "../../interfaces";
 
 export const handlerGetRezept = async (
-  event: APIGatewayEvent
+    event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   let connection;
 
-  try {    
+  try {
     let rezeptKerze: RezeptKerze[] = [];
     let rezeptSprayDiff: RezeptSprayDiff[] = [];
     let rezeptZP: RezeptZP[] = [];
-    let zutaten: Zutaten[] = [];
 
-    // Verbindung zur Datenbank herstellen
     connection = await getConnection();
 
     const [kerzerows]: any = await connection.query(`
@@ -44,11 +41,7 @@ export const handlerGetRezept = async (
       JOIN zwischenproduktrezept z ON rk.ZPRezeptID = z.ZPRezeptID
     `);
 
-    for (const kerze of kerzerows) {
-      const { RezeptKerzeID, Name, MatID, Name_Mat, BehaelterID, Behaelter_name, DeckelID, Deckel_name,
-              WarnEttID, WarnEtt_name, ZPRezeptID, ZP_name } = kerze;
-      rezeptKerze.push(kerze);
-    }
+    rezeptKerze = kerzerows;
 
     const [spraydiffrows]: any = await connection.query(`
       SELECT
@@ -63,19 +56,16 @@ export const handlerGetRezept = async (
         rs.ZPRezeptID1,
         z.Name as ZP_name1,
         rs.ZPRezeptID2,
-        z.Name as ZP_name2
+        z2.Name as ZP_name2
       FROM rezeptspraydif rs
       JOIN behaelter b ON rs.BehaelterID = b.BehaelterID
       JOIN deckel de ON rs.DeckelID = de.DeckelID
       JOIN warnettikett w ON rs.WarnEttID = w.WarnEttID
-      JOIN zwischenproduktrezept z ON rs.ZPRezeptID1 = z.ZPRezeptID OR rs.ZPRezeptID2 = z.ZPRezeptID
+      LEFT JOIN zwischenproduktrezept z ON rs.ZPRezeptID1 = z.ZPRezeptID
+      LEFT JOIN zwischenproduktrezept z2 ON rs.ZPRezeptID2 = z2.ZPRezeptID
     `);
 
-    for (const spraydiff of spraydiffrows) {
-      const { RezeptSprayDifID, Name, BehaelterID, Behaelter_name, DeckelID, Deckel_name, ZPRezeptID1,
-              ZP_name1, ZPRezeptID2, ZP_name2 } = spraydiff;
-      rezeptSprayDiff.push(spraydiff);
-    }
+    rezeptSprayDiff = spraydiffrows;
 
     const [zprows]: any = await connection.query(`
       SELECT
@@ -88,7 +78,6 @@ export const handlerGetRezept = async (
     `);
 
     for (const zp of zprows) {
-      const { ZPRezeptID, Name, Beschreibung, Releasedate, Changedate } = zp;
       const [matrows]: any = await connection.query(`
         SELECT
           z.MatID,
@@ -96,53 +85,33 @@ export const handlerGetRezept = async (
           z.Menge
         FROM rezeptzutaten z
         JOIN material m ON z.MatID = m.MatID
-        WHERE RezeptZutatenID = ?
-      `, [ZPRezeptID]);
-      for (const mat of matrows) {
-        const { MatID, Name, Menge } = mat
-        zutaten.push(mat);
-      }
+        WHERE z.ZPRezeptID = ?
+      `, [zp.ZPRezeptID]);
+
       rezeptZP.push({
-        ZPRezeptID: ZPRezeptID,
-        Name: Name,
-        Beschreibung: Beschreibung,
-        Releasedate: Releasedate,
-        Changedate: Changedate,
-        Zutaten: zutaten
+        ZPRezeptID: zp.ZPRezeptID,
+        Name: zp.Name,
+        Beschreibung: zp.Beschreibung,
+        Releasedate: zp.Releasedate,
+        Changedate: zp.Changedate,
+        Zutaten: matrows
       });
     }
 
-    const rezept = { Rezept: { Kerze: rezeptKerze, SprayDiff: rezeptSprayDiff, ZP: rezeptZP }};
-    console.log(rezept);
+    const rezept = { Rezept: { Kerze: rezeptKerze, SprayDiff: rezeptSprayDiff, ZP: rezeptZP } };
     const validatedData = validateData("rezepteSchema", rezept);
 
-    // HTTP-Post-Aufruf mit node-fetch
-    const response = await fetch("https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/responseSender", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(validatedData),
-    });
-
-    const responseBody = await response.json();
-
-    // Erfolgreiche Antwort mit Abfrageergebnissen
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Datenbank-Abfrage der Lieferanten erfolgreich!",
-        data: validatedData,
-        response: responseBody,
+        message: "Rezepte erfolgreich geladen.",
+        data: validatedData
       }),
     };
   } catch (error) {
-    return Errors.handleError(error, "handlerGetLieferanten");
+    return Errors.handleError(error, "handlerGetRezept");
   } finally {
-    // Verbindung freigeben
-    if (connection) {
-      connection.release();
-    }
+    if (connection) connection.release();
     await closePool();
   }
 };
