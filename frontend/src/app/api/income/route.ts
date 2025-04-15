@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/handlerWareneingang";
+        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerWareneingang";
         console.log("[API] Anfrage an Backend wird gesendet...");
 
         let response;
