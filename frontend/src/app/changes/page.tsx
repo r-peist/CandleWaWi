@@ -4,7 +4,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import Head from 'next/head';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaBoxes, FaShoppingCart, FaTruckLoading } from 'react-icons/fa';
+import { FaBoxes, FaShoppingCart, FaTruckLoading, FaArrowLeft } from 'react-icons/fa';
 import FeatureCard from "../components/featurecard";
 import Footer from '../components/footer';
 
