@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         };
 
         // Achte darauf, dass die URL keinen zusätzlichen Leerraum enthält!
-        const backendResponse = await fetch('http://localhost:3001/validatedInvKorrWE', {
+        const backendResponse = await fetch('https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/validatedInvKorrWE', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
