@@ -13,7 +13,7 @@ export async function POST(request: Request) {
         };
 
         // Sende den Request an das Backend (Lambda)
-        const backendResponse = await fetch('http://localhost:3001/validatedBuchung', {
+        const backendResponse = await fetch('https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/validatedBuchung', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
