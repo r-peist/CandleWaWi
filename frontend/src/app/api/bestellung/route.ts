@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/validatedGetMatLief";
+        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/validatedGetMatLief";
 
         // Lese den Request-Body
         const body = await req.json();
