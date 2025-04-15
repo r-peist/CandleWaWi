@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaSave, FaArrowLeft } from "react-icons/fa";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // Dummy-Daten, die später von echten API-Endpunkten ersetzt werden können
 const dummyCategories = [
@@ -44,7 +45,13 @@ const dummySuppliers = [
 
 const NewProductPage = () => {
     const router = useRouter();
-
+    const { user, isLoading } = useUser();
+    // Redirect bei fehlendem Login
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.push("/unauthorized");
+        }
+    }, [isLoading, user, router]);
     // States für Dropdowns
     const [categories, setCategories] = useState([]);
     const [materialCategories, setMaterialCategories] = useState([]);
@@ -163,7 +170,8 @@ const NewProductPage = () => {
         // Später POST-Request an /api/material (oder /api/recipes, falls Rezeptanlage)
         router.push("/changes");
     };
-
+    if (isLoading) return <div className="p-8 text-center">Lade...</div>;
+    if (!user) return null;
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             <header className="mb-8 flex justify-between items-center">

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { FaArrowLeft, FaSave, FaEdit, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // Dummy-Daten für Lagerorte
 const dummyWarehouses = [
@@ -51,6 +52,14 @@ const dummyMaterialSuppliers = [
 
 const InventoryPage = () => {
     const router = useRouter();
+    const { user, isLoading } = useUser();
+
+    // Redirect bei fehlendem Login
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.push("/unauthorized");
+        }
+    }, [isLoading, user, router]);
     const [inventory, setInventory] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedItem, setSelectedItem] = useState(null);
@@ -193,7 +202,8 @@ const InventoryPage = () => {
     const handleCancelSupplierEdit = () => {
         setSupplierEditData({ editing: false, MatLiefID: null, LiefID: "", Link: "" });
     };
-
+    if (isLoading) return <div className="p-8 text-center">Lade...</div>;
+    if (!user) return null;
     return (
         <div className="min-h-screen bg-gray-100 p-8">
             {/* Header mit Zurück-Button */}

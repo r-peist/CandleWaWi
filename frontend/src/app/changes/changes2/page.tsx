@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { FaArrowLeft, FaCheck, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 interface Material {
     MatID: number;
@@ -21,6 +22,14 @@ interface Order {
 const OrdersPage = () => {
     const router = useRouter();
     const [orders, setOrders] = useState<Order[]>([]);
+    const { user, isLoading } = useUser();
+
+    // Redirect bei fehlendem Login
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.push("/unauthorized");
+        }
+    }, [isLoading, user, router]);
 
     useEffect(() => {
         fetch("/api/inventarkorrektur")
@@ -48,7 +57,8 @@ const OrdersPage = () => {
         // Hier könnte ein API-Call erfolgen, um die Ablehnung zu melden
         setOrders((prev) => prev.filter((order) => order.BestellID !== orderId));
     };
-
+    if (isLoading) return <div className="p-8 text-center">Lade...</div>;
+    if (!user) return null;
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 p-8">
             {/* Header mit Zurück-Button */}

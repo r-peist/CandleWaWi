@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { IoMdClose } from "react-icons/io";
 import { FaArrowLeft, FaPlus, FaEdit } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 // Rezeptdaten abrufen
 const fetchRecipes = async () => {
@@ -37,7 +38,20 @@ const formatForMySQL = (isoString: string): string => {
 
 const RecipeOverviewPage = () => {
     const router = useRouter();
+    const { user, isLoading } = useUser();
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.push('/unauthorized');
+        }
+    }, [isLoading, user, router]);
+    //OMAR_Authentifizierung überprüfen
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Lädt...</div>;
+    }
 
+    if (!user) {
+        return null; // Zeige nichts, falls die Weiterleitung aktiv ist
+    }
     // Zustände
     const [recipes, setRecipes] = useState({ Kerze: [], SprayDiff: [], ZP: [] });
     const [error, setError] = useState("");
@@ -71,6 +85,7 @@ const RecipeOverviewPage = () => {
             setError(err.message);
         }
     };
+    
     useEffect(() => {
         loadRecipes();
     }, []);

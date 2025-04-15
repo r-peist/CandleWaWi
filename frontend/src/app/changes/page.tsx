@@ -1,15 +1,48 @@
 "use client";
 
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import FeatureCard from "../components/featurecard"
-import Footer from '../components/footer'
-import {FaArrowLeft, FaBoxes, FaShoppingCart, FaTruckLoading} from 'react-icons/fa'
-import { useRouter } from 'next/navigation'
+import { useUser } from "@auth0/nextjs-auth0/client";
+import Head from 'next/head';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FaBoxes, FaShoppingCart, FaTruckLoading } from 'react-icons/fa';
+import FeatureCard from "../components/featurecard";
+import Footer from '../components/footer';
 
-const Home: NextPage = () => {
+export default function Changes() {
+    const { user, isLoading } = useUser(); // Auth0-Benutzer abrufen
     const router = useRouter();
+    const [isAllowedUser, setIsAllowedUser] = useState(false);
 
+    useEffect(() => {
+        if (isLoading) return;
+    
+        if (!user) {
+            router.push("/api/auth/login");
+        } else {
+            console.log("Benutzer-E-Mail:", user.email);
+            const roles: string[] = Array.isArray(user["https://candlewawi.com/roles"])
+                ? user["https://candlewawi.com/roles"]
+                : [];
+    
+            const lowerRoles = roles.map(r => r.toLowerCase());
+            const isAdmin = lowerRoles.includes("admin");
+            
+            setIsAllowedUser(isAdmin);
+        }
+    }, [user, isLoading]);
+    
+
+    if (isLoading) {
+        return <p className="text-center text-lg">Lädt...</p>;
+    }
+
+    if (!isLoading && !user) {
+    return <p className="text-center text-lg">Bitte einloggen...</p>;
+}
+
+if (!isLoading && user && !isAllowedUser) {
+    return <p className="text-center text-lg">Zugriff verweigert</p>;
+}
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 flex flex-col">
             <Head>
@@ -62,4 +95,4 @@ const Home: NextPage = () => {
     );
 };
 
-export default Home;
+

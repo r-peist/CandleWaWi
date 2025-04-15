@@ -2,8 +2,12 @@
 import { useState, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Income() {
+    const { user, isLoading } = useUser(); //  Auth0
+    const router = useRouter();
+
     const [openOrders, setOpenOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [comment, setComment] = useState("");
@@ -12,9 +16,13 @@ export default function Income() {
     const [showFaultyModal, setShowFaultyModal] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
 
-    // Funktion zum Laden der offenen Bestellungen
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.push("/unauthorized"); // 👈 Weiterleitung wenn nicht eingeloggt
+        }
+    }, [isLoading, user, router]);
+
     const loadOpenOrders = async () => {
         setLoading(true);
         try {
@@ -33,7 +41,6 @@ export default function Income() {
                 throw new Error("Leere oder ungültige Antwort vom Backend!");
             }
 
-            // Falls das Backend keine Daten liefert, soll es stoppen:
             if (result.offen.length === 0 && result.pruefung.length === 0) {
                 throw new Error("Keine offenen Bestellungen gefunden!");
             }
@@ -67,32 +74,24 @@ export default function Income() {
     };
 
     useEffect(() => {
-        loadOpenOrders();
-    }, []);
+        if (user) {
+            loadOpenOrders();
+        }
+    }, [user]);
 
-    // Damit auch bei "Back"-Navigation immer neu geladen wird:
     useEffect(() => {
         const handlePageShow = (event: any) => {
             if (event.persisted) {
                 loadOpenOrders();
             }
         };
-
         window.addEventListener("pageshow", handlePageShow);
-        return () => {
-            window.removeEventListener("pageshow", handlePageShow);
-        };
+        return () => window.removeEventListener("pageshow", handlePageShow);
     }, []);
 
-    // Aufteilung in bearbeitbare Bestellungen und solche in Prüfung
-    const actionableOrders = openOrders.filter(
-        (order) => order.status !== "in_pruefung"
-    );
-    const infoOrders = openOrders.filter(
-        (order) => order.status === "in_pruefung"
-    );
+    const actionableOrders = openOrders.filter((order) => order.status !== "in_pruefung");
+    const infoOrders = openOrders.filter((order) => order.status === "in_pruefung");
 
-    // Buchung initiieren
     const handleBookOrder = (order) => {
         setOrderForBooking(order);
         setShowBookModal(true);
@@ -123,7 +122,6 @@ export default function Income() {
         }
     };
 
-    // Fehlerhaft-Meldung initiieren
     const handleMarkFaulty = (order) => {
         setSelectedOrder(order);
         setShowFaultyModal(true);
@@ -165,6 +163,8 @@ export default function Income() {
         setSelectedOrder(null);
         setComment("");
     };
+
+    if (isLoading || !user) return null; // Verhindere Rendering während Auth0 lädt
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 p-8">
