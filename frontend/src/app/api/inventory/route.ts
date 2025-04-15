@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const backendApiUrl = "http://localhost:3001/handlerInventar"; // Backend-Endpoint
+        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerInventar"; // Backend-Endpoint
         console.log("Frontend: Anfrage an Backend wird gesendet...");
 
         const response = await fetch(backendApiUrl, {
