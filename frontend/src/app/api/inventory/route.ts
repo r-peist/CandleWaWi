@@ -1,25 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 
 export async function GET(req: NextRequest) {
   try {
-    const backendApiUrl =
-      "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerInventar";
+    const { accessToken } = await getAccessToken();
 
-    // 🔐 Auth0 Access Token holen
-    const tokenRes = await getAccessToken();
-    const token = tokenRes.accessToken;
-
-    if (!token) {
-      throw new Error("Kein gültiger Auth0-Token verfügbar.");
+    if (!accessToken) {
+      return NextResponse.json({ message: "Nicht eingeloggt" }, { status: 401 });
     }
 
-    console.log("Frontend: Anfrage mit Auth Header wird an Backend gesendet...");
+    const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/handlerInventar";
 
     const response = await fetch(backendApiUrl, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Cache-Control": "no-store",
       },
       cache: "no-store",
@@ -29,13 +24,12 @@ export async function GET(req: NextRequest) {
       throw new Error(`Fehler beim Abrufen der Inventar-Daten: ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log("Frontend: Daten erfolgreich erhalten:", data);
+    const result = await response.json();
 
     const inventar =
-      (data?.response?.data?.Inventar && Array.isArray(data.response.data.Inventar)
-        ? data.response.data.Inventar
-        : data?.data?.Inventar) || null;
+      (result?.response?.data?.Inventar && Array.isArray(result.response.data.Inventar)
+        ? result.response.data.Inventar
+        : result?.data?.Inventar) || null;
 
     if (!inventar || !Array.isArray(inventar)) {
       throw new Error("Inventar-Daten fehlen oder haben das falsche Format");
