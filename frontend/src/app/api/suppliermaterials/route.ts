@@ -3,27 +3,29 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        // Verwende den korrekten Backend-Endpoint, der valide Daten liefert:
-        const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/validatedGetLieferantFE";
+        const backendApiUrl =
+            "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/validatedGetLieferantFE";
 
-        // Lese den Request-Body
-        const requestBody = await req.json();
-        console.log("Empfangen wurde:", requestBody);
-
-        // Ermittele die LiefID: entweder direkt oder innerhalb des Objekts "Lieferant"
-        const liefId = requestBody.LiefID || requestBody.Lieferant?.LiefID;
-        if (!liefId) {
-            throw new Error("LiefID is required");
+        // Access Token aus ENV lesen (du musst ihn vorher in .env.local setzen)
+        const token = process.env.AUTH0_API_ACCESS_TOKEN;
+        if (!token) {
+            throw new Error("Access Token nicht gefunden. Bitte ENV prüfen.");
         }
 
-        // Erstelle das Payload im Format, welches das Backend erwartet:
-        // { "Lieferant": { "LiefID": <liefId> } }
+        // Request Body einlesen
+        const requestBody = await req.json();
+        const liefId = requestBody.LiefID || requestBody.Lieferant?.LiefID;
+
+        if (!liefId) {
+            throw new Error("LiefID ist erforderlich");
+        }
+
         const payload = { Lieferant: { LiefID: liefId } };
 
-        // Sende den POST-Request an den Backend-Endpoint
         const response = await fetch(backendApiUrl, {
             method: "POST",
             headers: {
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
                 "Cache-Control": "no-store",
             },
@@ -36,8 +38,7 @@ export async function POST(req: NextRequest) {
         }
 
         const result = await response.json();
-        // Extrahiere die Materialdaten. Das Backend liefert die Daten typischerweise entweder
-        // unter result.response.data.MatLiefs oder unter result.data.MatLiefs.
+
         const matLiefs =
             result?.response?.data?.MatLiefs ?? result?.data?.MatLiefs ?? [];
 
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
     } catch (error: any) {
         console.error("Error in API route suppliermaterials:", error);
         return NextResponse.json(
-            { message: "Ein Fehler ist aufgetreten.", error: error.message },
+            { message: "Fehler", error: error.message },
             {
                 status: 500,
                 headers: {
