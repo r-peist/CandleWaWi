@@ -5,10 +5,17 @@ export async function GET(req: NextRequest) {
     try {
         const backendApiUrl = "https://refuv4aan4.execute-api.eu-central-1.amazonaws.com/dev/getLieferanten";
 
+        // ⛳ Access Token – entweder speichern oder zur Laufzeit holen
+        const token = process.env.AUTH0_API_ACCESS_TOKEN; // Stell sicher, dass dieses Token im .env vorhanden ist!
+
+        if (!token) {
+            throw new Error("Access Token nicht gefunden");
+        }
+
         const response = await fetch(backendApiUrl, {
             method: "GET",
-            cache: "no-store",
             headers: {
+                Authorization: `Bearer ${token}`,
                 "Cache-Control": "no-store",
             },
         });
@@ -18,7 +25,7 @@ export async function GET(req: NextRequest) {
         }
 
         const data = await response.json();
-        // Extrahiere zuerst data.response.data.Lieferanten, ansonsten versuche data.response.Lieferanten oder data.Lieferanten
+
         const lieferanten =
             data?.data?.Lieferanten ?? data?.Lieferanten ?? [];
 
