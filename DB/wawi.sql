@@ -117,7 +117,8 @@ CREATE TABLE IF NOT EXISTS `bestellung` (
   `BestellID` int(11) NOT NULL AUTO_INCREMENT,
   `LiefID` int(11) NOT NULL,
   `LagerID` int(11) NOT NULL,
-  `Bestelldatum` date NOT NULL,
+  `Bestelldatum` datetime NOT NULL,
+  `EingangZeitStempel` datetime DEFAULT NULL,
   `status` enum('offen','pruefung','abgeschlossen') NOT NULL DEFAULT 'offen',
   `Benutzer` varchar(50) NOT NULL,
   PRIMARY KEY (`BestellID`),
@@ -246,6 +247,18 @@ CREATE TABLE IF NOT EXISTS `invkorr_material` (
   CONSTRAINT `InvKorrMatID_InvKorrID` FOREIGN KEY (`InvKorrMatID`) REFERENCES `inventarkorrektur` (`InvKorrID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+-- Neue Tabelle: verkauf
+CREATE TABLE IF NOT EXISTS `verkauf` (
+  `VerkID` int(11) NOT NULL AUTO_INCREMENT,
+  `Plattform` enum('Shopify', 'Laden', 'Sonstiges') NOT NULL,
+  `verkauf` datetime NOT NULL,
+  `MatID` int(11) DEFAULT NULL,
+  `Menge` int(11) DEFAULT NULL,
+  PRIMARY KEY (`VerkID`),
+  KEY `Verkauf_MatID` (`MatID`),
+  CONSTRAINT `Verkauf_MatID` FOREIGN KEY (`MatID`) REFERENCES `material` (`MatID`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 CREATE TABLE IF NOT EXISTS `invkorr_wareneingang` (
   `InvKorrWEID` int(11) NOT NULL,
   `BestellID` int(11) NOT NULL,
@@ -328,6 +341,13 @@ INSERT INTO material (MatID, Name, KatID, MatKatID, SKU, Active) VALUES
   (17, 'WarnungDifSpray', 4, 12, 'WAR-001-DIF', 'true'),
   (18, 'Gemisch_Test', 4, 5, 'GEM-001-TEST', 'true');
 
+INSERT INTO `verkauf` (`VerkID`, `Plattform`, `verkauf`, `MatID`, `Menge`) VALUES
+(1, 'Shopify', '2025-04-01 12:34:56', 1, 3),
+(2, 'Laden', '2025-04-02 15:12:00', 2, 5),
+(3, 'Sonstiges', '2025-04-03 09:00:00', 3, 2),
+(4, 'Shopify', '2025-04-04 17:45:30', 4, 1),
+(5, 'Laden', '2025-04-05 11:22:10', 5, 4);
+
 INSERT INTO behaelter (BehaelterID, MatID, Name, Farbe, Hoehe, Breite, Fuellmenge) VALUES
   (1, 3, 'Glas1', 'Braun', 75, 25, 180),
   (2, 4, 'Glas2', 'Schwarz', 100, 35, 300),
@@ -343,13 +363,13 @@ INSERT INTO docht (DochtID, MatID, Laenge, Name) VALUES
   (1, 8, 75, 'Baumwolle'),
   (2, 9, 120, 'Holz');
 
-INSERT INTO bestellung (BestellID, LiefID, LagerID, Bestelldatum, status, Benutzer) VALUES
-  (1, 1, 1, '2024-02-12', 'pruefung', 'default'),
-  (2, 1, 1, '2024-04-22', 'offen', 'default'),
-  (3, 1, 1, '2024-09-11', 'abgeschlossen', 'default'),
-  (4, 3, 1, '2024-12-02', 'offen', 'default'),
-  (5, 1, 1, '2025-02-10', 'offen', 'default'),
-  (13, 1, 1, '2011-11-11', 'offen', 'default');
+INSERT INTO `bestellung` (`BestellID`, `LiefID`, `LagerID`, `Bestelldatum`, `EingangZeitStempel`, `status`, `Benutzer`) VALUES
+(1, 1, 1, '2024-02-12 00:00:00', NULL, 'pruefung', 'default'),
+(2, 1, 1, '2024-04-22 00:00:00', NULL, 'offen', 'default'),
+(3, 1, 1, '2024-09-11 00:00:00', NULL, 'abgeschlossen', 'default'),
+(4, 3, 1, '2024-12-02 00:00:00', NULL, 'offen', 'default'),
+(5, 1, 1, '2025-02-10 00:00:00', NULL, 'offen', 'default'),
+(13, 1, 1, '2011-11-11 00:00:00', NULL, 'offen', 'default');
 
 INSERT INTO materialbestellung (MatBestID, BestellID, MatID, Menge) VALUES
   (1, 1, 1, 3),
