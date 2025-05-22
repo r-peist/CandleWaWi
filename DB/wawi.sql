@@ -457,3 +457,42 @@ INSERT INTO invkorr_wareneingang (InvKorrWEID, BestellID) VALUES
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+-- 1. Neues Feld als FK hinzufügen
+ALTER TABLE `verkauf`
+ADD COLUMN `platform_id_sale` INT(11);
+
+-- 2. Daten aus ENUM in die neue Spalte migrieren
+UPDATE `verkauf` SET `platform_id_sale` = 
+  CASE `Plattform`
+    WHEN 'Shopify' THEN 1
+    WHEN 'Laden' THEN 2
+    WHEN 'Sonstiges' THEN 3
+    ELSE NULL
+  END;
+
+-- 3. Alte Spalte löschen
+ALTER TABLE `verkauf`
+DROP COLUMN `Plattform`;
+
+-- 4. Fremdschlüssel setzen
+ALTER TABLE `verkauf`
+ADD CONSTRAINT `fk_verkauf_platform`
+FOREIGN KEY (`platform_id_sale`) REFERENCES `platformen_verkauf` (`platform_id_sale`)
+ON DELETE RESTRICT ON UPDATE CASCADE;
+
+
+-- Neue Tabelle: platformen_verkauf
+CREATE TABLE IF NOT EXISTS `platformen_verkauf` (
+  `platform_id_sale` INT(11) NOT NULL,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`platform_id_sale`),
+  UNIQUE KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- Daten einfügen
+INSERT INTO `platformen_verkauf` (`platform_id_sale`, `name`) VALUES
+  (1, 'Shopify'),
+  (2, 'Laden'),
+  (3, 'Sonstiges');
+
